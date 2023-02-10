@@ -26,3 +26,9 @@ def user_login(request):
 
 def account(request):
     return render(request, 'account/account.html')
+
+
+def password(request):
+    return render(request, 'account/password.html')
+
+
