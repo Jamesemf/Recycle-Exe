@@ -1,27 +1,22 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login
-from .forms import LoginForm
+from .forms import LoginForm, RegistrationForm
 
 
-def user_login(request):
+def register(request):
     if request.method == 'POST':
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            data = form.cleaned_data
-            auth = authenticate(request, username=data['username'], password=data["password"])
-            if auth is not None:
-                # Check user account whether active
-                if auth.is_active:
-                    login(request, auth)
-                    return HttpResponse('Authenticated successfully')
-                else:
-                    return HttpResponse('Disabled Account')
-            else:
-                return HttpResponse('Invalid Login Information')
+        user_form = RegistrationForm(request.POST)
+        if user_form.is_valid():
+            # New user object without saving
+            new_user = user_form.save(commit=False)
+            # Set password
+            new_user.set_password(user_form.cleaned_data['password'])
+            new_user.save()
+            return render(request, 'registration/register_done.html', {'new_user': new_user})
     else:
-        form = LoginForm()
-    return render(request, 'account/login.html', {'form': form})
+        user_form = RegistrationForm()
+    return render(request, 'registration/register.html', {'user_form': user_form})
 
 
 def account(request):
