@@ -29,11 +29,11 @@ if (('BarcodeDetector' in window)) {
     // Create new barcode detector with all supported formats
 
     // Create new barcode detector
-    const barcodeDetector = new BarcodeDetector({ formats: ['qr_code'] });
+    const barcodeDetector = new BarcodeDetector({ formats: ['ean_13'] });
     // Run detect code function every 100 milliseconds
     setInterval(detectCode, 100);
 } else {
-    window.location.replace("http://127.0.0.1:8000/account");
+    window.location.replace("http://127.0.0.1:8000/account/login");
 }
 
 
