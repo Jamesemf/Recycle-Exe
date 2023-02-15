@@ -1,16 +1,16 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    Log-In
+    Welcome to join us! - Registration
 {% endblock %}
 
 {% block content %}
     <body class="text-center">
         <main class="form-signin w-100 m-auto">
-            <form action="{% url 'login' %}" method="POST">
+            <form method="POST">
                 {% csrf_token %}
-                <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
-                {% for field in form %}
+                <h1 class="h3 mb-3 fw-normal">Registration</h1>
+                {% for field in user_form %}
                     <div class="form-floating">
                         <input type="{{ field.widget_type }}" name="{{ field.name }}" class="form-control"
                                id={{ field.id_for_label }} placeholder={{ field.name }} required>
@@ -18,16 +18,16 @@
                     </div>
                 {% endfor %}
                 <input type="hidden" name="next" value={{ next }}>
-                <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
-                {% if form.errors %}
-                    <p style="color: red">
-                        <small><small>The Username and Password not match :(<br> Please try again!</small></small>
-                    </p>
-                {% else %}
-                    <p> <br> <br><p>
-                {% endif %}
+                <button class="w-100 btn btn-lg btn-primary" type="submit">Join US</button>
                 <p class="mt-5 mb-3 text-muted">&copy; All Right Reserved 2023</p>
             </form>
+            {% if form.errors %}
+                <p>
+                    There are some problem with the password. Please try again!
+                </p>
+            {% else %}
+                <br><br>
+            {% endif %}
         </main>
     </body>
 {% endblock %}
