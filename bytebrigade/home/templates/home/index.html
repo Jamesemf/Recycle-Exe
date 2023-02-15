@@ -1,0 +1,72 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/sign-in/">
+    <link href="{% static 'home/assets/css/bootstrap.min.css' %}" rel="stylesheet">
+    <title>Home</title>
+</head>
+    <body>
+      <nav class="navbar navbar-expand-lg navbar-light bg-light" style="display: flex; justify-content: space-around;">
+        <a class="navbar-brand" href="#"> <b>Leaderboard</b></a>
+        <a class="navbar-brand" style="text-align: center"><b>Title</b></a>
+        <a class="navbar-brand" href="#"><b>Profile</b></a>
+      </nav>
+
+                <div class="card d-flex" style="justify-content: center">
+                  <div class="card-body">
+                    <!--Table-->
+                    <table class="table-responsive">
+                    </table>
+                    <table class="table table-hover table-forum text-left">
+                      <!--Table head-->
+                      <thead>
+                        <tr>
+                          <th class="text-left"> Time</th>
+                          <th class="text-left"> Recycled</th>
+                          <th>Likes</th>
+                        </tr>
+
+                      </thead>
+                      <!--Table body-->
+
+                      <tbody class = "text-left border-top border-3 border-secondary fs-6">
+                            {% for item in Transaction %}
+                            <td>
+                              <span>{{item.time}}</span>
+                            </td>
+
+                          <td class="text-left">
+                            <p class="font-weight-bold" >
+                              {{item.user}} just recycled {{item.product.barcode}} at {{item.bin.binId}}
+                            </p>
+
+                          </td>
+
+                            <td scope="row" class="text-nowrap">
+                              <a href="#" type="button" class="btn btn-outline-dark-green btn-sm p-1 m-0 waves-effect">
+                                <span class="value">Score</span>
+                                 <i class="fas fa-thumbs-up ml-1"></i>
+                              </a>
+                            </td>
+                            {% endfor %}
+                      </tbody>
+                      <!--Table body-->
+                    </table>
+
+                    <!-- Table -->
+
+                    <!--Bottom Table UI-->
+                    <div class="d-flex justify-content-center">
+                      <button type="button" class="btn btn-dark">Scan Item ?</button>
+                    </div>
+                    <!--Bottom Table UI-->
+                  </div>
+                </div>
+        <footer class="navbar navbar-expand-lg navbar-light bg-light" style="display: flex; justify-content: space-around;">
+            <b>Footer</b>
+        </footer>
+
+    </body>
+</html>
