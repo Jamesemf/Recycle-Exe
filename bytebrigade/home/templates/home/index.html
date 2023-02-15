@@ -8,61 +8,49 @@
     <title>Home</title>
 </head>
     <body>
-                <div class="card d-flex" style="width: 48rem">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light" style="display: flex; justify-content: space-around;">
+        <a class="navbar-brand" href="#"> <b>Leaderboard</b></a>
+        <a class="navbar-brand" style="text-align: center"><b>Title</b></a>
+        <a class="navbar-brand" href="#"><b>Profile</b></a>
+      </nav>
+
+                <div class="card d-flex" style="justify-content: center">
                   <div class="card-body">
                     <!--Table-->
                     <table class="table-responsive">
                     </table>
-                    <table class="table table-hover table-forum text-center">
+                    <table class="table table-hover table-forum text-left">
                       <!--Table head-->
                       <thead>
                         <tr>
-                          <th></th>
-                          <th class="text-left">Recycled</th>
-                          <th>Comments</th>
+                          <th class="text-left"> Time</th>
+                          <th class="text-left"> Recycled</th>
+                          <th>Likes</th>
                         </tr>
+
                       </thead>
-                      <!--Table head-->
                       <!--Table body-->
-                      <tbody>
-                            {% for item in query_results %}
-                                <td scope="row" class="text-nowrap">
-                            <a href="#" type="button" class="btn btn-outline-dark-green btn-sm p-1 m-0 waves-effect">
-                              <span class="value">0</span>
-                              <i class="fas fa-thumbs-up ml-1"></i>
-                            </a>
-                            <a href="#" button" class="btn btn-outline-danger btn-sm p-1 m-0 waves-effect">
-                              <span class="value">0</span>
-                              <i class="fas fa-thumbs-down ml-1"></i>
-                            </a>
+
+                      <tbody class = "text-left border-top border-3 border-secondary fs-6">
+                            {% for item in Transaction %}
+                            <td>
+                              <span>{{item.time}}</span>
+                            </td>
+
+                          <td class="text-left">
+                            <p class="font-weight-bold" >
+                              {{item.user}} just recycled {{item.product.barcode}} at {{item.bin.binId}}
+                            </p>
+
                           </td>
-                          <td class="text-start">
-                            <a href="#" class="font-weight-bold blue-text">
-                              {{item.user}} just recycled {{item.product}} at {{ item.location}} at {{item.time}}
-                            </a>
-                            <div class="my-2">
-                              <a href="#" class="blue-text">
-                                <strong>MDBootstrap</strong>
+
+                            <td scope="row" class="text-nowrap">
+                              <a href="#" type="button" class="btn btn-outline-dark-green btn-sm p-1 m-0 waves-effect">
+                                <span class="value">Score</span>
+                                 <i class="fas fa-thumbs-up ml-1"></i>
                               </a>
-                              <span class="badge bg-secondary mx-1">staff</span><span
-                                class="badge bg-primary mx-1">pro</span><span class="badge bg-warning mx-1">premium</span>
-                              <span>a year ago</span>
-                              <div></div>
-                            </div>
-                          </td>
-                          <td>
-                            <a href="#" class="text-dark">
-                              <span>0</span>
-                              <i class="fas fa-comments ml-1"></i>
-                            </a>
-                          </td>
+                            </td>
                             {% endfor %}
-
-
-
-
-
-                        </tr>
                       </tbody>
                       <!--Table body-->
                     </table>
@@ -71,56 +59,14 @@
 
                     <!--Bottom Table UI-->
                     <div class="d-flex justify-content-center">
-                      <!--Pagination -->
-                      <nav class="my-2 pt-2">
-                        <ul class="pagination pagination-circle pg-info mb-0">
-                          <!--First-->
-                          <li class="page-item clearfix d-none d-md-block">
-                            <a href="#" class="page-link waves-effect">
-                              First </a>
-                          </li>
-                          <!--Arrow left-->
-                          <li class="page-item">
-                            <a href="#" class="page-link waves-effect" aria-label="Previous">
-                              <span aria-hidden="true">«</span>
-                              <span class="sr-only">
-                                Previous </span>
-                            </a>
-                          </li>
-                          <!--Numbers-->
-                          <li class="page-item">
-                            <a href="#" class="page-link waves-effect">11</a>
-                          </li>
-                          <li class="page-item">
-                            <a href="#" class="page-link waves-effect">12</a>
-                          </li>
-                          <li class="page-item active">
-                            <a href="#" class="page-link waves-effect">13</a>
-                          </li>
-                          <li class="page-item">
-                            <a href="#" class="page-link waves-effect">14</a>
-                          </li>
-                          <li class="page-item">
-                            <a href="#" class="page-link waves-effect">15</a>
-                          </li>
-                          <!--Arrow right-->
-                          <li class="page-item">
-                            <a href="#" class="page-link waves-effect" aria-label="Next">
-                              <span aria-hidden="true">»</span>
-                              <span class="sr-only">Next</span>
-                            </a>
-                          </li>
-                          <!--First-->
-                          <li class="page-item clearfix d-none d-md-block">
-                            <a href="#" class="page-link waves-effect">
-                              Last </a>
-                          </li>
-                        </ul>
-                      </nav>
-                      <!--/Pagination -->
+                      <button type="button" class="btn btn-dark">Scan Item ?</button>
                     </div>
                     <!--Bottom Table UI-->
                   </div>
                 </div>
+        <footer class="navbar navbar-expand-lg navbar-light bg-light" style="display: flex; justify-content: space-around;">
+            <b>Footer</b>
+        </footer>
+
     </body>
 </html>
