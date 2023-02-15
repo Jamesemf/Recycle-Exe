@@ -4,16 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3049aee3-629a-4512-8969-d528f414ba99" name="Changes" comment="Trying to fetch branch">
+    <list default="true" id="3049aee3-629a-4512-8969-d528f414ba99" name="Changes" comment="Co-authored-by: Samuel Thomas&#10;Co-authored-by: Angelo Palmer&#10;Co-authored-by: James Ford&#10;Co-authored-by: Oscar Norris&#10;Co-authored-by: Cameron Hallett&#10;Co-authored-by: Howard Cui">
       <changelist_data name="sccthomas" email="95318179+sccthomas@users.noreply.github.com&gt;, cameron hallett,oscar norris &lt;oscarhfnorris@gmail.com&gt; ,howardcui-super &lt;78500597+howardcui-super@users.noreply.github.com&gt;, james ford &lt;57077523+jamesemf@users.noreply.github.com&gt;, angelopalmer &lt;95857532+angelopalmer@users.noreply.github.com" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bytebrigade/home/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/home/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bytebrigade/home/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/home/views.py" afterDir="false" />
-    </list>
-    <list id="d3faa1e5-5dc7-4e42-afb5-ae0bdd4504cd" name="Changes by camer" comment="" />
-    <list id="10735dad-5d63-4d42-aac0-bad7abfc8820" name="Changes by James" comment="">
       <change beforePath="$PROJECT_DIR$/bytebrigade/home/templates/home/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/home/templates/home/index.html" afterDir="false" />
     </list>
+    <list id="d3faa1e5-5dc7-4e42-afb5-ae0bdd4504cd" name="Changes by camer" comment="" />
+    <list id="10735dad-5d63-4d42-aac0-bad7abfc8820" name="Changes by James" comment="" />
     <list id="14d19a1f-434b-42d5-8ef5-022989c7f8e9" name="Changes by osirr" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -97,6 +94,7 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="$PROJECT_DIR$/venv/bin/python" />
+      <option name="SDK_NAME" value="Python 3.11 (ECM2434)" />
       <option name="WORKING_DIRECTORY" value="" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
