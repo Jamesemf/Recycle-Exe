@@ -119,6 +119,11 @@ STATIC_ROOT = 'staticfiles'
 
 STATIC_URL = 'static/'
 
+# Super General Staticfiles for all application
+STATICFILES_DIRS = [
+    BASE_DIR / "statics",
+]
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
@@ -131,4 +136,9 @@ LOGIN_URL = 'login'
 
 LOGOUT_REDIRECT_URL = 'logout'
 
-LOGIN_REDIRECT_URL = 'account'
+LOGIN_REDIRECT_URL = 'index'
+
+
+# Verification Email Backend
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
