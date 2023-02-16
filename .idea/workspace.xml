@@ -6,14 +6,121 @@
   <component name="ChangeListManager">
     <list default="true" id="3049aee3-629a-4512-8969-d528f414ba99" name="Changes" comment="Trying to fetch branch">
       <changelist_data name="sccthomas" email="95318179+sccthomas@users.noreply.github.com&gt;, cameron hallett,oscar norris &lt;oscarhfnorris@gmail.com&gt; ,howardcui-super &lt;78500597+howardcui-super@users.noreply.github.com&gt;, james ford &lt;57077523+jamesemf@users.noreply.github.com&gt;, angelopalmer &lt;95857532+angelopalmer@users.noreply.github.com" />
+      <change afterPath="$PROJECT_DIR$/.idea/.name" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/staticfiles/boostrap/css/bootstrap-grid.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/staticfiles/boostrap/css/bootstrap-grid.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/staticfiles/boostrap/css/bootstrap-grid.min.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/staticfiles/boostrap/css/bootstrap-grid.min.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/staticfiles/boostrap/css/bootstrap-grid.rtl.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/staticfiles/boostrap/css/bootstrap-grid.rtl.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/staticfiles/boostrap/css/bootstrap-grid.rtl.min.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/staticfiles/boostrap/css/bootstrap-grid.rtl.min.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/staticfiles/boostrap/css/bootstrap-reboot.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/staticfiles/boostrap/css/bootstrap-reboot.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/staticfiles/boostrap/css/bootstrap-reboot.min.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/staticfiles/boostrap/css/bootstrap-reboot.min.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/staticfiles/boostrap/css/bootstrap-reboot.rtl.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/staticfiles/boostrap/css/bootstrap-reboot.rtl.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/staticfiles/boostrap/css/bootstrap-reboot.rtl.min.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/staticfiles/boostrap/css/bootstrap-reboot.rtl.min.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/staticfiles/boostrap/css/bootstrap-utilities.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/staticfiles/boostrap/css/bootstrap-utilities.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/staticfiles/boostrap/css/bootstrap-utilities.min.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/staticfiles/boostrap/css/bootstrap-utilities.min.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/staticfiles/boostrap/css/bootstrap-utilities.rtl.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/staticfiles/boostrap/css/bootstrap-utilities.rtl.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/staticfiles/boostrap/css/bootstrap-utilities.rtl.min.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/staticfiles/boostrap/css/bootstrap-utilities.rtl.min.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/staticfiles/boostrap/css/bootstrap.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/staticfiles/boostrap/css/bootstrap.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/staticfiles/boostrap/css/bootstrap.min.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/staticfiles/boostrap/css/bootstrap.min.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/staticfiles/boostrap/css/bootstrap.rtl.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/staticfiles/boostrap/css/bootstrap.rtl.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/staticfiles/boostrap/css/bootstrap.rtl.min.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/staticfiles/boostrap/css/bootstrap.rtl.min.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/staticfiles/boostrap/js/bootstrap.bundle.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/staticfiles/boostrap/js/bootstrap.bundle.js.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/staticfiles/boostrap/js/bootstrap.bundle.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/staticfiles/boostrap/js/bootstrap.bundle.min.js.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/staticfiles/boostrap/js/bootstrap.esm.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/staticfiles/boostrap/js/bootstrap.esm.js.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/staticfiles/boostrap/js/bootstrap.esm.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/staticfiles/boostrap/js/bootstrap.esm.min.js.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/staticfiles/boostrap/js/bootstrap.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/staticfiles/boostrap/js/bootstrap.js.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/staticfiles/boostrap/js/bootstrap.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/staticfiles/boostrap/js/bootstrap.min.js.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/staticfiles/images/Theme.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/staticfiles/navbar.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/staticfiles/style/css/main.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/staticfiles/style/images/Theme.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/staticfiles/templates/navbar.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/statics/boostrap/css/bootstrap-grid.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/statics/boostrap/css/bootstrap-grid.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/statics/boostrap/css/bootstrap-grid.min.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/statics/boostrap/css/bootstrap-grid.min.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/statics/boostrap/css/bootstrap-grid.rtl.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/statics/boostrap/css/bootstrap-grid.rtl.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/statics/boostrap/css/bootstrap-grid.rtl.min.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/statics/boostrap/css/bootstrap-grid.rtl.min.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/statics/boostrap/css/bootstrap-reboot.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/statics/boostrap/css/bootstrap-reboot.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/statics/boostrap/css/bootstrap-reboot.min.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/statics/boostrap/css/bootstrap-reboot.min.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/statics/boostrap/css/bootstrap-reboot.rtl.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/statics/boostrap/css/bootstrap-reboot.rtl.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/statics/boostrap/css/bootstrap-reboot.rtl.min.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/statics/boostrap/css/bootstrap-reboot.rtl.min.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/statics/boostrap/css/bootstrap-utilities.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/statics/boostrap/css/bootstrap-utilities.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/statics/boostrap/css/bootstrap-utilities.min.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/statics/boostrap/css/bootstrap-utilities.min.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/statics/boostrap/css/bootstrap-utilities.rtl.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/statics/boostrap/css/bootstrap-utilities.rtl.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/statics/boostrap/css/bootstrap-utilities.rtl.min.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/statics/boostrap/css/bootstrap-utilities.rtl.min.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/statics/boostrap/css/bootstrap.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/statics/boostrap/css/bootstrap.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/statics/boostrap/css/bootstrap.min.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/statics/boostrap/css/bootstrap.min.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/statics/boostrap/css/bootstrap.rtl.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/statics/boostrap/css/bootstrap.rtl.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/statics/boostrap/css/bootstrap.rtl.min.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/statics/boostrap/css/bootstrap.rtl.min.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/statics/boostrap/js/bootstrap.bundle.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/statics/boostrap/js/bootstrap.bundle.js.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/statics/boostrap/js/bootstrap.bundle.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/statics/boostrap/js/bootstrap.bundle.min.js.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/statics/boostrap/js/bootstrap.esm.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/statics/boostrap/js/bootstrap.esm.js.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/statics/boostrap/js/bootstrap.esm.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/statics/boostrap/js/bootstrap.esm.min.js.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/statics/boostrap/js/bootstrap.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/statics/boostrap/js/bootstrap.js.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/statics/boostrap/js/bootstrap.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/statics/boostrap/js/bootstrap.min.js.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/statics/style/css/main.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/statics/style/images/Theme.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/statics/templates/navbar.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/ECM2434.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/ECM2434.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bytebrigade/account/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/account/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bytebrigade/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/db.sqlite3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bytebrigade/.idea/.name" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/.idea/.name" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bytebrigade/.idea/jsLibraryMappings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bytebrigade/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bytebrigade/account/templates/account/account.html" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/account/templates/account/account.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bytebrigade/account/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/account/templates/base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bytebrigade/bytebrigade/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/bytebrigade/settings.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bytebrigade/home/templates/home/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/home/templates/home/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bytebrigade/staticfiles/account/sign-in.css" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/staticfiles/account/sign-in.css" afterDir="false" />
     </list>
     <list id="d3faa1e5-5dc7-4e42-afb5-ae0bdd4504cd" name="Changes by camer" comment="" />
     <list id="10735dad-5d63-4d42-aac0-bad7abfc8820" name="Changes by James" comment="" />
-    <list id="14d19a1f-434b-42d5-8ef5-022989c7f8e9" name="Changes by osirr" comment="" />
+    <list id="14d19a1f-434b-42d5-8ef5-022989c7f8e9" name="Changes by osirr" comment="">
+      <change beforePath="$PROJECT_DIR$/bytebrigade/account/static/account/sign-in.css" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/account/static/account/sign-in.css" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -67,13 +174,16 @@
     &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;TODO_SCOPE&quot;: &quot;All Places&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
     &quot;last_opened_file_path&quot;: &quot;/Users/samuelthomas/Documents/University/2ndYr/ECM2434GroupSoftwareEngineeringProject/versions/ECM2434/bytebrigade/home/static&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.stylelint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.stylelint&quot;: &quot;&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.django.DjangoModulesConfigurable&quot;,
@@ -124,6 +234,8 @@
       <workItem from="1676044549692" duration="4464000" />
       <workItem from="1676464887425" duration="4008000" />
       <workItem from="1676468913901" duration="7457000" />
+      <workItem from="1676544833863" duration="2258000" />
+      <workItem from="1676557565627" duration="232000" />
     </task>
     <task id="LOCAL-00001" summary="Checkout">
       <created>1676046271071</created>
