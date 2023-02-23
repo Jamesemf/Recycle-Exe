@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,8 +6,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Landing_page</title>
-    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/css/Navbar-Centered-Brand-Dark-icons.css">
+    <link rel="stylesheet" href="{% static '/assets/bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/Navbar-Centered-Brand-Dark-icons.css' %}">
 </head>
 
 <body class="font-monospace text-center bg-secondary bg-gradient" style="--bs-body-bg: #E1EDBD;--bs-secondary: #E1EDBD;--bs-secondary-rgb: 225,237,189;--bs-primary: #82B068;--bs-primary-rgb: 130,176,104;--bs-dark: #426D34;--bs-dark-rgb: 66,109,52;">
@@ -16,7 +17,7 @@
                     </svg></span><span class="text-center" style="color: var(--bs-black);">ByteBrigade</span></a><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-6" style="color: var(--bs-black);background: var(--bs-primary);"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse flex-grow-0 order-md-first" id="navcol-6">
                 <ul class="navbar-nav me-auto">
-                    <li class="nav-item"><button class="btn btn-light me-2" type="button" style="background: var(--bs-primary);color: var(--bs-btn-disabled-color);">Leaderboard</button></li>
+                    <li class="nav-item"><button class="btn btn-light me-2" type="button" style="background: var(--bs-primary);color: var(--bs-btn-disabled-color);">Home</button></li>
                 </ul>
                 <div class="d-md-none my-2"><button class="btn btn-light me-2" type="button">Button</button><button class="btn btn-primary" type="button">Button</button></div>
             </div>
@@ -24,27 +25,30 @@
         </div>
     </nav>
     <div class="fs-6" style="margin-right: 28px;margin-top: 14px;margin-bottom: 22px;color: var(--bs-secondary);padding-left: 0px;margin-left: 28px;">
-        <h1 style="background: #e1edbd;font-size: 30px;padding-bottom: 5px;color: var(--bs-black);">Daily Feed</h1>
-        <div class="table-responsive" style="background: #e1edbd;border: 1px solid #82b068;border-bottom-width: 1px;border-bottom-style: solid;border-radius: 2px;padding-left: 0px;margin-left: -5px;margin-right: -5px;">
-            <table class="table">
-                <thead style="background: #82b068;">
-                    <tr class="text-capitalize fs-6 text-center text-body">
-                        <th>Time</th>
-                        <th style="--bs-primary: #E1EDBD;--bs-primary-rgb: 225,237,189;--bs-secondary: #719A5E;--bs-secondary-rgb: 113,154,94;--bs-success: #719A5E;--bs-success-rgb: 113,154,94;--bs-info: #E1EDBD;--bs-info-rgb: 225,237,189;--bs-warning: #719A5E;--bs-warning-rgb: 113,154,94;--bs-danger: #719A5E;--bs-danger-rgb: 113,154,94;--bs-light: #E1EDBD;--bs-light-rgb: 225,237,189;--bs-dark: #719A5E;--bs-dark-rgb: 113,154,94;--bs-body-color: #E1EDBD;--bs-body-bg: #E1EDBD;">Recycled</th>
-                        <th>Likes</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="text-center">
-                        <td>X</td>
-                        <td>Y</td>
-                        <td>Z</td>
-                    </tr>
-                    <tr></tr>
-                </tbody>
-            </table>
-        </div><button class="btn btn-primary" type="button" style="background: var(--bs-primary);margin-top: 5px;color: var(--bs-body-color);">Scan</button>
+        <h1 style="background: #e1edbd;font-size: 30px;padding-bottom: 5px;color: var(--bs-black);">Scanner</h1>
     </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-lg-7" style="padding-right: 13px;margin-right: -1px;"></div>
+            <div class="col">
+                <div class="card"><img class="card-img-top w-100 d-block" width="375" height="80">
+                    <div class="card-body">
+                        <h4 class="card-title">{Product_name}</h4>
+                        <p class="card-text"></p>
+                        <ul>
+                            <li>New Home : {}</li>
+                            <li>Weight : {}</li>
+                            <li>Material : {}</li>
+                        </ul><button class="btn btn-primary border rounded" type="button">Find Out More</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4 col-md-6">
+                <div class="card"></div>
+            </div>
+        </div>
+    </div>
+    <div></div>
     <footer class="text-center">
         <div class="container text-muted py-4 py-lg-5">
             <ul class="list-inline">
@@ -66,7 +70,7 @@
             <p class="mb-0">Copyright © 2023 ByteBrigade</p>
         </div>
     </footer>
-    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="{% static 'assets/bootstrap/js/bootstrap.min.js' %}"></script>
 </body>
 
 </html>
