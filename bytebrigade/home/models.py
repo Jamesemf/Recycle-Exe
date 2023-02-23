@@ -42,16 +42,16 @@ class Product(models.Model):
 
 
 class Transactions(models.Model):
-    transactionID = models.IntegerField(primary_key=True)
-    time = models.DateTimeField("Time occurred", default=time.time())
+    transaction_id = models.AutoField(primary_key=True)
+    time = models.DateTimeField(auto_now_add=True)
     bin = models.ForeignKey(BinData, on_delete=models.CASCADE)  # need to assign as foreign key to bin application
     user = models.ForeignKey(User, default=-1, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    likes = models.IntegerField()
+    likes = models.IntegerField(default=0)
 
 
 class Statistics(models.Model):
-    user = models.ForeignKey(User, default=-1, on_delete=models.CASCADE, primary_key=True)
+    user = models.ForeignKey(User, default=-1, on_delete=models.CASCADE)
     points = models.IntegerField()
     carbon = models.DecimalField(max_digits=10, decimal_places=5)
     curweek = models.DecimalField(max_digits=10, decimal_places=5)

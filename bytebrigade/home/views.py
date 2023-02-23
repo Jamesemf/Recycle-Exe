@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from .models import Transactions
+from .models import Statistics
 from django.http import HttpResponse
 
 
@@ -8,8 +9,9 @@ from django.http import HttpResponse
 def getTransactions(request):
     data = Transactions.objects.all()
     data_dict = {
-        'Transaction': data
+        'Transactions': data,
     }
+
     return render(request, 'home/index.html', data_dict)
 
 
