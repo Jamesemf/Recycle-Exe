@@ -11,3 +11,7 @@ def getTransactions(request):
         'Transaction': data
     }
     return render(request, 'home/index.html', data_dict)
+
+
+def getLeaderboard(request):
+    return render(request, 'home/Leaderboard.html')

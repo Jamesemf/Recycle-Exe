@@ -3,7 +3,7 @@ from django.http import HttpResponse
 
 
 def barcode_lookup(request):
-    return HttpResponse(render(request, 'BCscanner/scanner.html'))
+    return HttpResponse(render(request, 'BCscanner/Scanner_page.html'))
 
 
 
