@@ -20,7 +20,7 @@ def register(request):
 
 
 def account(request):
-    return render(request, 'account/account.html')
+    return render(request, 'account/Profile_page.html')
 
 
 def password(request):

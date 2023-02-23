@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,10 +6,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Landing_page</title>
-    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/fonts/material-icons.min.css">
-    <link rel="stylesheet" href="assets/fonts/simple-line-icons.min.css">
-    <link rel="stylesheet" href="assets/css/Navbar-Centered-Brand-Dark-icons.css">
+    <link rel="stylesheet" href="{% static 'assets/bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/fonts/material-icons.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/fonts/simple-line-icons.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/Navbar-Centered-Brand-Dark-icons.css' %}">
 </head>
 
 <body class="font-monospace text-center bg-secondary bg-gradient" style="--bs-body-bg: #E1EDBD;--bs-secondary: #E1EDBD;--bs-secondary-rgb: 225,237,189;--bs-primary: #E1EDBD;--bs-primary-rgb: 130,176,104;--bs-dark: #426D34;--bs-dark-rgb: 66,109,52;">
@@ -262,7 +263,7 @@
             <p class="mb-0">Copyright © 2023 ByteBrigade</p>
         </div>
     </footer>
-    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="{% static 'assets/bootstrap/js/bootstrap.min.js' %}"></script>
 </body>
 
 </html>
