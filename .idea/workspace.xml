@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3049aee3-629a-4512-8969-d528f414ba99" name="Changes" comment="Adding variables to profile page and making navbar link to pages" />
+    <list default="true" id="3049aee3-629a-4512-8969-d528f414ba99" name="Changes" comment="Adding variables to profile page and making navbar link to pages">
+      <change beforePath="$PROJECT_DIR$/bytebrigade/account/templates/account/Profile_page.html" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/account/templates/account/Profile_page.html" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -35,7 +37,7 @@
     </option>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="main" />
+        <entry key="$PROJECT_DIR$" value="Stats_and_Goals" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
