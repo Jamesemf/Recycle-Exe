@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 import time
 # Create your models here.
+
+
 class BinData(models.Model):
     binId = models.CharField(max_length=10, primary_key=True)  # Format AM-01-1 (Building-Floor-BinNo)
     binLat = models.DecimalField(max_digits=25, decimal_places=22)
@@ -40,7 +42,33 @@ class Product(models.Model):
 
 
 class Transactions(models.Model):
+    transactionID = models.IntegerField(primary_key=True)
     time = models.DateTimeField("Time occurred", default=time.time())
     bin = models.ForeignKey(BinData, on_delete=models.CASCADE)  # need to assign as foreign key to bin application
-    user = models.ForeignKey(User, default=1, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, default=-1, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
+
+
+class Statistics(models.Model):
+    user = models.ForeignKey(User, default=-1, on_delete=models.CASCADE, primary_key=True)
+    points = models.IntegerField()
+    carbon = models.DecimalField(max_digits=10, decimal_places=5)
+    curweek = models.DecimalField(max_digits=10, decimal_places=5)
+    curmonth = models.DecimalField(max_digits=10, decimal_places=5)
+    curyear = models.DecimalField(max_digits=10, decimal_places=5)
+    lastRecycle = models.ForeignKey(Product, related_name="lastRecycle", default=-1, on_delete=models.CASCADE)
+    loveRecycling = models.ForeignKey(Product, related_name="loveRecycle", default=-1, on_delete=models.CASCADE)
+
+
+class Goals(models.Model):
+    goalID = models.IntegerField(primary_key=True)
+    name = models.CharField(max_length=200)
+    description = models.CharField(max_length=200)
+    target = models.DecimalField(max_digits=10, decimal_places=5)
+
+
+class UserGoals(models.Model):
+    userGoalID = models.IntegerField(primary_key=True)
+    user = models.ForeignKey(User, default=-1, on_delete=models.CASCADE)
+    goal = models.ForeignKey(Goals, default=-1, on_delete=models.CASCADE)
+    value = models.DecimalField(max_digits=10, decimal_places=5)
