@@ -6,15 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="3049aee3-629a-4512-8969-d528f414ba99" name="Changes" comment="Trying to fetch branch">
       <changelist_data name="sccthomas" email="95318179+sccthomas@users.noreply.github.com&gt;, cameron hallett,oscar norris &lt;oscarhfnorris@gmail.com&gt; ,howardcui-super &lt;78500597+howardcui-super@users.noreply.github.com&gt;, james ford &lt;57077523+jamesemf@users.noreply.github.com&gt;, angelopalmer &lt;95857532+angelopalmer@users.noreply.github.com" />
-      <change beforePath="$PROJECT_DIR$/.idea/ECM2434.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/ECM2434.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bytebrigade/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/db.sqlite3" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bytebrigade/home/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/home/models.py" afterDir="false" />
     </list>
-    <list id="564faa13-2048-4d4a-b90c-1b3f74d68ac3" name="Changes by Angelo Palmer" comment="">
-      <change beforePath="$PROJECT_DIR$/bytebrigade/home/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/home/models.py" afterDir="false" />
-    </list>
+    <list id="564faa13-2048-4d4a-b90c-1b3f74d68ac3" name="Changes by Angelo Palmer" comment="" />
     <list id="d3faa1e5-5dc7-4e42-afb5-ae0bdd4504cd" name="Changes by camer" comment="" />
     <list id="10735dad-5d63-4d42-aac0-bad7abfc8820" name="Changes by James" comment="" />
     <list id="14d19a1f-434b-42d5-8ef5-022989c7f8e9" name="Changes by osirr" comment="" />
@@ -52,16 +46,6 @@
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-  </component>
-  <component name="LineStatusTrackerManager">
-    <file path="$PROJECT_DIR$/bytebrigade/home/models.py">
-      <ranges>
-        <range start1="4" end1="4" start2="4" end2="6" changelist="3049aee3-629a-4512-8969-d528f414ba99" />
-        <range start1="42" end1="42" start2="44" end2="45" changelist="564faa13-2048-4d4a-b90c-1b3f74d68ac3" />
-        <range start1="44" end1="45" start2="47" end2="48" changelist="564faa13-2048-4d4a-b90c-1b3f74d68ac3" />
-        <range start1="47" end1="47" start2="50" end2="75" changelist="3049aee3-629a-4512-8969-d528f414ba99" />
-      </ranges>
-    </file>
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -143,7 +127,7 @@
       <workItem from="1676468913901" duration="7457000" />
       <workItem from="1676544833863" duration="2258000" />
       <workItem from="1676557565627" duration="232000" />
-      <workItem from="1677170451596" duration="2100000" />
+      <workItem from="1677170451596" duration="2281000" />
     </task>
     <task id="LOCAL-00001" summary="Checkout">
       <created>1676046271071</created>

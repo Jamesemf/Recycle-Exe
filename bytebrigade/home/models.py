@@ -47,6 +47,7 @@ class Transactions(models.Model):
     bin = models.ForeignKey(BinData, on_delete=models.CASCADE)  # need to assign as foreign key to bin application
     user = models.ForeignKey(User, default=-1, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    likes = models.IntegerField()
 
 
 class Statistics(models.Model):
