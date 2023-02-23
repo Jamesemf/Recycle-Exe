@@ -21,7 +21,7 @@
                 </ul>
                 <div class="d-md-none my-2"><button class="btn btn-light me-2" type="button">Button</button><button class="btn btn-primary" type="button">Button</button></div>
             </div>
-            <div class="d-none d-md-block"><a class="btn btn-light me-2" role="button" href="{% url 'account' %}" style="color: var(--bs-black);background: var(--bs-primary);">Profile</a><a class="btn btn-primary" role="button" href="#" style="background: var(--bs-primary);color: var(--bs-black);">Shop</a></div>
+            <div class="d-none d-md-block"><a class="btn btn-light me-2" role="button" href="#" style="color: var(--bs-black);background: var(--bs-primary);">Profile</a><a class="btn btn-primary" role="button" href="#" style="background: var(--bs-primary);color: var(--bs-black);">Shop</a></div>
         </div>
     </nav>
     <div class="fs-6" style="margin-right: 28px;margin-top: 14px;margin-bottom: 22px;color: var(--bs-secondary);padding-left: 0px;margin-left: 28px;">
@@ -36,12 +36,13 @@
                     </tr>
                 </thead>
                 <tbody>
+                    {% for item in Transaction %}
                     <tr class="text-center">
-                        <td>X</td>
-                        <td>Y</td>
-                        <td>Z</td>
+                        <td>{{ item.time}}</td>
+                        <td><p>{{item.user }} just recycled {{ item.product.barcode}} at {{item.bin.binId }}</p></td>
+                        <td>{{item.likes}}</td>
                     </tr>
-                    <tr></tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div><button class="btn btn-primary" type="button" style="background: var(--bs-primary);margin-top: 5px;color: var(--bs-body-color);">Scan</button>
