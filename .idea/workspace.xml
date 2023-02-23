@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3049aee3-629a-4512-8969-d528f414ba99" name="Changes" comment="Adding variables to profile page and making navbar link to pages">
-      <change beforePath="$PROJECT_DIR$/navbar/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/navbar/index.html" afterDir="false" />
-    </list>
+    <list default="true" id="3049aee3-629a-4512-8969-d528f414ba99" name="Changes" comment="Adding variables to profile page and making navbar link to pages" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -191,7 +189,14 @@
       <option name="project" value="LOCAL" />
       <updated>1677176894385</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Adding variables to profile page and making navbar link to pages">
+      <created>1677177151761</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1677177151761</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
