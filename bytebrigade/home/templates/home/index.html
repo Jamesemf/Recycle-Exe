@@ -36,12 +36,13 @@
                     </tr>
                 </thead>
                 <tbody>
+                    {% for item in Transaction %}
                     <tr class="text-center">
-                        <td>X</td>
-                        <td>Y</td>
-                        <td>Z</td>
+                        <td>{{ item.time}}</td>
+                        <td><p>{{item.user }} just recycled {{ item.product.barcode}} at {{item.bin.binId }}</p></td>
+                        <td>{{item.likes}}</td>
                     </tr>
-                    <tr></tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div><button class="btn btn-primary" type="button" style="background: var(--bs-primary);margin-top: 5px;color: var(--bs-body-color);">Scan</button>
