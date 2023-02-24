@@ -46,6 +46,13 @@
                 </tbody>
             </table>
     </div>
+            <form method = "POST">
+                {% csrf_token %}
+                <input type = "hidden" name = "location_lat" id = "lat" value>
+                <input type = "hidden" name = "location_long" id = "long" value >
+                <input type = "submit"  value = submit style="background: var(--bs-primary);margin-top: 5px;color: var(--bs-body-color);">Scan</input>
+            </form>
+
     <footer class="text-center">
         <div class="container text-muted py-4 py-lg-5">
             <ul class="list-inline">
@@ -69,5 +76,126 @@
     </footer>
     <script src="{% static 'assets/bootstrap/js/bootstrap.min.js' %}"></script>
 </body>
+
+ <script>
+        var x = document.getElementById("demo");
+
+
+        #Hi Angelo, If you feel like finishing the work I have implemented the whole backend I just need you to
+        change the values below from 100 to the respective lat and long that you can calculate in the scrip xxxx
+
+        document.getElementById("lat").value = 100
+        document.getElementById("long").value = 100
+
+
+        function showPosition(position) {
+                return [position.coords.latitude, position.coords.longitude];
+}
+
+
+        function closestBin() {
+            // Get DB data about bins
+            // Go through each bin etc. to find closest bin
+
+            var testBins = [[50.730827200860205, -3.5159728963712626], [50, 7], [50, 3], [50, 7]];
+            var minBinDist = [0, testBins[0], 0]; // index, element, distance
+
+            function getLocation() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(binDistCalc);
+                } else {
+                    x.innerHTML = "Geolocation is not supported by this browser.";
+                }
+            }
+            function binDistCalc(position) {
+                var lat = position.coords.latitude;
+                var long = position.coords.longitude;
+
+                // Loop through test bins array and compare each set of values
+                for (let y = 0; y < testBins.length; y++) {
+                    var binLat = testBins[y][0];
+                    var binLong = testBins[y][1];
+
+                    var distance = calculateDistance(lat, long, binLat, binLong);
+
+                    if (y == 0) {
+                        minBinDist = [];
+                        minBinDist = [y, testBins[y], distance];
+                    } else {
+                        if (distance < minBinDist[2]) {
+                            minBinDist = [];
+                            minBinDist = [y, testBins[y], distance];
+                        }
+                    }
+                }
+                return(minBinDist);
+            }
+            getLocation();
+            return(minBinDist)
+        }
+
+        function binDistance(binLat, binLong) {
+            // Get DB data about bins
+            // Go through each bin etc. until found (from QR code)
+
+            //var binLat = 50.730827200860205;
+            //var binLong = -3.5159728963712626;
+            var distance;
+            function getLocation() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(binDistCalc);
+                } else {
+                    x.innerHTML = "Geolocation is not supported by this browser.";
+                }
+            }
+            function binDistCalc(position) {
+                var lat = position.coords.latitude;
+                var long = position.coords.longitude;
+
+                //calculate the distance between user and a given location (bin)
+                distance = calculateDistance(lat, long, binLat, binLong);
+
+                // checks the tolerance
+                return(distance);
+            }
+            getLocation();
+            return(tolerance(distance));
+        }
+
+
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            var R = 6371; // Radius of the earth in km
+            var dLat = deg2rad(lat2 - lat1);  // deg2rad below
+            var dLon = deg2rad(lon2 - lon1);
+            var a =
+                Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2)
+                ;
+            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            var d = 1000 * R * c; // Distance in m
+
+            return d;
+        }
+        function deg2rad(deg) {
+            return deg * (Math.PI / 180);
+        }
+        function tolerance(distance) {
+            if (distance < 25) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        function withinDistance(data){
+            var closestBinResult = closestBin();
+            var binLat = closestBinResult[1][0];
+            var binLong = closestBinResult[1][1];
+            console.log(binDistance(binLat,binLong));
+        }
+
+ </script>
+
 
 </html>
