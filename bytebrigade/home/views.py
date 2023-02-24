@@ -16,4 +16,10 @@ def getTransactions(request):
 
 
 def getLeaderboard(request):
-    return render(request, 'home/Leaderboard.html')
+
+    statData = Statistics.objects.all().order_by('-points')
+    data_dict = {
+        'Statistics': statData,
+    }
+
+    return render(request, 'home/Leaderboard.html', data_dict)
