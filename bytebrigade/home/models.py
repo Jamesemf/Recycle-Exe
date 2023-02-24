@@ -36,12 +36,12 @@ class Product(models.Model):
     barcode = models.CharField(max_length=30, primary_key=True)
     name = models.CharField(max_length=30)
     details = models.CharField(max_length=200)
-    image = models.ImageField(upload_to='products')
+    image = models.ImageField(upload_to='statics/figures/products')
     type = models.CharField(max_length=30)
     value = models.IntegerField()
 
 
-class Transactions(models.Model):
+class Transaction(models.Model):
     transaction_id = models.AutoField(primary_key=True)
     time = models.DateTimeField(auto_now_add=True)
     bin = models.ForeignKey(BinData, on_delete=models.CASCADE)  # need to assign as foreign key to bin application
@@ -50,7 +50,7 @@ class Transactions(models.Model):
     likes = models.IntegerField(default=0)
 
 
-class Statistics(models.Model):
+class Statistic(models.Model):
     user = models.ForeignKey(User, default=-1, on_delete=models.CASCADE)
     points = models.IntegerField()
     carbon = models.DecimalField(max_digits=10, decimal_places=5)
@@ -61,15 +61,15 @@ class Statistics(models.Model):
     loveRecycling = models.ForeignKey(Product, related_name="loveRecycle", default=-1, on_delete=models.CASCADE)
 
 
-class Goals(models.Model):
+class Goal(models.Model):
     goalID = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=200)
     description = models.CharField(max_length=200)
     target = models.DecimalField(max_digits=10, decimal_places=5)
 
 
-class UserGoals(models.Model):
+class UserGoal(models.Model):
     userGoalID = models.IntegerField(primary_key=True)
     user = models.ForeignKey(User, default=-1, on_delete=models.CASCADE)
-    goal = models.ForeignKey(Goals, default=-1, on_delete=models.CASCADE)
+    goal = models.ForeignKey(Goal, default=-1, on_delete=models.CASCADE)
     value = models.DecimalField(max_digits=10, decimal_places=5)

@@ -36,12 +36,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="text-center">
-                        <td>X</td>
-                        <td>Y</td>
-                        <td>Z</td>
-                    </tr>
-                    <tr></tr>
+                    {% for item in Statistics %}
+                        <tr class="text-center">
+                            <td>{{forloop.counter}}</td>
+                            <td><p>{{item.user}}</p></td>
+                            <td>{{item.points}}</td>
+                        </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>
