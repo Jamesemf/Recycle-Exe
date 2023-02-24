@@ -21,8 +21,17 @@
                 </ul>
                 <div class="d-md-none my-2"><button class="btn btn-light me-2" type="button">Button</button><button class="btn btn-primary" type="button">Button</button></div>
             </div>
-            <div class="d-none d-md-block"><a class="btn btn-light me-2" role="button" href="{% url 'account' %}" style="color: var(--bs-black);background: var(--bs-primary);">Profile</a><a class="btn btn-primary" role="button" href="#" style="background: var(--bs-primary);color: var(--bs-black);">Shop</a></div>
-        </div>
+            <div class="d-inline-flex"><div class="dropdown">
+  <a class="btn btn-secondary dropdown-toggle" href="{% url 'account' %}" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background: var(--bs-primary);color: var(--bs-black);">
+    Profile
+  </a>
+<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+    <a class="dropdown-item" href="#">Log-Out</a>
+    <a class="dropdown-item" href="#">Another action</a>
+    <a class="dropdown-item" href="#">Something else here</a>
+  </div>
+</div>
+<a class="btn btn-primary" role="button" href="#" style="background: var(--bs-primary);color: var(--bs-black);margin-left: 26px;">Shop</a></div></div>
     </nav>
     <div class="fs-6" style="margin-right: 28px;margin-top: 14px;margin-bottom: 22px;color: var(--bs-secondary);padding-left: 0px;margin-left: 28px;">
         <h1 style="background: #e1edbd;font-size: 30px;padding-bottom: 5px;color: var(--bs-black);">Daily Feed</h1>
