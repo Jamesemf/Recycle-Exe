@@ -6,23 +6,24 @@
   <component name="ChangeListManager">
     <list default="true" id="3049aee3-629a-4512-8969-d528f414ba99" name="Changes" comment="Trying to fetch branch">
       <changelist_data name="sccthomas" email="95318179+sccthomas@users.noreply.github.com&gt;, cameron hallett,oscar norris &lt;oscarhfnorris@gmail.com&gt; ,howardcui-super &lt;78500597+howardcui-super@users.noreply.github.com&gt;, james ford &lt;57077523+jamesemf@users.noreply.github.com&gt;, angelopalmer &lt;95857532+angelopalmer@users.noreply.github.com" />
+      <change afterPath="$PROJECT_DIR$/bytebrigade/statics/figures/products/640x640.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bytebrigade/account/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/account/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bytebrigade/account/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/account/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bytebrigade/account/templates/registration/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/account/templates/registration/login.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bytebrigade/account/templates/registration/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/account/templates/registration/register.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bytebrigade/account/templates/account/Profile_page.html" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/account/templates/account/Profile_page.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bytebrigade/account/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/account/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bytebrigade/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/db.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bytebrigade/home/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/home/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bytebrigade/home/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/home/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bytebrigade/home/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/home/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bytebrigade/products/DSC_6267.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bytebrigade/products/Line.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bytebrigade/home/templates/home/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/home/templates/home/index.html" afterDir="false" />
     </list>
     <list id="564faa13-2048-4d4a-b90c-1b3f74d68ac3" name="Changes by Angelo Palmer" comment="" />
     <list id="d3faa1e5-5dc7-4e42-afb5-ae0bdd4504cd" name="Changes by camer" comment="" />
-    <list id="a2effc7b-5b04-401a-b038-c06b9d2ea579" name="Changes by HAOYA" comment="" />
-    <list id="10735dad-5d63-4d42-aac0-bad7abfc8820" name="Changes by James" comment="" />
+    <list id="a2effc7b-5b04-401a-b038-c06b9d2ea579" name="Changes by HAOYA" comment="">
+      <change beforePath="$PROJECT_DIR$/bytebrigade/account/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/account/views.py" afterDir="false" />
+    </list>
+    <list id="10735dad-5d63-4d42-aac0-bad7abfc8820" name="Changes by James" comment="">
+      <change beforePath="$PROJECT_DIR$/bytebrigade/account/templates/account/Profile_page.html" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/account/templates/account/Profile_page.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bytebrigade/account/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/account/views.py" afterDir="false" />
+    </list>
     <list id="14d19a1f-434b-42d5-8ef5-022989c7f8e9" name="Changes by osirr" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,10 +55,34 @@
     </option>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="main" />
+        <entry key="$PROJECT_DIR$" value="Stats_and_Goals" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="LineStatusTrackerManager">
+    <file path="$PROJECT_DIR$/bytebrigade/account/templates/account/Profile_page.html">
+      <ranges>
+        <range start1="32" end1="33" start2="32" end2="33" changelist="10735dad-5d63-4d42-aac0-bad7abfc8820" />
+        <range start1="41" end1="42" start2="41" end2="42" changelist="3049aee3-629a-4512-8969-d528f414ba99" />
+        <range start1="56" end1="57" start2="56" end2="57" changelist="3049aee3-629a-4512-8969-d528f414ba99" />
+        <range start1="67" end1="68" start2="67" end2="68" changelist="3049aee3-629a-4512-8969-d528f414ba99" />
+        <range start1="78" end1="79" start2="78" end2="79" changelist="3049aee3-629a-4512-8969-d528f414ba99" />
+        <range start1="90" end1="91" start2="90" end2="91" changelist="3049aee3-629a-4512-8969-d528f414ba99" />
+        <range start1="122" end1="123" start2="122" end2="123" changelist="3049aee3-629a-4512-8969-d528f414ba99" />
+        <range start1="137" end1="138" start2="137" end2="138" changelist="3049aee3-629a-4512-8969-d528f414ba99" />
+        <range start1="143" end1="144" start2="143" end2="144" changelist="3049aee3-629a-4512-8969-d528f414ba99" />
+        <range start1="149" end1="150" start2="149" end2="150" changelist="3049aee3-629a-4512-8969-d528f414ba99" />
+      </ranges>
+    </file>
+    <file path="$PROJECT_DIR$/bytebrigade/account/views.py">
+      <ranges>
+        <range start1="0" end1="1" start2="0" end2="1" changelist="3049aee3-629a-4512-8969-d528f414ba99" />
+        <range start1="4" end1="4" start2="4" end2="5" changelist="10735dad-5d63-4d42-aac0-bad7abfc8820" />
+        <range start1="7" end1="7" start2="8" end2="10" changelist="a2effc7b-5b04-401a-b038-c06b9d2ea579" />
+        <range start1="22" end1="24" start2="25" end2="33" changelist="10735dad-5d63-4d42-aac0-bad7abfc8820" />
+      </ranges>
+    </file>
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />

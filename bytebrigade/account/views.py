@@ -1,10 +1,13 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login
 from .forms import RegistrationForm
+from home.models import Statistic
 
 
 def register(request):
+    if request.user.is_authenticated:
+        return redirect('')
     if request.method == 'POST':
         user_form = RegistrationForm(request.POST)
         if user_form.is_valid():
@@ -20,8 +23,14 @@ def register(request):
 
 
 def account(request):
-    return render(request, 'account/Profile_page.html')
-
+    if request.user.is_authenticated:
+        data = Statistic.objects.get(user=request.user)
+        data_dict = {
+            'Profile': data,
+        }
+        return render(request, 'account/Profile_page.html', data_dict)
+    else:
+        return redirect('login')
 
 def password(request):
     return render(request, 'account/password.html')
