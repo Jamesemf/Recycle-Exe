@@ -4,15 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3049aee3-629a-4512-8969-d528f414ba99" name="Changes" comment="Trying to fetch branch">
-      <changelist_data name="sccthomas" email="95318179+sccthomas@users.noreply.github.com&gt;, cameron hallett,oscar norris &lt;oscarhfnorris@gmail.com&gt; ,howardcui-super &lt;78500597+howardcui-super@users.noreply.github.com&gt;, james ford &lt;57077523+jamesemf@users.noreply.github.com&gt;, angelopalmer &lt;95857532+angelopalmer@users.noreply.github.com" />
+    <list default="true" id="3049aee3-629a-4512-8969-d528f414ba99" name="Changes" comment="Implemented location check on scanner page, and directions to the closest bin using google.&#10;&#10;- James and Angelo">
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_24_02_2023__11_17__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_24_02_2023__11_17__Changes_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bytebrigade/barcodereader/templates/BCscanner/Scanner_page.html" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/barcodereader/templates/BCscanner/Scanner_page.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bytebrigade/barcodereader/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/barcodereader/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bytebrigade/home/templates/home/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/home/templates/home/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bytebrigade/home/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/home/views.py" afterDir="false" />
     </list>
     <list id="564faa13-2048-4d4a-b90c-1b3f74d68ac3" name="Changes by Angelo Palmer" comment="" />
     <list id="d3faa1e5-5dc7-4e42-afb5-ae0bdd4504cd" name="Changes by camer" comment="" />
     <list id="a2effc7b-5b04-401a-b038-c06b9d2ea579" name="Changes by HAOYA" comment="" />
     <list id="10735dad-5d63-4d42-aac0-bad7abfc8820" name="Changes by James" comment="" />
-    <list id="14d19a1f-434b-42d5-8ef5-022989c7f8e9" name="Changes by osirr" comment="" />
-    <list id="83b981c5-231e-4ed9-af43-5c240b415d5b" name="samuelthomas 进行的变更" comment="" />
+    <list id="0058b795-1460-4224-9009-bf9a7d308ab2" name="Changes by osirr" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -26,8 +30,18 @@
       <list>
         <option value="Python Script" />
         <option value="HTML File" />
-        <option value="JavaScript File" />
       </list>
+    </option>
+  </component>
+  <component name="FlaskConsoleOptions" custom-start-script="import sys&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo&#10;locals().update(ScriptInfo(create_app=None).load_app().make_shell_context())&#10;print(&quot;Python %s on %s\nApp: %s [%s]\nInstance: %s&quot; % (sys.version, sys.platform, app.import_name, app.env, app.instance_path))">
+    <envs>
+      <env key="FLASK_APP" value="app" />
+    </envs>
+    <option name="myCustomStartScript" value="import sys&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo&#10;locals().update(ScriptInfo(create_app=None).load_app().make_shell_context())&#10;print(&quot;Python %s on %s\nApp: %s [%s]\nInstance: %s&quot; % (sys.version, sys.platform, app.import_name, app.env, app.instance_path))" />
+    <option name="myEnvs">
+      <map>
+        <entry key="FLASK_APP" value="app" />
+      </map>
     </option>
   </component>
   <component name="Git.Merge.Settings">
@@ -36,6 +50,8 @@
   <component name="Git.Settings">
     <option name="PREVIOUS_COMMIT_AUTHORS">
       <list>
+        <option value="James Ford &lt;57077523+jamesemf@users.noreply.github.com&gt; angelopalmer &lt;95857532+angelopalmer@users.noreply.github.com&gt;" />
+        <option value="AngeloPalmer &lt;95857532+angelopalmer@users.noreply.github.com&gt;" />
         <option value="sccthomas &lt;95318179+sccthomas@users.noreply.github.com&gt;, cameron hallett,oscar norris &lt;oscarhfnorris@gmail.com&gt; ,howardcui-super &lt;78500597+howardcui-super@users.noreply.github.com&gt;, james ford &lt;57077523+jamesemf@users.noreply.github.com&gt;, angelopalmer &lt;95857532+angelopalmer@users.noreply.github.com&gt;" />
         <option value="Cameron Hallett, sccthomas &lt;95318179+sccthomas@users.noreply.github.com&gt; ,oscar norris &lt;oscarhfnorris@gmail.com&gt; ,howardcui-super &lt;78500597+howardcui-super@users.noreply.github.com&gt;, james ford &lt;57077523+jamesemf@users.noreply.github.com&gt;, angelopalmer &lt;95857532+angelopalmer@users.noreply.github.com&gt;" />
         <option value="Cam sccthomas &lt;95318179+sccthomas@users.noreply.github.com&gt; oscar norris &lt;oscarhfnorris@gmail.com&gt; howardcui-super &lt;78500597+howardcui-super@users.noreply.github.com&gt; james ford &lt;57077523+jamesemf@users.noreply.github.com&gt; angelopalmer &lt;95857532+angelopalmer@users.noreply.github.com&gt;" />
@@ -44,7 +60,7 @@
     </option>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="Stats_and_Goals" />
+        <entry key="$PROJECT_DIR$" value="main" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -79,7 +95,7 @@
     &quot;node.js.selected.package.stylelint&quot;: &quot;&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.django.DjangoModulesConfigurable&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;org.jetbrains.plugins.github.ui.GithubSettingsConfigurable&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
@@ -88,26 +104,26 @@
       <recent name="$PROJECT_DIR$/bytebrigade/home/static" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\HAOYA\OneDrive\文档\GitHub\J-ECM2434\ECM2434\bytebrigade\statics\style\js" />
-      <recent name="C:\Users\HAOYA\OneDrive\文档\GitHub\J-ECM2434\ECM2434\bytebrigade\account\templates\registration" />
-      <recent name="C:\Users\HAOYA\OneDrive\文档\GitHub\J-ECM2434\ECM2434\bytebrigade\account\templates\account" />
-      <recent name="C:\Users\HAOYA\OneDrive\文档\GitHub\J-ECM2434\ECM2434\bytebrigade\barcodereader\templates\BCscanner" />
-      <recent name="C:\Users\HAOYA\OneDrive\文档\GitHub\J-ECM2434\ECM2434\bytebrigade\home\templates\home" />
+      <recent name="D:\ECM2434_main4\bytebrigade\barcodereader\static" />
+      <recent name="D:\ECM2434_main4\bytebrigade\barcodereader\templates\BCscanner" />
+      <recent name="D:\ECM2434_main4\bytebrigade\barcodereader" />
+      <recent name="D:\ECM2434_main4\bytebrigade\staticfiles\images" />
+      <recent name="D:\ECM2434_main4\bytebrigade\barcodereader\static\images" />
     </key>
   </component>
   <component name="RunManager">
     <configuration name="Unnamed" type="Python.DjangoServer" factoryName="Django server" nameIsGenerated="true">
-      <module name="ECM2434" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="" />
+      <option name="SDK_HOME" value="$PROJECT_DIR$/venv/bin/python" />
       <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="true" />
+      <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="" />
       <option name="launchJavascriptDebuger" value="false" />
       <option name="port" value="8000" />
       <option name="host" value="" />
@@ -138,8 +154,9 @@
       <workItem from="1677172050315" duration="735000" />
       <workItem from="1677173842066" duration="4731000" />
       <workItem from="1677247372394" duration="7553000" />
-      <workItem from="1677392562622" duration="5131000" />
-      <workItem from="1677415985049" duration="9966000" />
+      <workItem from="1677279107333" duration="107000" />
+      <workItem from="1677423311248" duration="140000" />
+      <workItem from="1677423768687" duration="9385000" />
     </task>
     <task id="LOCAL-00001" summary="Checkout">
       <created>1676046271071</created>
@@ -176,7 +193,28 @@
       <option name="project" value="LOCAL" />
       <updated>1676468893254</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="navbar html template made">
+      <created>1677260883493</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1677260883493</updated>
+    </task>
+    <task id="LOCAL-00007" summary="navbar html template made">
+      <created>1677423364052</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1677423364052</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Implemented location check on scanner page, and directions to the closest bin using google.&#10;&#10;- James and Angelo">
+      <created>1677432984205</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1677432984205</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -199,6 +237,8 @@
     <MESSAGE value="urls index made" />
     <MESSAGE value="James and Sam" />
     <MESSAGE value="Co-authored-by: Samuel Thomas&#10;Co-authored-by: Angelo Palmer&#10;Co-authored-by: James Ford&#10;Co-authored-by: Oscar Norris&#10;Co-authored-by: Cameron Hallett&#10;Co-authored-by: Howard Cui" />
-    <option name="LAST_COMMIT_MESSAGE" value="Co-authored-by: Samuel Thomas&#10;Co-authored-by: Angelo Palmer&#10;Co-authored-by: James Ford&#10;Co-authored-by: Oscar Norris&#10;Co-authored-by: Cameron Hallett&#10;Co-authored-by: Howard Cui" />
+    <MESSAGE value="navbar html template made" />
+    <MESSAGE value="Implemented location check on scanner page, and directions to the closest bin using google.&#10;&#10;- James and Angelo" />
+    <option name="LAST_COMMIT_MESSAGE" value="Implemented location check on scanner page, and directions to the closest bin using google.&#10;&#10;- James and Angelo" />
   </component>
 </project>
