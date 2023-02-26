@@ -24,8 +24,26 @@
                         d="M4 11H2v3h2v-3zm5-4H7v7h2V7zm5-5v12h-2V2h2zm-2-1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1h-2zM6 7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7zm-5 4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-3z">
                     </path>
             </svg>
-        </span><span class="text-center" style="color: var(--bs-black);">ByteBrigade</span></a><button
-            data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-6"
+        </span><span class="text-center" style="color: var(--bs-black);">ByteBrigade</span></a>
+        <div class="d-inline-flex">
+            {% if request.user.is_authenticated %}
+                <div class="dropdown" style="border-radius: 8px;background: var(--bs-primary);padding: 8px;"><a class="dropdown-toggle text-center" aria-expanded="false" data-bs-toggle="dropdown" href="#" style="border-radius: 8px;color: var(--bs-black);background: var(--bs-primary); text-decoration: none;">Account</a>
+                    <div class="dropdown-menu">
+                        <p class="dropdown-item" >Hello {{ request.user.username }}</p>
+                        <a class="dropdown-item" href="{% url 'account' %}">Profile</a>
+                        <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+                    </div>
+                </div>
+            {% else %}
+                <div class="dropdown" style="border-radius: 8px;background: var(--bs-primary);padding: 8px;"><a class="dropdown-toggle text-center" aria-expanded="false" data-bs-toggle="dropdown" href="#" style="border-radius: 8px;color: var(--bs-black);background: var(--bs-primary); text-decoration: none;">Login</a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="{% url 'login' %}">Log-In</a>
+                        <a class="dropdown-item" href="{% url 'registration' %}">Sign-Up</a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        <button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-6"
             style="color: var(--bs-black);background: var(--bs-primary);"><span class="visually-hidden">Toggle
             navigation</span><span class="navbar-toggler-icon"></span></button>
         <div class="collapse navbar-collapse flex-grow-0 order-md-first" id="navcol-6">
@@ -54,24 +72,6 @@
                     </div>
                 </li>
             </ul>
-        </div>
-        <div class="d-inline-flex">
-            {% if request.user.is_authenticated %}
-                <div class="dropdown" style="border-radius: 8px;background: var(--bs-primary);padding: 8px;"><a class="dropdown-toggle text-center" aria-expanded="false" data-bs-toggle="dropdown" href="#" style="border-radius: 8px;color: var(--bs-black);background: var(--bs-primary); text-decoration: none;">Account</a>
-                    <div class="dropdown-menu">
-                        <p class="dropdown-item" >Hello {{ request.user.username }}</p>
-                        <a class="dropdown-item" href="{% url 'account' %}">Profile</a>
-                        <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
-                    </div>
-                </div>
-            {% else %}
-                <div class="dropdown" style="border-radius: 8px;background: var(--bs-primary);padding: 8px;"><a class="dropdown-toggle text-center" aria-expanded="false" data-bs-toggle="dropdown" href="#" style="border-radius: 8px;color: var(--bs-black);background: var(--bs-primary); text-decoration: none;">Login</a>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" href="{% url 'login' %}">Log-In</a>
-                        <a class="dropdown-item" href="{% url 'registration' %}">Sign-Up</a>
-                    </div>
-                </div>
-            {% endif %}
         </div>
     </nav>
 
