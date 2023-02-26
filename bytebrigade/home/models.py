@@ -51,14 +51,14 @@ class Transaction(models.Model):
 
 
 class Statistic(models.Model):
-    user = models.ForeignKey(User, default=-1, on_delete=models.CASCADE)
-    points = models.IntegerField()
-    carbon = models.DecimalField(max_digits=10, decimal_places=5)
-    curweek = models.DecimalField(max_digits=10, decimal_places=5)
-    curmonth = models.DecimalField(max_digits=10, decimal_places=5)
-    curyear = models.DecimalField(max_digits=10, decimal_places=5)
-    lastRecycle = models.ForeignKey(Product, related_name="lastRecycle", default=-1, on_delete=models.CASCADE)
-    loveRecycling = models.ForeignKey(Product, related_name="loveRecycle", default=-1, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    points = models.IntegerField(default=0)
+    carbon = models.DecimalField(default=0, max_digits=10, decimal_places=5)
+    curweek = models.DecimalField(default=0, max_digits=10, decimal_places=5)
+    curmonth = models.DecimalField(default=0, max_digits=10, decimal_places=5)
+    curyear = models.DecimalField(default=0, max_digits=10, decimal_places=5)
+    lastRecycle = models.ForeignKey(Product, related_name="lastRecycle", blank=True, null=True , on_delete=models.CASCADE)
+    loveRecycling = models.ForeignKey(Product, related_name="loveRecycle", blank=True, null=True , on_delete=models.CASCADE)
 
 
 class Goal(models.Model):
