@@ -5,7 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3049aee3-629a-4512-8969-d528f414ba99" name="Changes" comment="navbar html template made">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bytebrigade/statics/templates/navbar.html" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/statics/templates/navbar.html" afterDir="false" />
     </list>
     <list id="564faa13-2048-4d4a-b90c-1b3f74d68ac3" name="Changes by Angelo Palmer" comment="" />
@@ -138,7 +137,7 @@
       <workItem from="1677173842066" duration="4731000" />
       <workItem from="1677247372394" duration="7553000" />
       <workItem from="1677279107333" duration="107000" />
-      <workItem from="1677423311248" duration="46000" />
+      <workItem from="1677423311248" duration="140000" />
     </task>
     <task id="LOCAL-00001" summary="Checkout">
       <created>1676046271071</created>
@@ -182,7 +181,14 @@
       <option name="project" value="LOCAL" />
       <updated>1677260883493</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="navbar html template made">
+      <created>1677423364052</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1677423364052</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
