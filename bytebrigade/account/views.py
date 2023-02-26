@@ -7,7 +7,7 @@ from home.models import Statistic
 
 def register(request):
     if request.user.is_authenticated:
-        return redirect('')
+        return redirect('index')
     if request.method == 'POST':
         user_form = RegistrationForm(request.POST)
         if user_form.is_valid():
@@ -16,6 +16,8 @@ def register(request):
             # Set password
             new_user.set_password(user_form.cleaned_data['password'])
             new_user.save()
+            new_statistic = Statistic.objects.create(user=new_user)
+            new_statistic.save()
             return render(request, 'registration/register_done.html', {'new_user': new_user})
     else:
         user_form = RegistrationForm()
