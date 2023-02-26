@@ -73,13 +73,7 @@
                 </tbody>
             </table>
         </div>
-        <form method="POST">
-            {% csrf_token %}
-            <input type="hidden" name="location_lat" id="lat" value>
-            <input type="hidden" name="location_long" id="long" value>
-            <input type="submit" value=submit
-                style="background: var(--bs-primary);margin-top: 5px;color: var(--bs-body-color);">Scan</input>
-        </form>
+     <div class="d-none d-md-block"><a class="btn btn-light me-2" role="button" href="{% url 'barcode_lookup' %}" style="color: var(--bs-black);background: var(--bs-primary);">Scan Item ?</a>
 
         <footer class="text-center">
             <div class="container text-muted py-4 py-lg-5">
@@ -115,9 +109,6 @@
 </body>
 
 <script>
-    var x = document.getElementById("demo");
-
-
     // #Hi Angelo, If you feel like finishing the work I have implemented the whole backend I just need you to
     // change the values below from 100 to the respective lat and long that you can calculate in the scrip xxxx
 

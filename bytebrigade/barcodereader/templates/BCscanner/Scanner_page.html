@@ -29,7 +29,21 @@
     </div>
     <div class="container">
         <div class="row">
-            <div class="col-md-6 col-lg-7" style="padding-right: 13px;margin-right: -1px;"></div>
+            <form method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="location_lat" id="lat" value>
+                    <input type="hidden" name="location_long" id="long" value>
+                    <input type="submit" value=Begin style="background: var(--bs-primary);margin-top: 5px;color: var(--bs-body-color);"></input>
+                </form>
+            <div class="col-md-6 col-lg-7" style="padding-right: 13px;margin-right: -1px;">
+              {% if nearBin %}
+                <p>SCANNER</p>
+              {% endif %}
+                {% if not nearBin %}
+                    {% load static %} <img src="../../static/NoBin.png" style = "height:24%; width:auto;" />
+                {% endif %}
+            </div>
+
             <div class="col">
                 <div class="card"><img class="card-img-top w-100 d-block" width="375" height="80">
                     <div class="card-body">
@@ -72,5 +86,27 @@
     </footer>
     <script src="{% static 'assets/bootstrap/js/bootstrap.min.js' %}"></script>
 </body>
+<script>
 
+    function currentLocationInsert() {
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(binDistCalc);
+            } else {
+                x.innerHTML = "Geolocation is not supported by this browser.";
+            }
+        }
+
+        function binDistCalc(position) {
+            var lat = position.coords.latitude;
+            var long = position.coords.longitude;
+            document.getElementById("lat").value = lat;
+            document.getElementById("long").value = long;
+        }
+
+        getLocation();
+    }
+
+    currentLocationInsert();
+</script>
 </html>
