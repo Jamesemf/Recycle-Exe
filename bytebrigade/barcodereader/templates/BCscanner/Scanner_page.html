@@ -7,14 +7,26 @@
     <div class="fs-6" style="margin-right: 28px;margin-top: 14px;margin-bottom: 22px;color: var(--bs-secondary);padding-left: 0px;margin-left: 28px;">
         <h1 style="background: #e1edbd;font-size: 30px;padding-bottom: 5px;color: var(--bs-black);">Scanner</h1>
     </div>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6 col-lg-7" style="padding-right: 13px;margin-right: -1px;"></div>
-            <div class="col">
-                <div class="card">    <div style="width: 350px" id="reader"></div>
-                    <div id="qr-reader" style="width:350px"></div>
+    <!-- -->
+    <!-- -->
+    <!-- -->
+    <div style="display: flex; margin: 0 auto;"> <!-- class="container">-->
+
+        <!-- <div class="row"> -->
+        <div style="width: 100%; padding-left: 10vw; padding-right: 10vw;">
+
+            <!-- <div class="col-md-6 col-lg-7" style="padding-right: 13px;margin-right: -1px;"></div> -->
+
+            <div style="width: 10vw;"> <!-- style="width:350px;">-->
+
+                <div style="width: 80vw; margin: 0 auto; border-style: none;">
+                    <div id="qr-reader" style="width: 100%; border: 1px solid silver; position: relative; padding: 0px;"><div style="text-align: left; margin: 0px;"><div style="position: absolute; top: 10px; right: 10px; z-index: 2; display: none; padding: 5pt; border: 1px solid rgb(23, 23, 23); font-size: 10pt; background: rgba(0, 0, 0, 0.69); border-radius: 5px; text-align: center; font-weight: 400; color: white;">Powered by <a href="https://scanapp.org/" target="new" style="color: white;">ScanApp</a><br><br><a href="https://github.com/mebjas/html5-qrcode/issues" target="new" style="color: white;">Report issues</a></div><img alt="Info icon" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NjAgNDYwIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA0NjAgNDYwIiB4bWw6c3BhY2U9InByZXNlcnZlIj48cGF0aCBkPSJNMjMwIDBDMTAyLjk3NSAwIDAgMTAyLjk3NSAwIDIzMHMxMDIuOTc1IDIzMCAyMzAgMjMwIDIzMC0xMDIuOTc0IDIzMC0yMzBTMzU3LjAyNSAwIDIzMCAwem0zOC4zMzMgMzc3LjM2YzAgOC42NzYtNy4wMzQgMTUuNzEtMTUuNzEgMTUuNzFoLTQzLjEwMWMtOC42NzYgMC0xNS43MS03LjAzNC0xNS43MS0xNS43MVYyMDIuNDc3YzAtOC42NzYgNy4wMzMtMTUuNzEgMTUuNzEtMTUuNzFoNDMuMTAxYzguNjc2IDAgMTUuNzEgNy4wMzMgMTUuNzEgMTUuNzFWMzc3LjM2ek0yMzAgMTU3Yy0yMS41MzkgMC0zOS0xNy40NjEtMzktMzlzMTcuNDYxLTM5IDM5LTM5IDM5IDE3LjQ2MSAzOSAzOS0xNy40NjEgMzktMzkgMzl6Ii8+PC9zdmc+" style="position: absolute; top: 4px; right: 4px; opacity: 0.6; cursor: pointer; z-index: 2; width: 16px; height: 16px;"><div id="qr-reader__header_message" style="display: none; text-align: center; font-size: 14px; padding: 2px 10px; margin: 4px; border-top: 1px solid rgb(246, 246, 246); background: rgba(0, 0, 0, 0); color: rgb(17, 17, 17);">Requesting camera permissions...</div></div><div id="qr-reader__scan_region" style="width: 100%; min-height: 100px; text-align: center; position: relative;"><video muted="true" playsinline="" style="width: 1578px; display: block;"></video><canvas id="qr-canvas" width="250" height="250" style="width: 250px; height: 250px; display: none;"></canvas><div id="qr-shaded-region" style="position: absolute; border-width: 467px 664px; border-style: solid; border-color: rgba(0, 0, 0, 0.48); box-sizing: border-box; inset: 0px;"><div style="position: absolute; background-color: rgb(255, 255, 255); width: 40px; height: 5px; top: -5px; left: 0px;"></div><div style="position: absolute; background-color: rgb(255, 255, 255); width: 40px; height: 5px; top: -5px; right: 0px;"></div><div style="position: absolute; background-color: rgb(255, 255, 255); width: 40px; height: 5px; bottom: -5px; left: 0px;"></div><div style="position: absolute; background-color: rgb(255, 255, 255); width: 40px; height: 5px; bottom: -5px; right: 0px;"></div><div style="position: absolute; background-color: rgb(255, 255, 255); width: 5px; height: 45px; top: -5px; left: -5px;"></div><div style="position: absolute; background-color: rgb(255, 255, 255); width: 5px; height: 45px; bottom: -5px; left: -5px;"></div><div style="position: absolute; background-color: rgb(255, 255, 255); width: 5px; height: 45px; top: -5px; right: -5px;"></div><div style="position: absolute; background-color: rgb(255, 255, 255); width: 5px; height: 45px; bottom: -5px; right: -5px;"></div></div><div style="display: none; position: absolute; top: 0px; z-index: 1; background: yellow; text-align: center; width: 100%;">Scanner paused</div></div><div id="qr-reader__dashboard" style="width: 100%;"><div id="qr-reader__dashboard_section" style="width: 100%; padding: 10px 0px; text-align: left;"><div><div id="qr-reader__dashboard_section_csr" style="display: block; text-align: center;"><div style="display: none; padding: 5px 10px; text-align: center;"><input id="html5-qrcode-input-range-zoom" class="html5-qrcode-element" type="range" min="1" max="5" step="0.1" style="display: inline-block; width: 50%; height: 5px; background: rgb(211, 211, 211); outline: none; opacity: 0.7;"><span style="margin-right: 10px;">1x zoom</span></div><span style="margin-right: 10px; display: none;"><select id="html5-qrcode-select-camera" class="html5-qrcode-element" disabled=""><option value="f1628d8272fe5895ba6e563c873285bdda3d4f8fa673a08f762550f6bf234849">HD Camera (05c8:03f1)</option></select></span><span><button id="html5-qrcode-button-camera-start" class="html5-qrcode-element" type="button" style="opacity: 1; display: none;">Start Scanning</button><button id="html5-qrcode-button-camera-stop" class="html5-qrcode-element" type="button" style="display: inline-block;">Stop Scanning</button></span></div><div style="text-align: center; margin: auto auto 10px; width: 80%; max-width: 600px; border: 6px dashed rgb(235, 235, 235); padding: 10px; display: none;"><label for="html5-qrcode-private-filescan-input" style="display: inline-block;"><button id="html5-qrcode-button-file-selection" class="html5-qrcode-element" type="button">Choose Image - No image choosen</button><input id="html5-qrcode-private-filescan-input" class="html5-qrcode-element" type="file" accept="image/*" style="display: none;"></label><div style="font-weight: 400;">Or drop an image to scan</div></div></div><div style="text-align: center;"><a id="html5-qrcode-anchor-scan-type-change" class="html5-qrcode-element" style="text-decoration: underline; display: none;">Scan an Image File</a></div></div></div></div>
                     <div id="qr-reader-results"></div>
-                    <img class="card-img-top w-100 d-block" width="375" height="80">
+                </div>
+
+                <div class="card" style="width: 80vw; display: flex; margin: 0 auto;">
+
+
                     <div class="card-body">
                         <h4 class="card-title">{Product_name}</h4>
                         <p class="card-text"></p>
@@ -24,13 +36,21 @@
                             <li>Material : {}</li>
                         </ul><button class="btn btn-primary border rounded" type="button">Find Out More</button>
                     </div>
+
                 </div>
+
             </div>
-            <div class="col-4 col-md-6">
+
+            <!-- <div class="col-4 col-md-6">
                 <div class="card"></div>
-            </div>
+            </div> -->
         </div>
+
+
     </div>
+    <!-- -->
+        <!-- -->
+        <!-- -->
     <script src="{% static 'BCscanner/html5-qrcode.min.js' %}"></script>
     <script>
         function docReady(fn) {
