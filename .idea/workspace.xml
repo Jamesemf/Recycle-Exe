@@ -6,11 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="3049aee3-629a-4512-8969-d528f414ba99" name="Changes" comment="Implemented location check on scanner page, and directions to the closest bin using google.&#10;&#10;- James and Angelo">
       <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_24_02_2023__11_17__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_24_02_2023__11_17__Changes_.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bytebrigade/barcodereader/templates/BCscanner/Scanner_page.html" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/barcodereader/templates/BCscanner/Scanner_page.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bytebrigade/barcodereader/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/barcodereader/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bytebrigade/home/templates/home/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/home/templates/home/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bytebrigade/home/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/home/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bytebrigade/statics/templates/navbar.html" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/statics/templates/navbar.html" afterDir="false" />
     </list>
     <list id="564faa13-2048-4d4a-b90c-1b3f74d68ac3" name="Changes by Angelo Palmer" comment="" />
     <list id="d3faa1e5-5dc7-4e42-afb5-ae0bdd4504cd" name="Changes by camer" comment="" />

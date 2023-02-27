@@ -50,8 +50,8 @@
         </div>
         <div class="d-inline-flex">
             {% if request.user.is_authenticated %}
-                <div class="dropdown" style="border-radius: 8px;background: var(--bs-primary);padding: 8px;"><a class="dropdown-toggle text-center" aria-expanded="false" data-bs-toggle="dropdown" href="#" style="border-radius: 8px;color: var(--bs-black);background: var(--bs-primary);">Profile</a>
-                    <div class="dropdown-menu"><a class="dropdown-item" href="#">First Item</a><a class="dropdown-item" href="#">Second Item</a><a class="dropdown-item" href="#">Third Item</a></div>
+                <div class="dropdown" style="border-radius: 8px;background: var(--bs-primary);padding: 8px;"><a class="dropdown-toggle text-center" aria-expanded="false" data-bs-toggle="dropdown" href="{% url 'account' %}" style="border-radius: 8px;color: var(--bs-black);background: var(--bs-primary);">Profile</a>
+                    <div class="dropdown-menu"><a class="dropdown-item" href="{% url 'account' %}">Profile</a><a class="dropdown-item" href="{% url 'logout' %}">Log-Out</a><a class="dropdown-item" href="#">Third Item</a></div>
                 </div><a class="btn btn-primary" role="button" href="#" style="background: var(--bs-primary);color: var(--bs-black);margin-left: 26px;">Shop</a>
             {% else %}
                 <div class="dropdown" style="border-radius: 8px;background: var(--bs-primary);padding: 8px;"><a class="dropdown-toggle text-center" aria-expanded="false" data-bs-toggle="dropdown" href="#" style="border-radius: 8px;color: var(--bs-black);background: var(--bs-primary);">Profile</a>
