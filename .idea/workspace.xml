@@ -4,12 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
+<<<<<<< Updated upstream
     <list default="true" id="3049aee3-629a-4512-8969-d528f414ba99" name="Changes" comment="Implemented location check on scanner page, and directions to the closest bin using google.&#10;&#10;- James and Angelo">
       <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_24_02_2023__11_17__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_24_02_2023__11_17__Changes_.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bytebrigade/barcodereader/templates/BCscanner/Scanner_page.html" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/barcodereader/templates/BCscanner/Scanner_page.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bytebrigade/home/templates/home/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/home/templates/home/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bytebrigade/statics/templates/navbar.html" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/statics/templates/navbar.html" afterDir="false" />
     </list>
+=======
+    <list default="true" id="3049aee3-629a-4512-8969-d528f414ba99" name="Changes" comment="Implemented location check on scanner page, and directions to the closest bin using google.&#10;&#10;- James and Angelo" />
+>>>>>>> Stashed changes
     <list id="564faa13-2048-4d4a-b90c-1b3f74d68ac3" name="Changes by Angelo Palmer" comment="" />
     <list id="d3faa1e5-5dc7-4e42-afb5-ae0bdd4504cd" name="Changes by camer" comment="" />
     <list id="a2effc7b-5b04-401a-b038-c06b9d2ea579" name="Changes by HAOYA" comment="" />
@@ -155,6 +159,7 @@
       <workItem from="1677279107333" duration="107000" />
       <workItem from="1677423311248" duration="140000" />
       <workItem from="1677423768687" duration="9385000" />
+      <workItem from="1677433421142" duration="670000" />
     </task>
     <task id="LOCAL-00001" summary="Checkout">
       <created>1676046271071</created>
@@ -212,7 +217,21 @@
       <option name="project" value="LOCAL" />
       <updated>1677432984205</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Implemented location check on scanner page, and directions to the closest bin using google.&#10;&#10;- James and Angelo">
+      <created>1677433446687</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1677433446687</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Implemented location check on scanner page, and directions to the closest bin using google.&#10;&#10;- James and Angelo">
+      <created>1677433502147</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1677433502147</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
