@@ -6,6 +6,9 @@ import geopy.distance
 
 
 def barcode_lookup(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+
     if request.method == "POST":
         curr_lat = float(request.POST.get("location_lat"))
         curr_long = float(request.POST.get("location_long"))

@@ -1,9 +1,13 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Transaction, Statistic
+from django.contrib.auth import authenticate, login
 
 # Create your views here.
 
 def getTransactions(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+
     data = Transaction.objects.all()
     data_dict = {
         'Transaction': data,
@@ -12,10 +16,11 @@ def getTransactions(request):
 
 
 def getLeaderboard(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
 
     statData = Statistic.objects.all().order_by('-points')
     data_dict = {
-        'Statistic': statData,
+        'Statistics': statData,
     }
-
     return render(request, 'home/Leaderboard.html', data_dict)

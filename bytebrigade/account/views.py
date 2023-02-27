@@ -8,6 +8,7 @@ from home.models import Statistic
 def register(request):
     if request.user.is_authenticated:
         return redirect('index')
+
     if request.method == 'POST':
         user_form = RegistrationForm(request.POST)
         if user_form.is_valid():
