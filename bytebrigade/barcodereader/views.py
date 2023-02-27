@@ -50,3 +50,12 @@ def barcode_lookup(request):
         return HttpResponse(render(request, 'BCscanner/Scanner_page.html'))
 
 
+def api_lookup(barcode):
+    api_key = "5bcg2pbed762819eeppkc2qhjak1l4"
+    url = "https://api.barcodelookup.com/v3/products?barcode=" + barcode + "&formatted=y&key=" + api_key
+    with urllib.request.urlopen(url) as url:
+        data = json.loads(url.read().decode())
+    print(data)
+    print("\n")
+    data = data["products"][0]
+    return data

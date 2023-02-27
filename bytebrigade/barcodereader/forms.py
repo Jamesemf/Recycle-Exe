@@ -1,15 +1,13 @@
 from django import forms
+from home.models import Product
+
 
 class barcode_form(forms.ModelForm):
     type = forms.CharField()
     barcode = forms.CharField()
 
+
 class product_form(forms.ModelForm):
-    title = forms.CharField()
-    images = forms.ImageField()
-    material = forms.CharField()
-    weight = forms.DecimalField()
-    barcode = forms.IntegerField()
-
-
-
+    class Meta:
+        model = Product
+        fields = ('barcode', 'name', 'image', 'type', 'weight', 'category')

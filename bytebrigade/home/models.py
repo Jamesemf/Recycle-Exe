@@ -35,10 +35,10 @@ class BinData(models.Model):
 class Product(models.Model):
     barcode = models.CharField(max_length=30, primary_key=True)
     name = models.CharField(max_length=30)
-    details = models.CharField(max_length=200)
     image = models.ImageField(upload_to='statics/figures/products')
-    type = models.CharField(max_length=30)
-    value = models.IntegerField()
+    type = models.CharField(max_length=100)
+    weight = models.FloatField()
+    category = models.CharField(max_length=100)
 
     def __unicode__(self):
         return u'%s' % self.barcode
@@ -51,8 +51,6 @@ class Transaction(models.Model):
     user = models.ForeignKey(User, default=-1, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     likes = models.IntegerField(default=0)
-
-
 
 
 class Statistic(models.Model):
@@ -97,8 +95,6 @@ class Statistic(models.Model):
     # goes through transactions and get the product that they recycle the most. This occurs at each recycle event
     def calculateLove(self):
         pass
-
-
 
 
 class Goal(models.Model):
