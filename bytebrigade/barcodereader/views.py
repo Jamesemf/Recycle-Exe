@@ -12,17 +12,15 @@ def barcode_lookup(request):
     if not request.user.is_authenticated:
         return redirect('login')
     if request.method == 'POST':
-        form = barcode_form(request.POST)
-        # Cams code to get the dictionary
+        #form = barcode_form(request.POST)
+        barcode = request.POST.get("barcode")
+        print("Value is ", barcode)
 
-
-        #  Check if the product is already in the database
-        #  Assumption that if in the database we have all the data for the product
         try:
-            Product.objects.get(barcode=form.barcode)
+            Product.objects.get(barcode=form.cleaned_data('barcode'))
             return redirect('index')
         except:
-            dict = api_lookup(form.barcode)
+            dict = api_lookup(form.cleaned_data('barcode'))
             material = dict['material']
             title = dict['title']
             weight = dict['weight']
