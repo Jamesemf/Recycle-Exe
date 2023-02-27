@@ -42,9 +42,9 @@
             </div>
         </div>
     </div>
-{% endblock %}
 
 <script>
+    currentLocationInsert();
     function currentLocationInsert() {
         function getLocation() {
             if (navigator.geolocation) {
@@ -63,6 +63,5 @@
 
         getLocation();
     }
-    currentLocationInsert();
-
 </script>
+{% endblock %}
