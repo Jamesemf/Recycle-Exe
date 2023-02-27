@@ -40,6 +40,9 @@ class Product(models.Model):
     type = models.CharField(max_length=30)
     value = models.IntegerField()
 
+    def __unicode__(self):
+        return u'%s' % self.barcode
+
 
 class Transaction(models.Model):
     transaction_id = models.AutoField(primary_key=True)
@@ -50,6 +53,8 @@ class Transaction(models.Model):
     likes = models.IntegerField(default=0)
 
 
+
+
 class Statistic(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     points = models.IntegerField(default=0)
@@ -57,8 +62,20 @@ class Statistic(models.Model):
     curweek = models.DecimalField(default=0, max_digits=10, decimal_places=5)
     curmonth = models.DecimalField(default=0, max_digits=10, decimal_places=5)
     curyear = models.DecimalField(default=0, max_digits=10, decimal_places=5)
-    lastRecycle = models.ForeignKey(Product, related_name="lastRecycle", blank=True, null=True , on_delete=models.CASCADE)
-    loveRecycling = models.ForeignKey(Product, related_name="loveRecycle", blank=True, null=True , on_delete=models.CASCADE)
+    lastRecycle = models.ForeignKey(
+        Product,
+        related_name="lastRecycle",
+        on_delete=models.SET_DEFAULT,
+        to_field='barcode',
+        default='1'
+    )
+    loveRecycling = models.ForeignKey(
+        Product,
+        related_name="loveRecycle",
+        on_delete=models.SET_DEFAULT,
+        to_field='barcode',
+        default='1'
+    )
 
     def addToWeek(self, product:dict):
         # as transaction occurs add to 4 cols, points, carbon, cur week, last recycle.
