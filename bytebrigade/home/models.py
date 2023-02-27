@@ -60,6 +60,29 @@ class Statistic(models.Model):
     lastRecycle = models.ForeignKey(Product, related_name="lastRecycle", blank=True, null=True , on_delete=models.CASCADE)
     loveRecycling = models.ForeignKey(Product, related_name="loveRecycle", blank=True, null=True , on_delete=models.CASCADE)
 
+    def addToWeek(self, product:dict):
+        # as transaction occurs add to 4 cols, points, carbon, cur week, last recycle.
+        # add to year and month, but all are reset at the end of a cycle (week, month, year)
+        # love = self.calculateLove()
+        pass
+
+    def addCurMonth(self, kg):
+        # month += last week
+        pass
+
+    def addCurYear(self, kg):
+        # year += last month
+        pass
+
+    def addPoint(self, pts):
+        pass
+
+    # goes through transactions and get the product that they recycle the most. This occurs at each recycle event
+    def calculateLove(self):
+        pass
+
+
+
 
 class Goal(models.Model):
     goalID = models.IntegerField(primary_key=True)
