@@ -18,11 +18,12 @@
                     <div class="card-body">
                         <h4 class="card-title">{Product_name}</h4>
                         <p class="card-text"></p>
-                         <form name = "form" namemethod="POST">
+                         <form id = "formId" method="POST">
                             {% csrf_token %}
-                                <input type="hidden" id = barcode value=0>
-                                <input type="hidden" id = weight value=0>
-                                <input type="hidden" id = material value=0>
+                                <input type="hidden" id = barcode name = "barcode" value=0>
+                                <input type="hidden" id = weight name = "weight" value=0>
+                                <input type="hidden" id = material name = "material" value=0>
+
                          </form>
                         <ul>
                             <li>New Home : {}</li>
@@ -43,13 +44,11 @@
 
         var auto_refresh = setInterval(function() { submitform(); }, 100);
 
-        var testVariable = document.getElementById("barcode");
-        let oldVar = testVariable;
-
         function submitform(){
-            if (oldVar !== testVariable)
-            document.getElementById("form").submit();
+            if (document.getElementById("barcode").value != 0){
+                document.getElementById("formId").submit();
             }
+        }
 
         function docReady(fn) {
             // see if DOM is already available
@@ -71,7 +70,6 @@
                     lastResult = decodedText;
                     // Handle on success condition with the decoded message.
                     document.getElementById('barcode').value = decodedText;
-                    console.log(decodedText);
                     //console.log(`Scan result ${decodedText}`, decodedResult);
 
                 }
