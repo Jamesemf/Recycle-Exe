@@ -28,7 +28,11 @@
                 <div class="card">    <div style="width: 350px" id="reader"></div>
                     <div id="qr-reader" style="width:350px"></div>
                     <div id="qr-reader-results"></div>
-                    <img class="card-img-top w-100 d-block" width="375" height="80">
+                </div>
+
+                <div class="card" style="width: 80vw; display: flex; margin: 0 auto;">
+
+
                     <div class="card-body">
                         <h4 class="card-title">{Product_name}</h4>
                         <p class="card-text"></p>
@@ -38,14 +42,18 @@
                             <li>Material : {}</li>
                         </ul><button class="btn btn-primary border rounded" type="button">Find Out More</button>
                     </div>
+
                 </div>
+
             </div>
-            <div class="col-4 col-md-6">
+
+            <!-- <div class="col-4 col-md-6">
                 <div class="card"></div>
-            </div>
+            </div> -->
         </div>
+
+
     </div>
-<<<<<<< Updated upstream
     <script src="{% static 'BCscanner/html5-qrcode.min.js' %}"></script>
     <script>
         function docReady(fn) {
@@ -77,7 +85,6 @@
         });
     </script>
 {% endblock %}
-=======
     <div></div>
     <footer class="text-center">
         <div class="container text-muted py-4 py-lg-5">
@@ -126,4 +133,3 @@
     currentLocationInsert();
 </script>
 </html>
->>>>>>> Stashed changes
