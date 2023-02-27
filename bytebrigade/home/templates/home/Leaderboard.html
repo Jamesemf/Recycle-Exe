@@ -15,11 +15,11 @@
                         <th style="width: 200px">Points</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody style="color: black;">
                     {% for item in Statistics %}
                         <tr class="text-center" style = "border-bottom: #82b068 solid 2px;">
                             <td>{{forloop.counter}}</td>
-                            <td><p>{{item.user}}</p></td>
+                            <td>{{item.user}}</td>
                             <td>{{item.points}}</td>
                         </tr>
                     {% endfor %}

@@ -1,5 +1,4 @@
 {% load static %}
-<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -17,14 +16,15 @@
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="#">
                 <span class="text-center" style="color: var(--bs-black);">ByteBrigade</span>
-            </a><button data-bs-toggle="collapse" class="navbar-toggler"
+            </a>
+            <button data-bs-toggle="collapse" class="navbar-toggler"
                     data-bs-target="#navcol-6"
                     style="color: var(--bs-black);background: var(--bs-primary);">
                     <span class="visually-hidden">Togglenavigation</span>
                     <span class="navbar-toggler-icon"></span>
                 </button>
             <div class="collapse navbar-collapse flex-grow-0 order-md-first"
-                id="navcol-6">
+                id="navcol-6" style="box-sizing: border-box; width: 100%;">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item"><a class="btn btn-light me-2" role="button"
                             href="{% url 'leaderboard' %}"
@@ -36,7 +36,7 @@
                     <button class="btn btn-primary" type="button">Button</button>
                 </div>
             </div>
-            <div class="d-inline-flex">
+            <div class="d-inline-flex" style="box-sizing: border-box; width: 100%;">
                 <div class="dropdown">
                     <a class="btn btn-secondary dropdown-toggle"
                         href="{% url 'account' %}" role="button"
@@ -56,8 +56,6 @@
             </div>
         </div>
     </nav>
-
-    {% block content %}{% endblock %}
 
     <footer class="text-center">
         <div class="container text-muted py-4 py-lg-5">
