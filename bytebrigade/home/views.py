@@ -38,7 +38,6 @@ def getTransactions(request):
     # Default looking of index.
 
 
-
 def getLeaderboard(request):
     if not request.user.is_authenticated:
         return redirect('login')
