@@ -1,0 +1,372 @@
+Index: bytebrigade/home/views.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from django.shortcuts import render\r\nfrom .models import Transaction, Statistic, BinData\r\nfrom django.http import HttpResponse\r\nimport math\r\n\r\n# Create your views here.\r\n\r\n\r\ndef getTransactions(request):\r\n    if request.method == \"POST\":\r\n        curr_lat = float(request.POST.get(\"location_lat\"))\r\n        curr_long = float(request.POST.get(\"location_long\"))\r\n\r\n        R = 6371\r\n        shortest_distance = 100000000000\r\n        for bin in BinData.objects.all():\r\n            dLat = (float(bin.binLat) - curr_lat) * (math.pi / 180)\r\n            dLon = (float(bin.binLong) - curr_long) * (math.pi / 180)\r\n            a = math.sin(dLat / 2) * math.sin(dLat / 2) + math.cos(curr_lat * (math.pi / 180)) * math.cos(curr_long * (math.pi / 180)) * math.sin(dLon / 2) * math.sin(dLon / 2)\r\n            c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))\r\n            distance = 1000 * R * c\r\n            if distance < shortest_distance:\r\n                shortest_distance = distance\r\n\r\n        print(shortest_distance)\r\n\r\n    data = Transaction.objects.all()\r\n    data_dict = {\r\n        'Transaction': data,\r\n    }\r\n    return render(request, 'home/index.html', data_dict)\r\n\r\n\r\ndef getLeaderboard(request):\r\n\r\n    statData = Statistic.objects.all().order_by('-points')\r\n    data_dict = {\r\n        'Statistic': statData,\r\n    }\r\n\r\n    return render(request, 'home/Leaderboard.html', data_dict)\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/bytebrigade/home/views.py b/bytebrigade/home/views.py
+--- a/bytebrigade/home/views.py	(revision 343b0659ea3db714cc6b8e85f5f8d2f4931e6714)
++++ b/bytebrigade/home/views.py	(date 1677430793096)
+@@ -1,29 +1,9 @@
+ from django.shortcuts import render
+-from .models import Transaction, Statistic, BinData
+-from django.http import HttpResponse
+-import math
++from .models import Transaction, Statistic
+ 
+ # Create your views here.
+ 
+-
+ def getTransactions(request):
+-    if request.method == "POST":
+-        curr_lat = float(request.POST.get("location_lat"))
+-        curr_long = float(request.POST.get("location_long"))
+-
+-        R = 6371
+-        shortest_distance = 100000000000
+-        for bin in BinData.objects.all():
+-            dLat = (float(bin.binLat) - curr_lat) * (math.pi / 180)
+-            dLon = (float(bin.binLong) - curr_long) * (math.pi / 180)
+-            a = math.sin(dLat / 2) * math.sin(dLat / 2) + math.cos(curr_lat * (math.pi / 180)) * math.cos(curr_long * (math.pi / 180)) * math.sin(dLon / 2) * math.sin(dLon / 2)
+-            c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+-            distance = 1000 * R * c
+-            if distance < shortest_distance:
+-                shortest_distance = distance
+-
+-        print(shortest_distance)
+-
+     data = Transaction.objects.all()
+     data_dict = {
+         'Transaction': data,
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"ProjectRootManager\" version=\"2\" project-jdk-name=\"Python 3.11 (ECM2434)\" project-jdk-type=\"Python SDK\" />\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+--- a/.idea/misc.xml	(revision 343b0659ea3db714cc6b8e85f5f8d2f4931e6714)
++++ b/.idea/misc.xml	(date 1677424210323)
+@@ -1,4 +1,4 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+-  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.11 (ECM2434)" project-jdk-type="Python SDK" />
++  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.9" project-jdk-type="Python SDK" />
+ </project>
+\ No newline at end of file
+Index: bytebrigade/barcodereader/templates/BCscanner/Scanner_page.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>{% load static %}\r\n<!DOCTYPE html>\r\n<html lang=\"en\">\r\n\r\n<head>\r\n    <meta charset=\"utf-8\">\r\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, shrink-to-fit=no\">\r\n    <title>Landing_page</title>\r\n    <link rel=\"stylesheet\" href=\"{% static '/assets/bootstrap/css/bootstrap.min.css' %}\">\r\n    <link rel=\"stylesheet\" href=\"{% static 'assets/css/Navbar-Centered-Brand-Dark-icons.css' %}\">\r\n</head>\r\n\r\n<body class=\"font-monospace text-center bg-secondary bg-gradient\" style=\"--bs-body-bg: #E1EDBD;--bs-secondary: #E1EDBD;--bs-secondary-rgb: 225,237,189;--bs-primary: #82B068;--bs-primary-rgb: 130,176,104;--bs-dark: #426D34;--bs-dark-rgb: 66,109,52;\">\r\n    <nav class=\"navbar navbar-dark navbar-expand-md bg-dark py-3\" style=\"color: rgb(225,237,189);\">\r\n        <div class=\"container\"><a class=\"navbar-brand d-flex align-items-center\" href=\"#\"><span class=\"bs-icon-sm bs-icon-rounded bs-icon-primary d-flex justify-content-center align-items-center me-2 bs-icon\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"1em\" height=\"1em\" fill=\"currentColor\" viewBox=\"0 0 16 16\" class=\"bi bi-bar-chart\" style=\"color: var(--bs-black);\">\r\n                        <path d=\"M4 11H2v3h2v-3zm5-4H7v7h2V7zm5-5v12h-2V2h2zm-2-1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1h-2zM6 7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7zm-5 4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-3z\"></path>\r\n                    </svg></span><span class=\"text-center\" style=\"color: var(--bs-black);\">ByteBrigade</span></a><button data-bs-toggle=\"collapse\" class=\"navbar-toggler\" data-bs-target=\"#navcol-6\" style=\"color: var(--bs-black);background: var(--bs-primary);\"><span class=\"visually-hidden\">Toggle navigation</span><span class=\"navbar-toggler-icon\"></span></button>\r\n            <div class=\"collapse navbar-collapse flex-grow-0 order-md-first\" id=\"navcol-6\">\r\n                <ul class=\"navbar-nav me-auto\">\r\n                    <li class=\"nav-item\"><button class=\"btn btn-light me-2\" type=\"button\" style=\"background: var(--bs-primary);color: var(--bs-btn-disabled-color);\">Home</button></li>\r\n                </ul>\r\n                <div class=\"d-md-none my-2\"><button class=\"btn btn-light me-2\" type=\"button\">Button</button><button class=\"btn btn-primary\" type=\"button\">Button</button></div>\r\n            </div>\r\n            <div class=\"d-none d-md-block\"><a class=\"btn btn-light me-2\" role=\"button\" href=\"#\" style=\"color: var(--bs-black);background: var(--bs-primary);\">Profile</a><a class=\"btn btn-primary\" role=\"button\" href=\"#\" style=\"background: var(--bs-primary);color: var(--bs-black);\">Shop</a></div>\r\n        </div>\r\n    </nav>\r\n    <div class=\"fs-6\" style=\"margin-right: 28px;margin-top: 14px;margin-bottom: 22px;color: var(--bs-secondary);padding-left: 0px;margin-left: 28px;\">\r\n        <h1 style=\"background: #e1edbd;font-size: 30px;padding-bottom: 5px;color: var(--bs-black);\">Scanner</h1>\r\n    </div>\r\n    <div class=\"container\">\r\n        <div class=\"row\">\r\n            <div class=\"col-md-6 col-lg-7\" style=\"padding-right: 13px;margin-right: -1px;\"></div>\r\n            <div class=\"col\">\r\n                <div class=\"card\"><img class=\"card-img-top w-100 d-block\" width=\"375\" height=\"80\">\r\n                    <div class=\"card-body\">\r\n                        <h4 class=\"card-title\">{Product_name}</h4>\r\n                        <p class=\"card-text\"></p>\r\n                        <ul>\r\n                            <li>New Home : {}</li>\r\n                            <li>Weight : {}</li>\r\n                            <li>Material : {}</li>\r\n                        </ul><button class=\"btn btn-primary border rounded\" type=\"button\">Find Out More</button>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n            <div class=\"col-4 col-md-6\">\r\n                <div class=\"card\"></div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n    <div></div>\r\n    <footer class=\"text-center\">\r\n        <div class=\"container text-muted py-4 py-lg-5\">\r\n            <ul class=\"list-inline\">\r\n                <li class=\"list-inline-item me-4\"><a class=\"link-secondary\" href=\"#\">About</a></li>\r\n                <li class=\"list-inline-item me-4\"><a class=\"link-secondary\" href=\"#\">Development</a></li>\r\n                <li class=\"list-inline-item\"><a class=\"link-secondary\" href=\"#\">Hosting</a></li>\r\n            </ul>\r\n            <ul class=\"list-inline\">\r\n                <li class=\"list-inline-item me-4\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"1em\" height=\"1em\" fill=\"currentColor\" viewBox=\"0 0 16 16\" class=\"bi bi-facebook\">\r\n                        <path d=\"M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z\"></path>\r\n                    </svg></li>\r\n                <li class=\"list-inline-item me-4\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"1em\" height=\"1em\" fill=\"currentColor\" viewBox=\"0 0 16 16\" class=\"bi bi-twitter\">\r\n                        <path d=\"M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z\"></path>\r\n                    </svg></li>\r\n                <li class=\"list-inline-item\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"1em\" height=\"1em\" fill=\"currentColor\" viewBox=\"0 0 16 16\" class=\"bi bi-instagram\">\r\n                        <path d=\"M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.917 3.917 0 0 0-1.417.923A3.927 3.927 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.916 3.916 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.926 3.926 0 0 0-.923-1.417A3.911 3.911 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0h.003zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599.28.28.453.546.598.92.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.47 2.47 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.478 2.478 0 0 1-.92-.598 2.48 2.48 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233 0-2.136.008-2.388.046-3.231.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045v.002zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92zm-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217zm0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334z\"></path>\r\n                    </svg></li>\r\n            </ul>\r\n            <p class=\"mb-0\">Copyright © 2023 ByteBrigade</p>\r\n        </div>\r\n    </footer>\r\n    <script src=\"{% static 'assets/bootstrap/js/bootstrap.min.js' %}\"></script>\r\n</body>\r\n\r\n</html>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/bytebrigade/barcodereader/templates/BCscanner/Scanner_page.html b/bytebrigade/barcodereader/templates/BCscanner/Scanner_page.html
+--- a/bytebrigade/barcodereader/templates/BCscanner/Scanner_page.html	(revision 343b0659ea3db714cc6b8e85f5f8d2f4931e6714)
++++ b/bytebrigade/barcodereader/templates/BCscanner/Scanner_page.html	(date 1677432154452)
+@@ -29,7 +29,21 @@
+     </div>
+     <div class="container">
+         <div class="row">
+-            <div class="col-md-6 col-lg-7" style="padding-right: 13px;margin-right: -1px;"></div>
++            <form method="POST">
++                    {% csrf_token %}
++                    <input type="hidden" name="location_lat" id="lat" value>
++                    <input type="hidden" name="location_long" id="long" value>
++                    <input type="submit" value=Begin style="background: var(--bs-primary);margin-top: 5px;color: var(--bs-body-color);"></input>
++                </form>
++            <div class="col-md-6 col-lg-7" style="padding-right: 13px;margin-right: -1px;">
++              {% if nearBin %}
++                <p>SCANNER</p>
++              {% endif %}
++                {% if not nearBin %}
++                    {% load static %} <img src="../../static/NoBin.png" style = "height:24%; width:auto;" />
++                {% endif %}
++            </div>
++
+             <div class="col">
+                 <div class="card"><img class="card-img-top w-100 d-block" width="375" height="80">
+                     <div class="card-body">
+@@ -72,5 +86,27 @@
+     </footer>
+     <script src="{% static 'assets/bootstrap/js/bootstrap.min.js' %}"></script>
+ </body>
++<script>
++
++    function currentLocationInsert() {
++        function getLocation() {
++            if (navigator.geolocation) {
++                navigator.geolocation.getCurrentPosition(binDistCalc);
++            } else {
++                x.innerHTML = "Geolocation is not supported by this browser.";
++            }
++        }
+ 
++        function binDistCalc(position) {
++            var lat = position.coords.latitude;
++            var long = position.coords.longitude;
++            document.getElementById("lat").value = lat;
++            document.getElementById("long").value = long;
++        }
++
++        getLocation();
++    }
++
++    currentLocationInsert();
++</script>
+ </html>
+\ No newline at end of file
+Index: bytebrigade/home/templates/home/index.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>{% load static %}\r\n<!DOCTYPE html>\r\n<html lang=\"en\">\r\n\r\n<head>\r\n    <meta charset=\"utf-8\">\r\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, shrink-to-fit=no\">\r\n    <title>Landing_page</title>\r\n    <link rel=\"stylesheet\" href=\"{% static 'assets/bootstrap/css/bootstrap.min.css' %}\">\r\n    <link rel=\"stylesheet\" href=\"{% static 'assets/css/Navbar-Centered-Brand-Dark-icons.css' %}\">\r\n</head>\r\n\r\n<body class=\"font-monospace text-center bg-secondary bg-gradient\"\r\n    style=\"--bs-body-bg: #E1EDBD;--bs-secondary: #E1EDBD;--bs-secondary-rgb: 225,237,189;--bs-primary: #82B068;--bs-primary-rgb: 130,176,104;--bs-dark: #426D34;--bs-dark-rgb: 66,109,52;\">\r\n    <nav class=\"navbar navbar-dark navbar-expand-md bg-dark py-3\" style=\"color: rgb(225,237,189);\">\r\n        <div class=\"container\"><a class=\"navbar-brand d-flex align-items-center\" href=\"#\"><span\r\n                    class=\"bs-icon-sm bs-icon-rounded bs-icon-primary d-flex justify-content-center align-items-center me-2 bs-icon\"><svg\r\n                        xmlns=\"http://www.w3.org/2000/svg\" width=\"1em\" height=\"1em\" fill=\"currentColor\"\r\n                        viewBox=\"0 0 16 16\" class=\"bi bi-bar-chart\" style=\"color: var(--bs-black);\">\r\n                        <path\r\n                            d=\"M4 11H2v3h2v-3zm5-4H7v7h2V7zm5-5v12h-2V2h2zm-2-1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1h-2zM6 7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7zm-5 4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-3z\">\r\n                        </path>\r\n                    </svg></span><span class=\"text-center\" style=\"color: var(--bs-black);\">ByteBrigade</span></a><button\r\n                data-bs-toggle=\"collapse\" class=\"navbar-toggler\" data-bs-target=\"#navcol-6\"\r\n                style=\"color: var(--bs-black);background: var(--bs-primary);\"><span class=\"visually-hidden\">Toggle\r\n                    navigation</span><span class=\"navbar-toggler-icon\"></span></button>\r\n            <div class=\"collapse navbar-collapse flex-grow-0 order-md-first\" id=\"navcol-6\">\r\n                <ul class=\"navbar-nav me-auto\">\r\n                    <li class=\"nav-item\"><a class=\"btn btn-light me-2\" role=\"button\" href=\"{% url 'leaderboard' %}\"\r\n                            style=\"background: var(--bs-primary);color: var(--bs-btn-disabled-color);\">Leaderboard</a>\r\n                    </li>\r\n                </ul>\r\n                <div class=\"d-md-none my-2\"><button class=\"btn btn-light me-2\" type=\"button\">Button</button><button\r\n                        class=\"btn btn-primary\" type=\"button\">Button</button></div>\r\n            </div>\r\n            <div class=\"d-inline-flex\"><div class=\"dropdown\">\r\n  <a class=\"btn btn-secondary dropdown-toggle\" href=\"{% url 'account' %}\" role=\"button\" id=\"dropdownMenuLink\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\" style=\"background: var(--bs-primary);color: var(--bs-black);\">\r\n    Profile\r\n  </a>\r\n<div class=\"dropdown-menu\" aria-labelledby=\"dropdownMenuLink\">\r\n    <a class=\"dropdown-item\" href=\"#\">Log-Out</a>\r\n    <a class=\"dropdown-item\" href=\"#\">Another action</a>\r\n    <a class=\"dropdown-item\" href=\"#\">Something else here</a>\r\n  </div>\r\n</div>\r\n<a class=\"btn btn-primary\" role=\"button\" href=\"#\" style=\"background: var(--bs-primary);color: var(--bs-black);margin-left: 26px;\">Shop</a></div></div>\r\n    </nav>\r\n    <div class=\"fs-6\"\r\n        style=\"margin-right: 28px;margin-top: 14px;margin-bottom: 22px;color: var(--bs-secondary);padding-left: 0px;margin-left: 28px;\">\r\n        <h1 style=\"background: #e1edbd;font-size: 30px;padding-bottom: 5px;color: var(--bs-black);\">Daily Feed</h1>\r\n        <div class=\"table-responsive\"\r\n            style=\"background: #e1edbd;border: 1px solid #82b068;border-bottom-width: 1px;border-bottom-style: solid;border-radius: 2px;padding-left: 0px;margin-left: -5px;margin-right: -5px;\">\r\n            <table class=\"table\">\r\n                <thead style=\"background: #82b068;\">\r\n                    <tr class=\"text-capitalize fs-6 text-center text-body\">\r\n                        <th>Time</th>\r\n                        <th\r\n                            style=\"--bs-primary: #E1EDBD;--bs-primary-rgb: 225,237,189;--bs-secondary: #719A5E;--bs-secondary-rgb: 113,154,94;--bs-success: #719A5E;--bs-success-rgb: 113,154,94;--bs-info: #E1EDBD;--bs-info-rgb: 225,237,189;--bs-warning: #719A5E;--bs-warning-rgb: 113,154,94;--bs-danger: #719A5E;--bs-danger-rgb: 113,154,94;--bs-light: #E1EDBD;--bs-light-rgb: 225,237,189;--bs-dark: #719A5E;--bs-dark-rgb: 113,154,94;--bs-body-color: #E1EDBD;--bs-body-bg: #E1EDBD;\">\r\n                            Recycled</th>\r\n                        <th>Likes</th>\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n                    {% for item in Transaction %}\r\n                    <tr class=\"text-center\">\r\n                        <td>{{ item.time}}</td>\r\n                        <td>\r\n                            <p>{{item.user }} just recycled {{ item.product.barcode}} at {{item.bin.binId }}</p>\r\n                        </td>\r\n                        <td>{{item.likes}}</td>\r\n                    </tr>\r\n                    {% endfor %}\r\n                </tbody>\r\n            </table>\r\n        </div>\r\n        <form method=\"POST\">\r\n            {% csrf_token %}\r\n            <input type=\"hidden\" name=\"location_lat\" id=\"lat\" value>\r\n            <input type=\"hidden\" name=\"location_long\" id=\"long\" value>\r\n            <input type=\"submit\" value=submit\r\n                style=\"background: var(--bs-primary);margin-top: 5px;color: var(--bs-body-color);\">Scan</input>\r\n        </form>\r\n\r\n        <footer class=\"text-center\">\r\n            <div class=\"container text-muted py-4 py-lg-5\">\r\n                <ul class=\"list-inline\">\r\n                    <li class=\"list-inline-item me-4\"><a class=\"link-secondary\" href=\"#\">About</a></li>\r\n                    <li class=\"list-inline-item me-4\"><a class=\"link-secondary\" href=\"#\">Development</a></li>\r\n                    <li class=\"list-inline-item\"><a class=\"link-secondary\" href=\"#\">Hosting</a></li>\r\n                </ul>\r\n                <ul class=\"list-inline\">\r\n                    <li class=\"list-inline-item me-4\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"1em\" height=\"1em\"\r\n                            fill=\"currentColor\" viewBox=\"0 0 16 16\" class=\"bi bi-facebook\">\r\n                            <path\r\n                                d=\"M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z\">\r\n                            </path>\r\n                        </svg></li>\r\n                    <li class=\"list-inline-item me-4\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"1em\" height=\"1em\"\r\n                            fill=\"currentColor\" viewBox=\"0 0 16 16\" class=\"bi bi-twitter\">\r\n                            <path\r\n                                d=\"M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z\">\r\n                            </path>\r\n                        </svg></li>\r\n                    <li class=\"list-inline-item\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"1em\" height=\"1em\"\r\n                            fill=\"currentColor\" viewBox=\"0 0 16 16\" class=\"bi bi-instagram\">\r\n                            <path\r\n                                d=\"M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.917 3.917 0 0 0-1.417.923A3.927 3.927 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.916 3.916 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.926 3.926 0 0 0-.923-1.417A3.911 3.911 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0h.003zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599.28.28.453.546.598.92.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.47 2.47 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.478 2.478 0 0 1-.92-.598 2.48 2.48 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233 0-2.136.008-2.388.046-3.231.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045v.002zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92zm-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217zm0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334z\">\r\n                            </path>\r\n                        </svg></li>\r\n                </ul>\r\n                <p class=\"mb-0\">Copyright © 2023 ByteBrigade</p>\r\n            </div>\r\n        </footer>\r\n        <script src=\"{% static 'assets/bootstrap/js/bootstrap.min.js' %}\"></script>\r\n</body>\r\n\r\n<script>\r\n    var x = document.getElementById(\"demo\");\r\n\r\n\r\n    // #Hi Angelo, If you feel like finishing the work I have implemented the whole backend I just need you to\r\n    // change the values below from 100 to the respective lat and long that you can calculate in the scrip xxxx\r\n\r\n\r\n    function currentLocationInsert() {\r\n        function getLocation() {\r\n            if (navigator.geolocation) {\r\n                navigator.geolocation.getCurrentPosition(binDistCalc);\r\n            } else {\r\n                x.innerHTML = \"Geolocation is not supported by this browser.\";\r\n            }\r\n        }\r\n\r\n        function binDistCalc(position) {\r\n            var lat = position.coords.latitude;\r\n            var long = position.coords.longitude;\r\n            document.getElementById(\"lat\").value = lat;\r\n            document.getElementById(\"long\").value = long;\r\n        }\r\n\r\n        getLocation();\r\n    }\r\n\r\n    currentLocationInsert();\r\n\r\n    /* Deprecated code\r\n\r\n    function showPosition(position) {\r\n        return [position.coords.latitude, position.coords.longitude];\r\n    }\r\n\r\n    function closestBin() {\r\n        // Get DB data about bins\r\n        // Go through each bin etc. to find closest bin\r\n\r\n        var testBins = [[50.730827200860205, -3.5159728963712626], [50, 7], [50, 3], [50, 7]];\r\n        var minBinDist = [0, testBins[0], 0]; // index, element, distance\r\n\r\n        function getLocation() {\r\n            if (navigator.geolocation) {\r\n                navigator.geolocation.getCurrentPosition(binDistCalc);\r\n            } else {\r\n                x.innerHTML = \"Geolocation is not supported by this browser.\";\r\n            }\r\n        }\r\n        function binDistCalc(position) {\r\n            var lat = position.coords.latitude;\r\n            var long = position.coords.longitude;\r\n\r\n            // Loop through test bins array and compare each set of values\r\n            for (let y = 0; y < testBins.length; y++) {\r\n                var binLat = testBins[y][0];\r\n                var binLong = testBins[y][1];\r\n\r\n                var distance = calculateDistance(lat, long, binLat, binLong);\r\n\r\n                if (y == 0) {\r\n                    minBinDist = [];\r\n                    minBinDist = [y, testBins[y], distance];\r\n                } else {\r\n                    if (distance < minBinDist[2]) {\r\n                        minBinDist = [];\r\n                        minBinDist = [y, testBins[y], distance];\r\n                    }\r\n                }\r\n            }\r\n            return (minBinDist);\r\n        }\r\n        getLocation();\r\n        return (minBinDist)\r\n    }\r\n\r\n    function binDistance(binLat, binLong) {\r\n        // Get DB data about bins\r\n        // Go through each bin etc. until found (from QR code)\r\n\r\n        //var binLat = 50.730827200860205;\r\n        //var binLong = -3.5159728963712626;\r\n        var distance;\r\n        function getLocation() {\r\n            if (navigator.geolocation) {\r\n                navigator.geolocation.getCurrentPosition(binDistCalc);\r\n            } else {\r\n                x.innerHTML = \"Geolocation is not supported by this browser.\";\r\n            }\r\n        }\r\n        function binDistCalc(position) {\r\n            var lat = position.coords.latitude;\r\n            var long = position.coords.longitude;\r\n\r\n            //calculate the distance between user and a given location (bin)\r\n            distance = calculateDistance(lat, long, binLat, binLong);\r\n\r\n            // checks the tolerance\r\n            return (distance);\r\n        }\r\n        getLocation();\r\n        return (tolerance(distance));\r\n    }\r\n\r\n\r\n    function calculateDistance(lat1, lon1, lat2, lon2) {\r\n        var R = 6371; // Radius of the earth in km\r\n        var dLat = deg2rad(lat2 - lat1);  // deg2rad below\r\n        var dLon = deg2rad(lon2 - lon1);\r\n        var a =\r\n            Math.sin(dLat / 2) * Math.sin(dLat / 2) +\r\n            Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *\r\n            Math.sin(dLon / 2) * Math.sin(dLon / 2)\r\n            ;\r\n        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));\r\n        var d = 1000 * R * c; // Distance in m\r\n\r\n        return d;\r\n    }\r\n    function deg2rad(deg) {\r\n        return deg * (Math.PI / 180);\r\n    }\r\n    function tolerance(distance) {\r\n        if (distance < 25) {\r\n            return true;\r\n        } else {\r\n            return false;\r\n        }\r\n    }\r\n\r\n    function withinDistance(data) {\r\n        var closestBinResult = closestBin();\r\n        var binLat = closestBinResult[1][0];\r\n        var binLong = closestBinResult[1][1];\r\n        console.log(binDistance(binLat, binLong));\r\n    }\r\n    */\r\n</script>\r\n\r\n\r\n</html>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/bytebrigade/home/templates/home/index.html b/bytebrigade/home/templates/home/index.html
+--- a/bytebrigade/home/templates/home/index.html	(revision 343b0659ea3db714cc6b8e85f5f8d2f4931e6714)
++++ b/bytebrigade/home/templates/home/index.html	(date 1677424494011)
+@@ -73,13 +73,7 @@
+                 </tbody>
+             </table>
+         </div>
+-        <form method="POST">
+-            {% csrf_token %}
+-            <input type="hidden" name="location_lat" id="lat" value>
+-            <input type="hidden" name="location_long" id="long" value>
+-            <input type="submit" value=submit
+-                style="background: var(--bs-primary);margin-top: 5px;color: var(--bs-body-color);">Scan</input>
+-        </form>
++     <div class="d-none d-md-block"><a class="btn btn-light me-2" role="button" href="{% url 'barcode_lookup' %}" style="color: var(--bs-black);background: var(--bs-primary);">Scan Item ?</a>
+ 
+         <footer class="text-center">
+             <div class="container text-muted py-4 py-lg-5">
+@@ -115,9 +109,6 @@
+ </body>
+ 
+ <script>
+-    var x = document.getElementById("demo");
+-
+-
+     // #Hi Angelo, If you feel like finishing the work I have implemented the whole backend I just need you to
+     // change the values below from 100 to the respective lat and long that you can calculate in the scrip xxxx
+ 
+Index: bytebrigade/barcodereader/views.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from django.shortcuts import render\r\nfrom django.http import HttpResponse\r\n\r\n\r\ndef barcode_lookup(request):\r\n    return HttpResponse(render(request, 'BCscanner/Scanner_page.html'))\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/bytebrigade/barcodereader/views.py b/bytebrigade/barcodereader/views.py
+--- a/bytebrigade/barcodereader/views.py	(revision 343b0659ea3db714cc6b8e85f5f8d2f4931e6714)
++++ b/bytebrigade/barcodereader/views.py	(date 1677431074559)
+@@ -1,7 +1,35 @@
+ from django.shortcuts import render
+ from django.http import HttpResponse
++from home.models import BinData
++import webbrowser
++import geopy.distance
+ 
+ 
+ def barcode_lookup(request):
+-    return HttpResponse(render(request, 'BCscanner/Scanner_page.html'))
++    if request.method == "POST":
++        curr_lat = float(request.POST.get("location_lat"))
++        curr_long = float(request.POST.get("location_long"))
++        coords_1 = (curr_lat, curr_long)
++
++        shortestDistance = 100000000
++        closeBin = None
++
++        for bin in BinData.objects.all():
++            coords_2 = (bin.binLat, bin.binLong)
++            distance = geopy.distance.geodesic(coords_1, coords_2).m
++            if distance < shortestDistance:
++                shortestDistance = distance
++                closeBin = coords_2
++
++        if shortestDistance < 1:
++            data_dict = {"nearBin": True}
++            return render(request, 'BCscanner/Scanner_page.html', data_dict)
+ 
++        else:
++            data_dict = {"nearBin": False}
++            a_website = "http://maps.google.com/?q=" + str(closeBin[0]) + "," + str(closeBin[1])
++            webbrowser.open_new_tab(a_website)
++            return render(request, 'BCscanner/Scanner_page.html', data_dict)
++
++    else:
++        return render(request, 'BCscanner/Scanner_page.html')
+Index: .idea/dataSources.local.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"dataSourceStorageLocal\" created-in=\"PY-223.8617.48\">\r\n    <data-source name=\"db\" uuid=\"1f169241-cf48-489a-819d-f9013d6a201f\">\r\n      <database-info product=\"\" version=\"\" jdbc-version=\"\" driver-name=\"\" driver-version=\"\" dbms=\"SQLITE\" exact-version=\"0\" />\r\n      <auth-provider>no-auth</auth-provider>\r\n      <schema-mapping>\r\n        <introspection-scope>\r\n          <node kind=\"schema\" negative=\"1\" />\r\n        </introspection-scope>\r\n      </schema-mapping>\r\n    </data-source>\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/dataSources.local.xml b/.idea/dataSources.local.xml
+--- a/.idea/dataSources.local.xml	(revision 343b0659ea3db714cc6b8e85f5f8d2f4931e6714)
++++ b/.idea/dataSources.local.xml	(date 1677423878618)
+@@ -1,6 +1,6 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+-  <component name="dataSourceStorageLocal" created-in="PY-223.8617.48">
++  <component name="dataSourceStorageLocal" created-in="PY-223.8214.51">
+     <data-source name="db" uuid="1f169241-cf48-489a-819d-f9013d6a201f">
+       <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="SQLITE" exact-version="0" />
+       <auth-provider>no-auth</auth-provider>
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"3049aee3-629a-4512-8969-d528f414ba99\" name=\"Changes\" comment=\"navbar html template made\">\r\n      <change beforePath=\"$PROJECT_DIR$/bytebrigade/statics/templates/navbar.html\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/bytebrigade/statics/templates/navbar.html\" afterDir=\"false\" />\r\n    </list>\r\n    <list id=\"564faa13-2048-4d4a-b90c-1b3f74d68ac3\" name=\"Changes by Angelo Palmer\" comment=\"\" />\r\n    <list id=\"d3faa1e5-5dc7-4e42-afb5-ae0bdd4504cd\" name=\"Changes by camer\" comment=\"\" />\r\n    <list id=\"a2effc7b-5b04-401a-b038-c06b9d2ea579\" name=\"Changes by HAOYA\" comment=\"\" />\r\n    <list id=\"10735dad-5d63-4d42-aac0-bad7abfc8820\" name=\"Changes by James\" comment=\"\" />\r\n    <list id=\"14d19a1f-434b-42d5-8ef5-022989c7f8e9\" name=\"Changes by osirr\" comment=\"\" />\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"DjangoConsoleOptions\" custom-start-script=\"import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)\">\r\n    <option name=\"myCustomStartScript\" value=\"import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)\" />\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Python Script\" />\r\n        <option value=\"HTML File\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Merge.Settings\">\r\n    <option name=\"BRANCH\" value=\"Barcode+Camera\" />\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"PREVIOUS_COMMIT_AUTHORS\">\r\n      <list>\r\n        <option value=\"sccthomas &lt;95318179+sccthomas@users.noreply.github.com&gt;, cameron hallett,oscar norris &lt;oscarhfnorris@gmail.com&gt; ,howardcui-super &lt;78500597+howardcui-super@users.noreply.github.com&gt;, james ford &lt;57077523+jamesemf@users.noreply.github.com&gt;, angelopalmer &lt;95857532+angelopalmer@users.noreply.github.com&gt;\" />\r\n        <option value=\"Cameron Hallett, sccthomas &lt;95318179+sccthomas@users.noreply.github.com&gt; ,oscar norris &lt;oscarhfnorris@gmail.com&gt; ,howardcui-super &lt;78500597+howardcui-super@users.noreply.github.com&gt;, james ford &lt;57077523+jamesemf@users.noreply.github.com&gt;, angelopalmer &lt;95857532+angelopalmer@users.noreply.github.com&gt;\" />\r\n        <option value=\"Cam sccthomas &lt;95318179+sccthomas@users.noreply.github.com&gt; oscar norris &lt;oscarhfnorris@gmail.com&gt; howardcui-super &lt;78500597+howardcui-super@users.noreply.github.com&gt; james ford &lt;57077523+jamesemf@users.noreply.github.com&gt; angelopalmer &lt;95857532+angelopalmer@users.noreply.github.com&gt;\" />\r\n        <option value=\"sccthomas &lt;95318179+sccthomas@users.noreply.github.com&gt; oscar norris &lt;oscarhfnorris@gmail.com&gt; howardcui-super &lt;78500597+howardcui-super@users.noreply.github.com&gt; james ford &lt;57077523+jamesemf@users.noreply.github.com&gt; angelopalmer &lt;95857532+angelopalmer@users.noreply.github.com&gt;\" />\r\n      </list>\r\n    </option>\r\n    <option name=\"RECENT_BRANCH_BY_REPOSITORY\">\r\n      <map>\r\n        <entry key=\"$PROJECT_DIR$\" value=\"main\" />\r\n      </map>\r\n    </option>\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"MarkdownSettingsMigration\">\r\n    <option name=\"stateVersion\" value=\"1\" />\r\n  </component>\r\n  <component name=\"ProjectId\" id=\"2LYOSN1qQ4Qflkn3cgn0YGfsjfw\" />\r\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\">\r\n    <ConfirmationsSetting value=\"2\" id=\"Add\" />\r\n  </component>\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\">{\r\n  &quot;keyToString&quot;: {\r\n    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,\r\n    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,\r\n    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,\r\n    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,\r\n    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,\r\n    &quot;TODO_SCOPE&quot;: &quot;All Places&quot;,\r\n    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,\r\n    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,\r\n    &quot;last_opened_file_path&quot;: &quot;/Users/samuelthomas/Documents/University/2ndYr/ECM2434GroupSoftwareEngineeringProject/versions/ECM2434&quot;,\r\n    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,\r\n    &quot;node.js.detected.package.stylelint&quot;: &quot;true&quot;,\r\n    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,\r\n    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,\r\n    &quot;node.js.selected.package.stylelint&quot;: &quot;&quot;,\r\n    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,\r\n    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,\r\n    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.django.DjangoModulesConfigurable&quot;,\r\n    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;\r\n  }\r\n}</component>\r\n  <component name=\"RecentsManager\">\r\n    <key name=\"CopyFile.RECENT_KEYS\">\r\n      <recent name=\"$PROJECT_DIR$/bytebrigade/home/static\" />\r\n    </key>\r\n    <key name=\"MoveFile.RECENT_KEYS\">\r\n      <recent name=\"C:\\Users\\HAOYA\\OneDrive\\文档\\GitHub\\J-ECM2434\\ECM2434\\bytebrigade\\account\\templates\\registration\" />\r\n      <recent name=\"C:\\Users\\HAOYA\\OneDrive\\文档\\GitHub\\J-ECM2434\\ECM2434\\bytebrigade\\account\\templates\\account\" />\r\n      <recent name=\"C:\\Users\\HAOYA\\OneDrive\\文档\\GitHub\\J-ECM2434\\ECM2434\\bytebrigade\\barcodereader\\templates\\BCscanner\" />\r\n      <recent name=\"C:\\Users\\HAOYA\\OneDrive\\文档\\GitHub\\J-ECM2434\\ECM2434\\bytebrigade\\home\\templates\\home\" />\r\n      <recent name=\"C:\\Users\\HAOYA\\OneDrive\\文档\\GitHub\\J-ECM2434\\ECM2434\\bytebrigade\\statics\" />\r\n    </key>\r\n  </component>\r\n  <component name=\"RunManager\">\r\n    <configuration name=\"Unnamed\" type=\"Python.DjangoServer\" factoryName=\"Django server\" nameIsGenerated=\"true\">\r\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\r\n      <option name=\"PARENT_ENVS\" value=\"true\" />\r\n      <envs>\r\n        <env name=\"PYTHONUNBUFFERED\" value=\"1\" />\r\n      </envs>\r\n      <option name=\"SDK_HOME\" value=\"$PROJECT_DIR$/venv/bin/python\" />\r\n      <option name=\"WORKING_DIRECTORY\" value=\"\" />\r\n      <option name=\"IS_MODULE_SDK\" value=\"false\" />\r\n      <option name=\"ADD_CONTENT_ROOTS\" value=\"true\" />\r\n      <option name=\"ADD_SOURCE_ROOTS\" value=\"true\" />\r\n      <module name=\"\" />\r\n      <option name=\"launchJavascriptDebuger\" value=\"false\" />\r\n      <option name=\"port\" value=\"8000\" />\r\n      <option name=\"host\" value=\"\" />\r\n      <option name=\"additionalOptions\" value=\"\" />\r\n      <option name=\"browserUrl\" value=\"http://127.0.0.1:8000/\" />\r\n      <option name=\"runTestServer\" value=\"false\" />\r\n      <option name=\"runNoReload\" value=\"false\" />\r\n      <option name=\"useCustomRunCommand\" value=\"false\" />\r\n      <option name=\"customRunCommand\" value=\"\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"3049aee3-629a-4512-8969-d528f414ba99\" name=\"Changes\" comment=\"\" />\r\n      <created>1676044548517</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1676044548517</updated>\r\n      <workItem from=\"1676044549692\" duration=\"4464000\" />\r\n      <workItem from=\"1676464887425\" duration=\"4008000\" />\r\n      <workItem from=\"1676468913901\" duration=\"7457000\" />\r\n      <workItem from=\"1676544833863\" duration=\"2258000\" />\r\n      <workItem from=\"1676557565627\" duration=\"232000\" />\r\n      <workItem from=\"1677163052654\" duration=\"181000\" />\r\n      <workItem from=\"1677163264665\" duration=\"4626000\" />\r\n      <workItem from=\"1677172050315\" duration=\"735000\" />\r\n      <workItem from=\"1677173842066\" duration=\"4731000\" />\r\n      <workItem from=\"1677247372394\" duration=\"7553000\" />\r\n      <workItem from=\"1677279107333\" duration=\"107000\" />\r\n      <workItem from=\"1677423311248\" duration=\"140000\" />\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"Checkout\">\r\n      <created>1676046271071</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1676046271071</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00002\" summary=\"Checkout\">\r\n      <created>1676047169678</created>\r\n      <option name=\"number\" value=\"00002\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1676047169678</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00003\" summary=\"Checkout\">\r\n      <created>1676047191430</created>\r\n      <option name=\"number\" value=\"00003\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1676047191430</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00004\" summary=\"Checkout\">\r\n      <created>1676048626569</created>\r\n      <option name=\"number\" value=\"00004\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00004\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1676048626569</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00005\" summary=\"urls index made\">\r\n      <created>1676468893254</created>\r\n      <option name=\"number\" value=\"00005\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00005\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1676468893254</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00006\" summary=\"navbar html template made\">\r\n      <created>1677260883493</created>\r\n      <option name=\"number\" value=\"00006\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00006\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1677260883493</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00007\" summary=\"navbar html template made\">\r\n      <created>1677423364052</created>\r\n      <option name=\"number\" value=\"00007\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00007\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1677423364052</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"8\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State />\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <option name=\"ADD_EXTERNAL_FILES_SILENTLY\" value=\"true\" />\r\n    <MESSAGE value=\"Checkout\" />\r\n    <MESSAGE value=\"urls index made\" />\r\n    <MESSAGE value=\"James and Sam\" />\r\n    <MESSAGE value=\"Co-authored-by: Samuel Thomas&#10;Co-authored-by: Angelo Palmer&#10;Co-authored-by: James Ford&#10;Co-authored-by: Oscar Norris&#10;Co-authored-by: Cameron Hallett&#10;Co-authored-by: Howard Cui\" />\r\n    <MESSAGE value=\"navbar html template made\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"navbar html template made\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 343b0659ea3db714cc6b8e85f5f8d2f4931e6714)
++++ b/.idea/workspace.xml	(date 1677432939021)
+@@ -4,14 +4,26 @@
+     <option name="autoReloadType" value="SELECTIVE" />
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="3049aee3-629a-4512-8969-d528f414ba99" name="Changes" comment="navbar html template made">
+-      <change beforePath="$PROJECT_DIR$/bytebrigade/statics/templates/navbar.html" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/statics/templates/navbar.html" afterDir="false" />
++    <list default="true" id="3049aee3-629a-4512-8969-d528f414ba99" name="Changes" comment="Implemented location check on scanner page, and directions to the closest bin using google.&#10;&#10;- James and Angelo">
++      <changelist_data name="James Ford" email="57077523+jamesemf@users.noreply.github.com&gt; angelopalmer &lt;95857532+angelopalmer@users.noreply.github.com" />
++      <change afterPath="$PROJECT_DIR$/bytebrigade/barcodereader/static/NoBin.png" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_24_02_2023__11_17__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_24_02_2023__11_17__Changes_.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/bytebrigade/barcodereader/templates/BCscanner/Scanner_page.html" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/barcodereader/templates/BCscanner/Scanner_page.html" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/bytebrigade/barcodereader/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/barcodereader/views.py" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/bytebrigade/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/db.sqlite3" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/bytebrigade/home/templates/home/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/home/templates/home/index.html" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/bytebrigade/home/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/home/views.py" afterDir="false" />
++    </list>
++    <list id="564faa13-2048-4d4a-b90c-1b3f74d68ac3" name="Changes by Angelo Palmer" comment="">
++      <change beforePath="$PROJECT_DIR$/bytebrigade/home/static/home/assets/css/bootstrap-utilities.rtl.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/home/static/home/assets/css/bootstrap-utilities.rtl.min.css" afterDir="false" />
+     </list>
+-    <list id="564faa13-2048-4d4a-b90c-1b3f74d68ac3" name="Changes by Angelo Palmer" comment="" />
+     <list id="d3faa1e5-5dc7-4e42-afb5-ae0bdd4504cd" name="Changes by camer" comment="" />
+     <list id="a2effc7b-5b04-401a-b038-c06b9d2ea579" name="Changes by HAOYA" comment="" />
+     <list id="10735dad-5d63-4d42-aac0-bad7abfc8820" name="Changes by James" comment="" />
+-    <list id="14d19a1f-434b-42d5-8ef5-022989c7f8e9" name="Changes by osirr" comment="" />
++    <list id="0058b795-1460-4224-9009-bf9a7d308ab2" name="Changes by osirr" comment="" />
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+@@ -28,12 +40,25 @@
+       </list>
+     </option>
+   </component>
++  <component name="FlaskConsoleOptions" custom-start-script="import sys&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo&#10;locals().update(ScriptInfo(create_app=None).load_app().make_shell_context())&#10;print(&quot;Python %s on %s\nApp: %s [%s]\nInstance: %s&quot; % (sys.version, sys.platform, app.import_name, app.env, app.instance_path))">
++    <envs>
++      <env key="FLASK_APP" value="app" />
++    </envs>
++    <option name="myCustomStartScript" value="import sys&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo&#10;locals().update(ScriptInfo(create_app=None).load_app().make_shell_context())&#10;print(&quot;Python %s on %s\nApp: %s [%s]\nInstance: %s&quot; % (sys.version, sys.platform, app.import_name, app.env, app.instance_path))" />
++    <option name="myEnvs">
++      <map>
++        <entry key="FLASK_APP" value="app" />
++      </map>
++    </option>
++  </component>
+   <component name="Git.Merge.Settings">
+     <option name="BRANCH" value="Barcode+Camera" />
+   </component>
+   <component name="Git.Settings">
+     <option name="PREVIOUS_COMMIT_AUTHORS">
+       <list>
++        <option value="James Ford &lt;57077523+jamesemf@users.noreply.github.com&gt; angelopalmer &lt;95857532+angelopalmer@users.noreply.github.com&gt;" />
++        <option value="AngeloPalmer &lt;95857532+angelopalmer@users.noreply.github.com&gt;" />
+         <option value="sccthomas &lt;95318179+sccthomas@users.noreply.github.com&gt;, cameron hallett,oscar norris &lt;oscarhfnorris@gmail.com&gt; ,howardcui-super &lt;78500597+howardcui-super@users.noreply.github.com&gt;, james ford &lt;57077523+jamesemf@users.noreply.github.com&gt;, angelopalmer &lt;95857532+angelopalmer@users.noreply.github.com&gt;" />
+         <option value="Cameron Hallett, sccthomas &lt;95318179+sccthomas@users.noreply.github.com&gt; ,oscar norris &lt;oscarhfnorris@gmail.com&gt; ,howardcui-super &lt;78500597+howardcui-super@users.noreply.github.com&gt;, james ford &lt;57077523+jamesemf@users.noreply.github.com&gt;, angelopalmer &lt;95857532+angelopalmer@users.noreply.github.com&gt;" />
+         <option value="Cam sccthomas &lt;95318179+sccthomas@users.noreply.github.com&gt; oscar norris &lt;oscarhfnorris@gmail.com&gt; howardcui-super &lt;78500597+howardcui-super@users.noreply.github.com&gt; james ford &lt;57077523+jamesemf@users.noreply.github.com&gt; angelopalmer &lt;95857532+angelopalmer@users.noreply.github.com&gt;" />
+@@ -58,39 +83,39 @@
+     <option name="hideEmptyMiddlePackages" value="true" />
+     <option name="showLibraryContents" value="true" />
+   </component>
+-  <component name="PropertiesComponent">{
+-  &quot;keyToString&quot;: {
+-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+-    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+-    &quot;TODO_SCOPE&quot;: &quot;All Places&quot;,
+-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+-    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+-    &quot;last_opened_file_path&quot;: &quot;/Users/samuelthomas/Documents/University/2ndYr/ECM2434GroupSoftwareEngineeringProject/versions/ECM2434&quot;,
+-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+-    &quot;node.js.detected.package.stylelint&quot;: &quot;true&quot;,
+-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+-    &quot;node.js.selected.package.stylelint&quot;: &quot;&quot;,
+-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+-    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.django.DjangoModulesConfigurable&quot;,
+-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
++  <component name="PropertiesComponent"><![CDATA[{
++  "keyToString": {
++    "ASKED_ADD_EXTERNAL_FILES": "true",
++    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
++    "DefaultHtmlFileTemplate": "HTML File",
++    "RunOnceActivity.OpenProjectViewOnStart": "true",
++    "RunOnceActivity.ShowReadmeOnStart": "true",
++    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
++    "TODO_SCOPE": "All Places",
++    "WebServerToolWindowFactoryState": "false",
++    "codeWithMe.voiceChat.enabledByDefault": "false",
++    "last_opened_file_path": "/Users/samuelthomas/Documents/University/2ndYr/ECM2434GroupSoftwareEngineeringProject/versions/ECM2434",
++    "node.js.detected.package.eslint": "true",
++    "node.js.detected.package.stylelint": "true",
++    "node.js.detected.package.tslint": "true",
++    "node.js.selected.package.eslint": "(autodetect)",
++    "node.js.selected.package.stylelint": "",
++    "node.js.selected.package.tslint": "(autodetect)",
++    "nodejs_package_manager_path": "npm",
++    "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable",
++    "vue.rearranger.settings.migration": "true"
+   }
+-}</component>
++}]]></component>
+   <component name="RecentsManager">
+     <key name="CopyFile.RECENT_KEYS">
+       <recent name="$PROJECT_DIR$/bytebrigade/home/static" />
+     </key>
+     <key name="MoveFile.RECENT_KEYS">
+-      <recent name="C:\Users\HAOYA\OneDrive\文档\GitHub\J-ECM2434\ECM2434\bytebrigade\account\templates\registration" />
+-      <recent name="C:\Users\HAOYA\OneDrive\文档\GitHub\J-ECM2434\ECM2434\bytebrigade\account\templates\account" />
+-      <recent name="C:\Users\HAOYA\OneDrive\文档\GitHub\J-ECM2434\ECM2434\bytebrigade\barcodereader\templates\BCscanner" />
+-      <recent name="C:\Users\HAOYA\OneDrive\文档\GitHub\J-ECM2434\ECM2434\bytebrigade\home\templates\home" />
+-      <recent name="C:\Users\HAOYA\OneDrive\文档\GitHub\J-ECM2434\ECM2434\bytebrigade\statics" />
++      <recent name="D:\ECM2434_main4\bytebrigade\barcodereader\static" />
++      <recent name="D:\ECM2434_main4\bytebrigade\barcodereader\templates\BCscanner" />
++      <recent name="D:\ECM2434_main4\bytebrigade\barcodereader" />
++      <recent name="D:\ECM2434_main4\bytebrigade\staticfiles\images" />
++      <recent name="D:\ECM2434_main4\bytebrigade\barcodereader\static\images" />
+     </key>
+   </component>
+   <component name="RunManager">
+@@ -138,6 +163,7 @@
+       <workItem from="1677247372394" duration="7553000" />
+       <workItem from="1677279107333" duration="107000" />
+       <workItem from="1677423311248" duration="140000" />
++      <workItem from="1677423768687" duration="9054000" />
+     </task>
+     <task id="LOCAL-00001" summary="Checkout">
+       <created>1676046271071</created>
+@@ -212,6 +238,7 @@
+     <MESSAGE value="James and Sam" />
+     <MESSAGE value="Co-authored-by: Samuel Thomas&#10;Co-authored-by: Angelo Palmer&#10;Co-authored-by: James Ford&#10;Co-authored-by: Oscar Norris&#10;Co-authored-by: Cameron Hallett&#10;Co-authored-by: Howard Cui" />
+     <MESSAGE value="navbar html template made" />
+-    <option name="LAST_COMMIT_MESSAGE" value="navbar html template made" />
++    <MESSAGE value="Implemented location check on scanner page, and directions to the closest bin using google.&#10;&#10;- James and Angelo" />
++    <option name="LAST_COMMIT_MESSAGE" value="Implemented location check on scanner page, and directions to the closest bin using google.&#10;&#10;- James and Angelo" />
+   </component>
+ </project>
+\ No newline at end of file

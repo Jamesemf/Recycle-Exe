@@ -8,6 +8,7 @@ from home.models import Statistic
 def register(request):
     if request.user.is_authenticated:
         return redirect('index')
+
     if request.method == 'POST':
         user_form = RegistrationForm(request.POST)
         if user_form.is_valid():
@@ -27,8 +28,15 @@ def register(request):
 def account(request):
     if request.user.is_authenticated:
         data = Statistic.objects.get(user=request.user)
+        maxWeek = Statistic.objects.all().order_by('curweek')[0]
+        maxMonth = Statistic.objects.all().order_by('curmonth')[0]
+        maxYear = Statistic.objects.all().order_by('curyear')[0]
+
         data_dict = {
             'Profile': data,
+            'maxWeek': maxWeek,
+            'maxMonth': maxMonth,
+            'maxYear': maxYear,
         }
         return render(request, 'account/Profile_page.html', data_dict)
     else:
