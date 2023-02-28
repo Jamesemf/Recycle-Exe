@@ -4,6 +4,15 @@
 {% block title %} Scan Now! {% endblock %}
 
 {% block content %}
+    <style>
+        #qr-reader button {
+            /* styling for camera button */
+            /* background-color: black; */
+        }
+    </style>
+
+
+
     <div class="fs-6" style="margin-right: 28px;margin-top: 14px;margin-bottom: 22px;color: var(--bs-secondary);padding-left: 0px;margin-left: 28px;">
         <h1 style="background: #e1edbd;font-size: 30px;padding-bottom: 5px;color: var(--bs-black);">Scanner</h1>
     </div>
@@ -19,11 +28,43 @@
             </div>
         </div>
     </div>
-{% endblock %}
-
-{% block script %}
+        <form id = "formid" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="location_lat" id="lat" value=0>
+            <input type="hidden" name="location_long" id="long" value=0>
+            <input type="hidden" name="barcode" id="barcode" value=0>
+        </form>
+    </div>
     <script src="{% static 'BCscanner/html5-qrcode.min.js' %}"></script>
     <script>
+
+        let auto_refresh = setInterval(function() { submitform(); }, 3000);
+
+        currentLocationInsert();
+        function currentLocationInsert() {
+            function getLocation() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(binDistCalc);
+                } else {
+                    x.innerHTML = "Geolocation is not supported by this browser.";
+                }
+            }
+
+            function binDistCalc(position) {
+                var lat = position.coords.latitude;
+                var long = position.coords.longitude;
+                document.getElementById("lat").value = lat;
+                document.getElementById("long").value = long;
+            }
+            getLocation();
+        }
+
+        function submitform(){
+            if (document.getElementById("barcode").value != 0){
+                document.getElementById("formId").submit();
+            }
+        }
+
         function docReady(fn) {
             // see if DOM is already available
             if (document.readyState === "complete"
@@ -43,7 +84,7 @@
                     ++countResults;
                     lastResult = decodedText;
                     // Handle on success condition with the decoded message.
-                    console.log(`Scan result ${decodedText}`, decodedResult);
+                    document.getElementById('barcode').value = lastResult;
                 }
             }
 
@@ -52,4 +93,5 @@
             html5QrcodeScanner.render(onScanSuccess);
         });
     </script>
+
 {% endblock %}
