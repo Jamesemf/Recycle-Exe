@@ -35,10 +35,13 @@ class BinData(models.Model):
 class Product(models.Model):
     barcode = models.CharField(max_length=30, primary_key=True)
     name = models.CharField(max_length=30)
-    details = models.CharField(max_length=200)
     image = models.ImageField(upload_to='statics/figures/products')
-    type = models.CharField(max_length=30)
-    value = models.IntegerField()
+    type = models.CharField(max_length=100)
+    weight = models.FloatField()
+    category = models.CharField(max_length=100)
+
+    def __unicode__(self):
+        return u'%s' % self.barcode
 
 
 class Transaction(models.Model):
@@ -57,8 +60,41 @@ class Statistic(models.Model):
     curweek = models.DecimalField(default=0, max_digits=10, decimal_places=5)
     curmonth = models.DecimalField(default=0, max_digits=10, decimal_places=5)
     curyear = models.DecimalField(default=0, max_digits=10, decimal_places=5)
-    lastRecycle = models.ForeignKey(Product, related_name="lastRecycle", blank=True, null=True , on_delete=models.CASCADE)
-    loveRecycling = models.ForeignKey(Product, related_name="loveRecycle", blank=True, null=True , on_delete=models.CASCADE)
+    lastRecycle = models.ForeignKey(
+        Product,
+        related_name="lastRecycle",
+        on_delete=models.SET_DEFAULT,
+        to_field='barcode',
+        default='1'
+    )
+    loveRecycling = models.ForeignKey(
+        Product,
+        related_name="loveRecycle",
+        on_delete=models.SET_DEFAULT,
+        to_field='barcode',
+        default='1'
+    )
+
+    def addToWeek(self, product:dict):
+        # as transaction occurs add to 4 cols, points, carbon, cur week, last recycle.
+        # add to year and month, but all are reset at the end of a cycle (week, month, year)
+        # love = self.calculateLove()
+        pass
+
+    def addCurMonth(self, kg):
+        # month += last week
+        pass
+
+    def addCurYear(self, kg):
+        # year += last month
+        pass
+
+    def addPoint(self, pts):
+        pass
+
+    # goes through transactions and get the product that they recycle the most. This occurs at each recycle event
+    def calculateLove(self):
+        pass
 
 
 class Goal(models.Model):

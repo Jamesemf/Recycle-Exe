@@ -22,3 +22,5 @@ class RegistrationForm(forms.ModelForm):
             raise forms.ValidationError('Password do not match!')
         else:
             return cleandata['password_confirm']
+
+

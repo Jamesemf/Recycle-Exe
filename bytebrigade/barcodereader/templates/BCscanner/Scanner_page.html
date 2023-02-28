@@ -25,16 +25,27 @@
             </div>
 
             <div class="col">
-                <div class="card"><img class="card-img-top w-100 d-block" width="375" height="80">
+                <div class="card">    <div style="width: 700px" id="reader"></div>
+                    <div id="qr-reader" style="width:700px"></div>
+                    <div id="qr-reader-results"></div>
+                    <img class="card-img-top w-100 d-block" width="700" height="80">
                     <div class="card-body">
                         <h4 class="card-title">{Product_name}</h4>
                         <p class="card-text"></p>
+                         <form id = "formId" method="POST">
+                            {% csrf_token %}
+                                <input type="hidden" id = barcode name = "barcode" value=0>
+                                <input type="hidden" id = weight name = "weight" value=0>
+                                <input type="hidden" id = material name = "material" value=0>
+
+                         </form>
                         <ul>
                             <li>New Home : {}</li>
                             <li>Weight : {}</li>
                             <li>Material : {}</li>
                         </ul><button class="btn btn-primary border rounded" type="button">Find Out More</button>
                     </div>
+                    {{ productForm }}
                 </div>
             </div>
             <div class="col-4 col-md-6">
@@ -42,26 +53,61 @@
             </div>
         </div>
     </div>
+    <script src="{% static 'BCscanner/html5-qrcode.min.js' %}"></script>
+    <script>
+        var auto_refresh = setInterval(function() { submitform(); }, 3000);
 
-<script>
-    currentLocationInsert();
-    function currentLocationInsert() {
-        function getLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(binDistCalc);
-            } else {
-                x.innerHTML = "Geolocation is not supported by this browser.";
+        currentLocationInsert();
+        function currentLocationInsert() {
+            function getLocation() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(binDistCalc);
+                } else {
+                    x.innerHTML = "Geolocation is not supported by this browser.";
+                }
+            }
+
+            function binDistCalc(position) {
+                var lat = position.coords.latitude;
+                var long = position.coords.longitude;
+                document.getElementById("lat").value = lat;
+                document.getElementById("long").value = long;
+            }
+
+            getLocation();
+        }
+
+
+        function submitform(){
+            if (document.getElementById("barcode").value != 0){
+                document.getElementById("formId").submit();
             }
         }
 
-        function binDistCalc(position) {
-            var lat = position.coords.latitude;
-            var long = position.coords.longitude;
-            document.getElementById("lat").value = lat;
-            document.getElementById("long").value = long;
-        }
+        function docReady(fn) {
+            // see if DOM is already available
+            if (document.readyState === "complete"
+                || document.readyState === "interactive") {
+                // call on next available tick
+                setTimeout(fn, 1);
 
-        getLocation();
-    }
+
+        docReady(function () {
+            var resultContainer = document.getElementById('qr-reader-results');
+            var lastResult, countResults = 0;
+            function onScanSuccess(decodedText, decodedResult) {
+                if (decodedText !== lastResult) {
+                    ++countResults;
+                    lastResult = decodedText;
+                    // Handle on success condition with the decoded message.
+                    document.getElementById('barcode').value = decodedText;
+                    //console.log(`Scan result ${decodedText}`, decodedResult);
+
+                }
+            }
+
+
+
+
 </script>
 {% endblock %}
