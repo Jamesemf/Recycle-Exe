@@ -19,7 +19,7 @@
                     {% for item in Transaction %}
                     <tr style = "border-bottom: #82b068 solid 2px;">
                         <td>{{item.time}}</td>
-                        <td>{{item.user}} just recycled {{item.product.barcode}} at {{item.bin.binId }}</td>
+                        <td>{{item.user}} just recycled {{item.product}} at {{item.bin.binId }}</td>
                         <td>{{item.likes}}</td>
                     </tr>
                     {% endfor %}
