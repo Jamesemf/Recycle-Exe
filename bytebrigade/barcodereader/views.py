@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .forms import barcode_form, product_form
-import requests
 import urllib.request
 import json
 from home.models import Statistic, Product
@@ -29,7 +28,7 @@ def barcode_lookup(request):
                 shortestDistance = distance
                 closeBin = coords_2
 
-        if shortestDistance < 1:
+        if shortestDistance < 10:
             data_dict = {"nearBin": True}
             return render(request, 'BCscanner/Scanner_page.html', data_dict)
 
@@ -47,13 +46,8 @@ def barcode_lookup(request):
             print("in db")
         else:
             print("not in db")
-            #p = api_lookup(barcode_camera)   # The error is that as soon as we try to open another URL it goes oii i am the only url
-            #print(p)
-            api_key = "5bcg2pbed762819eeppkc2qhjak1l4"
-            response = requests.get("https://api.barcodelookup.com/v3/products?barcode=" + barcode_camera + "&formatted=y&key=" + api_key)
-            print(response)
-        return HttpResponse(render(request, 'BCscanner/Scanner_page.html'))
-
+            # render the form page for them to input the products details
+        return HttpResponse(render(request, 'BCscanner/new_product_page.html'))
         """
         try:
             Product.objects.get(barcode=form.cleaned_data('barcode'))
@@ -87,6 +81,13 @@ def barcode_lookup(request):
         return render(request, 'BCscanner/Scanner_page.html')
 
 
+
+def user_add_product_view(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    if request.method == "POST":
+        pass
+
 def api_lookup(barcode):
     print("d")
     api_key = "5bcg2pbed762819eeppkc2qhjak1l4"
@@ -99,4 +100,3 @@ def api_lookup(barcode):
     print("\n")
     data = data["products"][0]
     return data
-

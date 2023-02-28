@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .models import Transaction, Statistic
 from django.contrib.auth import authenticate, login
 
+
 # Create your views here.
 
 def getTransactions(request):
