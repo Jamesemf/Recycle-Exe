@@ -6,65 +6,68 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>{% block title %}{% endblock %}</title>
+    <link rel="shortcut icon" type="image/png" href="{% static 'figures/favicon.ico' %}"/>
     <link rel="stylesheet" href="{% static 'assets/bootstrap/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'assets/css/Navbar-Centered-Brand-Dark-icons.css' %}">
+    {% block header %}  {% endblock %}
 </head>
 
 <body class="font-monospace text-center bg-secondary bg-gradient" style="--bs-body-bg: #E1EDBD;--bs-secondary: #E1EDBD;
     --bs-secondary-rgb: 225,237,189;--bs-primary: #82B068;--bs-primary-rgb: 130,176,104;--bs-dark: #426D34;
     --bs-dark-rgb: 66,109,52;">
-    <nav class="navbar navbar-dark navbar-expand-md bg-dark py-3"
-        style="color: rgb(225,237,189);">
-        <div class="container">
-            <a class="navbar-brand d-flex align-items-center" href="#">
-                <span class="bs-icon-sm bs-icon-rounded bs-icon-primary d-flex justify-content-center align-items-center me-2 bs-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em"
-                        fill="currentColor" viewBox="0 0 16 16"
-                        class="bi bi-bar-chart" style="color: var(--bs-black);">
-                        <path
-                                d="M4 11H2v3h2v-3zm5-4H7v7h2V7zm5-5v12h-2V2h2zm-2-1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1h-2zM6 7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7zm-5 4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-3z">
-                        </path>
-                    </svg>
-                </span>
-                <span class="text-center" style="color: var(--bs-black);">ByteBrigade</span>
-            </a><button data-bs-toggle="collapse" class="navbar-toggler"
-                    data-bs-target="#navcol-6"
-                    style="color: var(--bs-black);background: var(--bs-primary);">
-                    <span class="visually-hidden">Togglenavigation</span>
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-            <div class="collapse navbar-collapse flex-grow-0 order-md-first"
-                id="navcol-6">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item"><a class="btn btn-light me-2" role="button"
-                            href="{% url 'leaderboard' %}"
-                            style="background: var(--bs-primary);color: var(--bs-btn-disabled-color);">Leaderboard</a>
-                    </li>
-                </ul>
-                <div class="d-md-none my-2">
-                    <button class="btn btn-light me-2" type="button">Button</button>
-                    <button class="btn btn-primary" type="button">Button</button>
-                </div>
-            </div>
-            <div class="d-inline-flex">
-                <div class="dropdown">
-                    <a class="btn btn-secondary dropdown-toggle"
-                        href="{% url 'account' %}" role="button"
-                        id="dropdownMenuLink" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false"
-                        style="background: var(--bs-primary);color: var(--bs-black);">
-                        Profile
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                        <a class="dropdown-item" href="#">Log-Out</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <a class="dropdown-item" href="#">Something else here</a>
+    <nav class="navbar navbar-dark navbar-expand-md bg-dark d-flex justify-content-center align-items-center align-content-center py-3"
+    style="color: var(--bs-black);">
+    <div class="container"><a class="navbar-brand d-flex" href="#" style="margin-left: 50px;">
+        <span class="bs-icon-sm bs-icon-rounded bs-icon-primary d-flex justify-content-center align-items-center me-2 bs-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor"
+                    viewBox="0 0 16 16" class="bi bi-bar-chart" style="color: var(--bs-black);">
+                    <path
+                        d="M4 11H2v3h2v-3zm5-4H7v7h2V7zm5-5v12h-2V2h2zm-2-1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1h-2zM6 7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7zm-5 4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-3z">
+                    </path>
+            </svg>
+        </span><span class="text-center" style="color: var(--bs-black);">ByteBrigade</span></a>
+        <div class="d-inline-flex">
+            {% if request.user.is_authenticated %}
+                <div class="dropdown" style="border-radius: 8px;background: var(--bs-primary);padding: 8px;"><a class="dropdown-toggle text-center" aria-expanded="false" data-bs-toggle="dropdown" href="#" style="border-radius: 8px;color: var(--bs-black);background: var(--bs-primary); text-decoration: none;">Account</a>
+                    <div class="dropdown-menu">
+                        <p class="dropdown-item" >Hello {{ request.user.username }}</p>
+                        <a class="dropdown-item" href="{% url 'account' %}">Profile</a>
+                        <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
                     </div>
                 </div>
-                <a class="btn btn-primary" role="button" href="#"
-                    style="background: var(--bs-primary);color: var(--bs-black);margin-left: 26px;">Shop</a>
+            {% else %}
+                <div class="dropdown" style="border-radius: 8px;background: var(--bs-primary);padding: 8px;"><a class="dropdown-toggle text-center" aria-expanded="false" data-bs-toggle="dropdown" href="#" style="border-radius: 8px;color: var(--bs-black);background: var(--bs-primary); text-decoration: none;">Login</a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="{% url 'login' %}">Log-In</a>
+                        <a class="dropdown-item" href="{% url 'registration' %}">Sign-Up</a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        <button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-6"
+            style="color: var(--bs-black);background: var(--bs-primary);"><span class="visually-hidden">Toggle
+            navigation</span><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse flex-grow-0 order-md-first" id="navcol-6">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    {% if request.get_full_path == "/" %}
+                        <li class="nav-item"><a class="btn btn-light me-2" role="button"
+                            href="{% url 'leaderboard' %}"
+                            style="background: var(--bs-primary);color: var(--bs-btn-disabled-color);">Leaderboard</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item"><a class="btn btn-light me-2" role="button"
+                            href="{% url 'index' %}"
+                            style="background: var(--bs-primary);color: var(--bs-btn-disabled-color);">Back Home</a>
+                        </li>
+                    {% endif %}
+                </li>
+            </ul>
+            <div class="d-md-none my-2"><button class="btn btn-light me-2"
+                    type="button">Button</button><button class="btn btn-primary" type="button">Button</button>
             </div>
         </div>
+    </div>
     </nav>
 
     {% block content %}{% endblock %}
@@ -99,6 +102,7 @@
             <p class="mb-0">Copyright © 2023 ByteBrigade</p>
         </div>
     </footer>
+
     <script src="{% static 'assets/bootstrap/js/bootstrap.min.js' %}"></script>
 </body>
 

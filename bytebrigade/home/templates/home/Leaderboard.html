@@ -4,28 +4,28 @@
 {% block title %} Leaderboard {% endblock %}
 
 {% block content %}
-    <div class="fs-6" style="margin-right: 28px;margin-top: 14px;margin-bottom: 22px;color: var(--bs-secondary);padding-left: 0px;margin-left: 28px;">
+    <div class="fs-6" style="margin-right: 28px;margin-top: 14px;margin-bottom: 22px;color: var(--bs-secondary);margin-left: 28px;">
         <h1 style="background: #e1edbd;font-size: 30px;padding-bottom: 5px;color: var(--bs-black);">Leaderboard</h1>
-        <div class="table-responsive" style="background: #e1edbd;border: 1px solid #82b068;border-bottom-width: 1px;border-bottom-style: solid;border-radius: 2px;padding-left: 0px;margin-left: -5px;margin-right: -5px;">
-            <table class="table">
-                <thead style="background: #82b068;">
-                    <tr class="text-capitalize fs-6 text-center text-body">
-                        <th>Position</th>
-                        <th style="--bs-primary: #E1EDBD;--bs-primary-rgb: 225,237,189;--bs-secondary: #719A5E;--bs-secondary-rgb: 113,154,94;--bs-success: #719A5E;--bs-success-rgb: 113,154,94;--bs-info: #E1EDBD;--bs-info-rgb: 225,237,189;--bs-warning: #719A5E;--bs-warning-rgb: 113,154,94;--bs-danger: #719A5E;--bs-danger-rgb: 113,154,94;--bs-light: #E1EDBD;--bs-light-rgb: 225,237,189;--bs-dark: #719A5E;--bs-dark-rgb: 113,154,94;--bs-body-color: #E1EDBD;--bs-body-bg: #E1EDBD;">Username</th>
-                        <th>Points</th>
+        <div style="background: #e1edbd;">
+        <table class = "table table-striped" >
+                <thead style="background: #82b068; padding: 10px">
+                    <tr>
+                        <th style="width: 200px">Rank</th>
+                        <th style="width: 200px">Username</th>
+                        <th style="width: 200px">Points</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody style="color: black;">
                     {% for item in Statistics %}
-                        <tr class="text-center">
+                        <tr class="text-center" style = "border-bottom: #82b068 solid 2px;">
                             <td>{{forloop.counter}}</td>
-                            <td><p>{{item.user}}</p></td>
+                            <td>{{item.user}}</td>
                             <td>{{item.points}}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
-    </div>
-    <div><input type="search" style="background: var(--bs-gray-100);border-style: solid;border-color: var(--bs-success);border-top-color: var(--bs-success);border-right-color: var(--bs-success);border-bottom-color: var(--bs-success);border-left-color: var(--bs-success);box-shadow: 1px 1px var(--bs-success);" placeholder="User search"></div>
+    <div><input type="search" style="background: #82b068;border-style: solid;border-color: var(--bs-success);margin-top: 10px" placeholder="User search"></div>
 {% endblock %}
+

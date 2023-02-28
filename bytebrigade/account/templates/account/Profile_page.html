@@ -150,21 +150,15 @@
                             <path fill-rule="evenodd" clip-rule="evenodd" d="M15.1707 9C15.5825 10.1652 16.6938 11 18 11C19.6569 11 21 9.65685 21 8C21 6.34315 19.6569 5 18 5C16.6938 5 15.5825 5.83481 15.1707 7H4C3.44772 7 3 7.44772 3 8C3 8.55228 3.44772 9 4 9H15.1707ZM19 8C19 8.55228 18.5523 9 18 9C17.4477 9 17 8.55228 17 8C17 7.44772 17.4477 7 18 7C18.5523 7 19 7.44772 19 8Z" fill="currentColor"></path>
                         </svg>
                         <h4 class="card-title" style="padding-left: 0px;margin-bottom: 34px;margin-top: 27px;">Where are you compared to others?</h4>
-                        <div class="d-inline-flex flex-row justify-content-evenly align-items-center align-content-center">
-                            <div>
-                                <h4 class="d-inline-flex justify-content-lg-center align-items-lg-center" style="margin-right: 0px;margin-left: 0px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Week</h4>
-                            </div>
-                            <div>
-                                <h4 style="margin-left: 0px;margin-right: 0px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Month&nbsp; &nbsp; &nbsp;&nbsp;</h4>
-                            </div>
-                            <div>
-                                <h4 style="margin-left: 0px;margin-right: 0px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Year&nbsp; &nbsp; &nbsp;&nbsp;</h4>
-                            </div>
-                        </div>
+
+
                         <div class="row">
                             <div class="col">
                                 <div class="table-responsive">
                                     <table class="table">
+                                        <caption style="caption-side: top; text-align: center;">
+                                            Week
+                                        </caption>
                                         <thead>
                                             <tr>
                                                 <th>User</th>
@@ -173,12 +167,12 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td>{}</td>
-                                                <td>{}</td>
+                                                <td>{{maxWeek.user}}</td>
+                                                <td>{{maxWeek.curweek}}</td>
                                             </tr>
                                             <tr>
-                                                <td>{}</td>
-                                                <td>{}</td>
+                                                <td>{{Profile.user}}</td>
+                                                <td>{{Profile.curweek}}</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -187,6 +181,9 @@
                             <div class="col">
                                 <div class="table-responsive">
                                     <table class="table">
+                                        <caption style="caption-side: top; text-align: center;">
+                                            Month
+                                        </caption>
                                         <thead>
                                             <tr>
                                                 <th>User</th>
@@ -194,13 +191,13 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>{}</td>
-                                                <td>{}</td>
+                                             <tr>
+                                                <td>{{maxMonth.user}}</td>
+                                                <td>{{maxMonth.curmonth}}</td>
                                             </tr>
                                             <tr>
-                                                <td>{}</td>
-                                                <td>{}</td>
+                                                <td>{{Profile.user}}</td>
+                                                <td>{{Profile.curmonth}}</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -209,6 +206,9 @@
                             <div class="col">
                                 <div class="table-responsive">
                                     <table class="table">
+                                        <caption style="caption-side: top; text-align: center;">
+                                            Year
+                                        </caption>
                                         <thead>
                                             <tr>
                                                 <th>User</th>
@@ -216,13 +216,13 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>{}</td>
-                                                <td>{}</td>
+                                             <tr>
+                                                <td>{{maxYear.user}}</td>
+                                                <td>{{maxYear.curyear}}</td>
                                             </tr>
                                             <tr>
-                                                <td>{}</td>
-                                                <td>{}</td>
+                                                <td>{{Profile.user}}</td>
+                                                <td>{{Profile.curyear}}</td>
                                             </tr>
                                         </tbody>
                                     </table>

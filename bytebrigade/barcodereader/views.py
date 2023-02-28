@@ -4,14 +4,42 @@ from .forms import barcode_form, product_form
 import requests
 import urllib.request
 import json
-
 from home.models import Statistic, Product
+from home.models import BinData
+import webbrowser
+import geopy.distance
 
 
 def barcode_lookup(request):
     if not request.user.is_authenticated:
         return redirect('login')
-    if request.method == 'POST':
+
+    if request.method == "POST":
+        curr_lat = float(request.POST.get("location_lat"))
+        curr_long = float(request.POST.get("location_long"))
+        coords_1 = (curr_lat, curr_long)
+
+        shortestDistance = 100000000
+        closeBin = None
+
+        for bin in BinData.objects.all():
+            coords_2 = (bin.binLat, bin.binLong)
+            distance = geopy.distance.geodesic(coords_1, coords_2).m
+            if distance < shortestDistance:
+                shortestDistance = distance
+                closeBin = coords_2
+
+        if shortestDistance < 1:
+            data_dict = {"nearBin": True}
+            return render(request, 'BCscanner/Scanner_page.html', data_dict)
+
+        else:
+            data_dict = {"nearBin": False}
+            a_website = "http://maps.google.com/?q=" + str(closeBin[0]) + "," + str(closeBin[1])
+            webbrowser.open_new_tab(a_website)
+            return render(request, 'BCscanner/Scanner_page.html', data_dict)
+
+    elif request.method == 'POST':
         print(request.POST)
         barcode_camera = request.POST.get("barcode")
         print("Value is ", barcode_camera)
@@ -55,9 +83,8 @@ def barcode_lookup(request):
                                                  weight=weight)
             new_product.save()
             """
-
     else:
-        return HttpResponse(render(request, 'BCscanner/Scanner_page.html'))
+        return render(request, 'BCscanner/Scanner_page.html')
 
 
 def api_lookup(barcode):
@@ -72,3 +99,4 @@ def api_lookup(barcode):
     print("\n")
     data = data["products"][0]
     return data
+
