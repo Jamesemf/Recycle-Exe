@@ -42,7 +42,7 @@
     <script src="{% static 'BCscanner/html5-qrcode.min.js' %}"></script>
     <script>
 
-        var auto_refresh = setInterval(function() { submitform(); }, 100);
+        var auto_refresh = setInterval(function() { submitform(); }, 3000);
 
         function submitform(){
             if (document.getElementById("barcode").value != 0){

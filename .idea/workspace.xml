@@ -6,15 +6,13 @@
   <component name="ChangeListManager">
     <list default="true" id="3049aee3-629a-4512-8969-d528f414ba99" name="Changes" comment="Barcode gets collected">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bytebrigade/barcodereader/templates/BCscanner/Scanner_page.html" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/barcodereader/templates/BCscanner/Scanner_page.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bytebrigade/barcodereader/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/barcodereader/views.py" afterDir="false" />
     </list>
     <list id="564faa13-2048-4d4a-b90c-1b3f74d68ac3" name="Changes by Angelo Palmer" comment="" />
     <list id="d3faa1e5-5dc7-4e42-afb5-ae0bdd4504cd" name="Changes by camer" comment="" />
-    <list id="a2effc7b-5b04-401a-b038-c06b9d2ea579" name="Changes by HAOYA" comment="">
-      <change beforePath="$PROJECT_DIR$/bytebrigade/barcodereader/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/barcodereader/forms.py" afterDir="false" />
-    </list>
-    <list id="10735dad-5d63-4d42-aac0-bad7abfc8820" name="Changes by James" comment="">
-      <change beforePath="$PROJECT_DIR$/bytebrigade/barcodereader/templates/BCscanner/Scanner_page.html" beforeDir="false" afterPath="$PROJECT_DIR$/bytebrigade/barcodereader/templates/BCscanner/Scanner_page.html" afterDir="false" />
-    </list>
+    <list id="a2effc7b-5b04-401a-b038-c06b9d2ea579" name="Changes by HAOYA" comment="" />
+    <list id="10735dad-5d63-4d42-aac0-bad7abfc8820" name="Changes by James" comment="" />
     <list id="83b981c5-231e-4ed9-af43-5c240b415d5b" name="samuelthomas 进行的变更" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -147,6 +145,7 @@
       <workItem from="1677426955912" duration="74000" />
       <workItem from="1677431020879" duration="3090000" />
       <workItem from="1677494422166" duration="543000" />
+      <workItem from="1677540414414" duration="6115000" />
     </task>
     <task id="LOCAL-00001" summary="Checkout">
       <created>1676046271071</created>
