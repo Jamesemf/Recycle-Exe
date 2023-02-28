@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Transaction, Statistic
+from .models import Transaction, Statistic, Goal, UserGoal
 from django.contrib.auth import authenticate, login
 
 

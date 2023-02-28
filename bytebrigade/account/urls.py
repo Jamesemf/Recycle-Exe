@@ -11,4 +11,5 @@ urlpatterns = [
     path('password/reset', auth_views.PasswordResetView.as_view(), name='password_reset'),
     path('password/change', auth_views.PasswordChangeView.as_view(), name='password_change'),
     path('password/change/done/', auth_views.PasswordChangeDoneView.as_view(), name='password_change_done'),
+    path('addUserGoal/', views.addUserGoal, name='addUserGoal'),
 ]

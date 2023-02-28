@@ -98,14 +98,15 @@ class Statistic(models.Model):
 
 
 class Goal(models.Model):
-    goalID = models.IntegerField(primary_key=True)
+    goalID = models.AutoField(primary_key=True)
     name = models.CharField(max_length=200)
     description = models.CharField(max_length=200)
     target = models.DecimalField(max_digits=10, decimal_places=5)
 
 
 class UserGoal(models.Model):
-    userGoalID = models.IntegerField(primary_key=True)
+    userGoalID = models.AutoField(primary_key=True)
+    userGoalNum = models.IntegerField()
     user = models.ForeignKey(User, default=-1, on_delete=models.CASCADE)
     goal = models.ForeignKey(Goal, default=-1, on_delete=models.CASCADE)
     value = models.DecimalField(max_digits=10, decimal_places=5)
