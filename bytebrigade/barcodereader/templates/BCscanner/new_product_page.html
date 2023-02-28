@@ -7,9 +7,38 @@
    <div class="fs-6" style="margin-right: 28px;margin-top: 14px;margin-bottom: 22px;color: var(--bs-secondary);margin-left: 28px;">
         <h1 style="background: #e1edbd;font-size: 30px;padding-bottom: 5px;color: var(--bs-black);">New Product</h1>
         <div style="background: #e1edbd;">
-
-            form goes here
-
+            <!-- form to input the item if it doesn't exist -->
+            <form method="POST" id="newItem">
+                {% csrf_token %}
+                <input type="text" name="barcode" value={{ barcode }} >
+                <div class="form-group">
+                  <label for="materialInput">Product Name</label>
+                  <input type="text" class="form-control" name="name" id="nameInput" aria-describedby="material" placeholder="Enter Name" required>
+                  <small id="material" class="form-text text-muted">Name of the Product</small>
+                </div>
+                <div class="form-group">
+                  <label for="materialInput">Product Type</label>
+                  <input type="text" class="form-control" name="type" id="materialInput" aria-describedby="type" placeholder="Enter Type" required>
+                  <small id="type" class="form-text text-muted">This helps our systems know what you've recycled :)</small>
+                </div>
+                <div class="form-group">
+                    <label for="weightInput">Product Weight</label>
+                    <input type="text" class="form-control" name="weight" id="weightInput" aria-describedby="weight" placeholder="Enter rough weight in grams" required>
+                    <small id="weight" class="form-text text-muted">Try to enter the full weight listed on the packaging.</small>
+                </div>
+                <div class="form-group">
+                    <label for="recycleInput">What bin could you put this item in?</label>
+                    <select id="recycleInput" class="form-control" aria-describedby="recycle" name ='category' required>
+                        <!-- all types of bin -->
+                        <option value="paper">Paper</option>
+                        <option value="glass">Glass</option>
+                        <option value="plastic">Plastic</option>
+                        <option value="general">General Waste</option>
+                    </select>
+                    <small id="recycle" class="form-text text-muted">This helps us know for future users.</small>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
         </div>
     </div>
 {% endblock %}

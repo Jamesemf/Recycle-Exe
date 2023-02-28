@@ -10,4 +10,4 @@ class barcode_form(forms.Form):
 class product_form(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ('barcode', 'name', 'image', 'type', 'weight', 'category')
+        fields = ('barcode', 'name', 'type', 'weight', 'category')

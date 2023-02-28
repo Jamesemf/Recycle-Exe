@@ -35,7 +35,6 @@ class BinData(models.Model):
 class Product(models.Model):
     barcode = models.CharField(max_length=30, primary_key=True)
     name = models.CharField(max_length=30)
-    image = models.ImageField(upload_to='statics/figures/products')
     type = models.CharField(max_length=100)
     weight = models.FloatField()
     category = models.CharField(max_length=100)
