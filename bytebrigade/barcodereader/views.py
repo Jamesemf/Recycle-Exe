@@ -4,89 +4,28 @@ from .forms import barcode_form, product_form
 import urllib.request
 import json
 from home.models import Statistic, Product
-from home.models import BinData
-import webbrowser
-import geopy.distance
 
 
 def barcode_lookup(request):
+    # If the user not log-in, redirect them to login page
     if not request.user.is_authenticated:
         return redirect('login')
-
-    if request.method == "POST":
-        curr_lat = float(request.POST.get("location_lat"))
-        curr_long = float(request.POST.get("location_long"))
-        coords_1 = (curr_lat, curr_long)
-
-        shortestDistance = 100000000
-        closeBin = None
-
-        for bin in BinData.objects.all():
-            coords_2 = (bin.binLat, bin.binLong)
-            distance = geopy.distance.geodesic(coords_1, coords_2).m
-            if distance < shortestDistance:
-                shortestDistance = distance
-                closeBin = coords_2
-
-        if shortestDistance < 10:
-            data_dict = {"nearBin": True}
-            return render(request, 'BCscanner/Scanner_page.html', data_dict)
-
-        else:
-            data_dict = {"nearBin": False}
-            a_website = "http://maps.google.com/?q=" + str(closeBin[0]) + "," + str(closeBin[1])
-            webbrowser.open_new_tab(a_website)
-            return render(request, 'BCscanner/Scanner_page.html', data_dict)
-
-    elif request.method == 'POST':
-        print(request.POST)
-        barcode_camera = request.POST.get("barcode")
-        print("Value is ", barcode_camera)
-        if Product.objects.filter(barcode=barcode_camera).exists():
-            print("in db")
-        else:
-            print("not in db")
-            # render the form page for them to input the products details
-        return HttpResponse(render(request, 'BCscanner/new_product_page.html'))
-        """
-        try:
-            Product.objects.get(barcode=form.cleaned_data('barcode'))
-            return redirect('index')
-        except:
-            dict = api_lookup(form.cleaned_data('barcode'))
-            material = dict['material']
-            title = dict['title']
-            weight = dict['weight']
-            images = dict['images']
-            category = dict['category']
-            new_dict = {'type': material,
-                        'name': title,
-                        'weight': weight,
-                        'image': images[0],
-                        'category': category,
-                        'barcode': form.barcode,
-            }
-            productForm = product_form(initial=new_dict)
-
-            HttpResponse(render(request, 'BCscanner/Scanner_page.html', productForm))
-
-            new_product = Product.objects.create(barcode=form.barcode,
-                                                 title=title,
-                                                 image=images[0],
-                                                 type=category,
-                                                 weight=weight)
-            new_product.save()
-            """
+    # If
+    if request.method == 'POST':
+        database_lookup(request)
     else:
         return render(request, 'BCscanner/Scanner_page.html')
 
 
-
 def user_add_product_view(request):
+    # we need to send the user to a page that contains a form
+    # Ask the user for the weight and material of the product
+    # Then add the product to the database
     if not request.user.is_authenticated:
         return redirect('login')
     if request.method == "POST":
         pass
+
 
 def api_lookup(barcode):
     print("d")
@@ -100,3 +39,16 @@ def api_lookup(barcode):
     print("\n")
     data = data["products"][0]
     return data
+
+
+def database_lookup(request):
+    print(request.POST)
+    barcode_camera = request.POST.get("barcode")
+    print("Value is ", barcode_camera)
+    if Product.objects.filter(barcode=barcode_camera).exists():
+        print("in db")
+        product_data = Product.objects.get(barcode=barcode_camera)
+        print(product_data)
+    else:
+        print("not in db")
+        return HttpResponse(render(request, 'BCscanner/new_product_page.html'))

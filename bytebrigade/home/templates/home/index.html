@@ -19,14 +19,40 @@
                     {% for item in Transaction %}
                     <tr style = "border-bottom: #82b068 solid 2px;">
                         <td>{{item.time}}</td>
-                        <td>{{item.user}} just recycled {{item.product}} at {{item.bin.binId }}</td>
+                        <td>{{item.user}} just recycled {{item.product}} at {{item.bin.binId}}</td>
                         <td>{{item.likes}}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
-        <a class="btn btn-light me-2" role="button" href="{% url 'barcode_lookup' %}"style="color: var(--bs-black);background: var(--bs-primary);margin-top: 10px">Scan Item ?</a>
+            <form id = "formId" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="location_lat" id="lat" value=0>
+                <input type="hidden" name="location_long" id="long" value=0>
+                <div class="btn btn-light me-2"><button class="btn btn-primary d-block w-100" type="submit">{{message}}</button></div>
+            </form>
     </div>
+    <script>
+        currentLocationInsert();
+
+        function currentLocationInsert() {
+            function getLocation() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(binDistCalc);
+                } else {
+                    x.innerHTML = "Geolocation is not supported by this browser.";
+                }
+            }
+
+            function binDistCalc(position) {
+                var lat = position.coords.latitude;
+                var long = position.coords.longitude;
+                document.getElementById("lat").value = lat;
+                document.getElementById("long").value = long;
+            }
+            getLocation();
+        }
+    </script>
 {% endblock %}
 

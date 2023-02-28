@@ -6,3 +6,8 @@ html {
   -o-background-size: cover;
   background-size: cover;
 }
+
+#newItem {
+  display: flex;
+  flex-direction: column;
+}
