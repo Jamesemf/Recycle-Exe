@@ -1,0 +1,170 @@
+Index: bytebrigade/home/views.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from os import truncate\nfrom django.shortcuts import render, redirect\nfrom .models import Transaction, Statistic, BinData\nfrom django.contrib.auth import authenticate, login\nimport webbrowser\nimport geopy.distance\n\n# Create your views here.\ndef getTransactions(request):\n    # If user not login, redirect them to login page.\n    if not request.user.is_authenticated:\n        return redirect('login')\n\n    # When user press the 'scan it!' button, check if they are within range.\n    data = Transaction.objects.all()\n\n    if request.method == 'POST':\n        distance, close_bin, bin_object = withinRange(request)\n        x = round(distance)\n        request.session['bin_data'] = bin_object.binId\n        distance = 2\n        if distance > 10:\n            data_dict = {\n                'Transaction': data,\n                'popup': 1,\n                'error': 1,\n                'Bin': bin_object,\n                'Distance': x,\n            }\n            a_website = \"http://maps.google.com/?q=\" + str(close_bin[0]) + \",\" + str(close_bin[1])\n            webbrowser.open_new_tab(a_website)\n            return render(request, 'home/index.html', data_dict)\n        else:\n            return redirect('barcode_lookup')\n    else:\n        data_dict = {\n            'Transaction': data\n        }\n        return render(request, 'home/index.html', data_dict)\n    # Default looking of index.\n\n\ndef getLeaderboard(request):\n    if not request.user.is_authenticated:\n        return redirect('login')\n    statData = Statistic.objects.all().order_by('-points')\n    data_dict = {\n        'Statistics': statData,\n    }\n\n    return render(request, 'home/Leaderboard.html', data_dict)\n\n\ndef withinRange(request):\n    curr_lat = float(request.POST.get(\"location_lat\"))\n    curr_long = float(request.POST.get(\"location_long\"))\n    coords_1 = (curr_lat, curr_long)\n\n    shortestDistance = 100000000\n    closeBin = None\n    binObject = None\n\n    for bin in BinData.objects.all():\n        coords_2 = (bin.binLat, bin.binLong)\n        distance = geopy.distance.geodesic(coords_1, coords_2).m\n        if distance < shortestDistance:\n            shortestDistance = distance\n            close_bin = coords_2\n            bin_object = bin\n\n    return shortestDistance, close_bin, bin_object\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/bytebrigade/home/views.py b/bytebrigade/home/views.py
+--- a/bytebrigade/home/views.py	(revision 40784f969464e404a1273e37623b4400651a722d)
++++ b/bytebrigade/home/views.py	(date 1677694929106)
+@@ -8,6 +8,7 @@
+ # Create your views here.
+ def getTransactions(request):
+     # If user not login, redirect them to login page.
++    request.session['barcode'] = -1
+     if not request.user.is_authenticated:
+         return redirect('login')
+ 
+@@ -18,7 +19,7 @@
+         distance, close_bin, bin_object = withinRange(request)
+         x = round(distance)
+         request.session['bin_data'] = bin_object.binId
+-        distance = 2
++        #distance = 2
+         if distance > 10:
+             data_dict = {
+                 'Transaction': data,
+Index: bytebrigade/barcodereader/views.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from django.shortcuts import render, redirect\nfrom django.http import HttpResponse\nimport urllib.request\nimport json\nfrom home.models import Statistic, Product, BinData, Transaction\nfrom datetime import datetime\nfrom django.contrib.auth.models import User\n\n\ndef barcode_lookup(request):\n    # If the user not log-in, redirect them to login page\n    if not request.user.is_authenticated:\n        return redirect('login')\n    if request.method == 'POST':\n        barcode_product = request.POST.get(\"barcode\")\n        # We set the session barcode so that we can then use it in the other areas of the project\n        request.session['barcode'] = barcode_product\n        if Product.objects.filter(barcode=barcode_product).exists():\n            return redirect('recycle_confirm')\n            # redirect to product recycle page\n        else:\n            return redirect('create_product')\n\n    else:\n        return render(request, 'BCscanner/Scanner_page.html')\n\n\ndef create_product(request):\n    # we need to send the user to a page that contains a form\n    # Ask the user for the weight and material of the product\n    # Then add the product to the database\n    if not request.user.is_authenticated:\n        return redirect('login')\n    if request.method == 'POST':\n        form = request.POST\n        new_product = Product.objects.create(\n            barcode=form.get(\"barcode\"),\n            name=form.get(\"name\"),\n            weight=float(form.get(\"weight\")) / 1000,\n            material=form.get(\"material\"),\n            recycle=form.get(\"recycle\")\n        )\n        new_product.save()\n\n        product_data = Product.objects.get(barcode=form.get(\"barcode\"))\n        addstats(request.user, product_data, 50)\n\n        return redirect('recycle_confirm')\n    elif request.session['barcode']:\n        if not Product.objects.filter(barcode=request.session['barcode']).exists():\n            barcode = {'barcode': request.session['barcode']}\n            return render(request, 'BCscanner/new_product_page.html', barcode)\n        else:\n            return redirect('index')\n\n\n# create a function that is called by barcode_lookup() once the whole product shit is done\n# This function adds the transaction but doesn't render anything, it is a procedure\n\n\ndef create_product_success(request):\n    pass\n    # This function is called after a new product is made\n    # it present to the user what the product is and the points that they get\n    # Then it sends then to recycle_confirm\n\n\ndef recycle_confirm(request):\n    # The function that handles recording a transaction\n    # Then it shows you to a popup showing what stats you gained on the home_page\n    if not request.user.is_authenticated:\n        return redirect('login')\n    try:\n        barcode_product = request.session['barcode']\n        bin_data = request.session['bin_data']\n        if Product.objects.filter(barcode=barcode_product).exists() \\\n                and BinData.objects.filter(binId=bin_data).exists():\n            product_data = Product.objects.get(barcode=barcode_product)\n            user_data = request.user\n            cur_time = (datetime.now()).strftime(\"%H:%M:%S\")\n            bin_data = BinData.objects.get(binId=bin_data)\n            new_transaction = Transaction.objects.create(\n                product=product_data,\n                user=user_data,\n                time=cur_time,\n                bin=bin_data,\n            )\n            new_transaction.save()\n            request.session['barcode'] = -1\n            request.session['bin_data'] = -1\n        # Call a function that will take in the calculate the points for the user\n        # If the product is new add points, this is handle in the create product part\n        # def addstats(points,kg)\n            weight = product_data.weight\n            points = round(weight * 122)\n            print(\"h\")\n            addstats(request.user, product_data, points, weight)  # need to include the product\n            print(\"j\")\n\n            data = Transaction.objects.all()\n            data_dict = {\n                'Transaction': data,\n                'popup': 1,\n                'newPoints': 1,\n                'product': product_data.name,\n                'points': points,\n\n            }\n            print(\"k\")\n            print(data_dict)\n            return render(request, 'home/index.html', data_dict)\n        return redirect('barcode_lookup')\n    except Exception as e:\n        print(e)\n        # They tried to scam us and haven't scanned a product\n        return redirect('barcode_lookup')\n\n\ndef recycle_result_stats_view(request):\n    # The function that shows when user finished recycle\n    # The page have stats of points,\n    pass\n\n\ndef api_lookup(barcode):\n    print(\"d\")\n    api_key = \"5bcg2pbed762819eeppkc2qhjak1l4\"\n    url = \"https://api.barcodelookup.com/v3/products?barcode=\" + barcode + \"&formatted=y&key=\" + api_key\n    print(\"j\")\n    with urllib.request.urlopen(url) as url:\n        data = json.loads(url.read().decode())\n    print(\"l\")\n    print(data)\n    print(\"\\n\")\n    data = data[\"products\"][0]\n    return data\n\n\ndef database_lookup(request):\n    print(request.POST)\n    barcode_camera = request.POST.get(\"barcode\")\n    print(\"Value is \", barcode_camera)\n    if Product.objects.filter(barcode=barcode_camera).exists():\n        print(\"in db\")\n        product_data = Product.objects.get(barcode=barcode_camera)\n        print(product_data)\n    else:\n        print(\"not in db\")\n\n\ndef addstats(user, product, points: int, kg=0):\n    user_stats = Statistic.objects.get(user=user)\n    user_stats.points += points\n    kg *= 0.09\n    print(\"added points\")\n    user_stats.curweek += kg  # change field\n    print(\"added curweek\")\n    user_stats.curmonth += kg\n    print(\"added curmonth\")\n    user_stats.curyear += kg\n    print(\"added curyear\")\n    user_stats.lastRecycle = product\n    print(\"added lastRecycle\")\n    user_stats.save()  # this will update only\n\n\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/bytebrigade/barcodereader/views.py b/bytebrigade/barcodereader/views.py
+--- a/bytebrigade/barcodereader/views.py	(revision 40784f969464e404a1273e37623b4400651a722d)
++++ b/bytebrigade/barcodereader/views.py	(date 1677694479892)
+@@ -15,6 +15,7 @@
+         barcode_product = request.POST.get("barcode")
+         # We set the session barcode so that we can then use it in the other areas of the project
+         request.session['barcode'] = barcode_product
++        request.session['valid'] = 1
+         if Product.objects.filter(barcode=barcode_product).exists():
+             return redirect('recycle_confirm')
+             # redirect to product recycle page
+@@ -29,6 +30,7 @@
+     # we need to send the user to a page that contains a form
+     # Ask the user for the weight and material of the product
+     # Then add the product to the database
++    #request.session['new_product'] = False
+     if not request.user.is_authenticated:
+         return redirect('login')
+     if request.method == 'POST':
+@@ -45,24 +47,16 @@
+         product_data = Product.objects.get(barcode=form.get("barcode"))
+         addstats(request.user, product_data, 50)
+ 
++        request.session['new_product'] = True
++
+         return redirect('recycle_confirm')
+-    elif request.session['barcode']:
++    elif request.session['barcode'] != -1:
+         if not Product.objects.filter(barcode=request.session['barcode']).exists():
+             barcode = {'barcode': request.session['barcode']}
+             return render(request, 'BCscanner/new_product_page.html', barcode)
+         else:
+             return redirect('index')
+-
+-
+-# create a function that is called by barcode_lookup() once the whole product shit is done
+-# This function adds the transaction but doesn't render anything, it is a procedure
+-
+-
+-def create_product_success(request):
+-    pass
+-    # This function is called after a new product is made
+-    # it present to the user what the product is and the points that they get
+-    # Then it sends then to recycle_confirm
++    return redirect('index')
+ 
+ 
+ def recycle_confirm(request):
+@@ -70,6 +64,13 @@
+     # Then it shows you to a popup showing what stats you gained on the home_page
+     if not request.user.is_authenticated:
+         return redirect('login')
++    try:
++        if not request.session['valid'] == 1:
++            return redirect('index')
++    except Exception as e:
++        print(e)
++        return redirect("index")
++
+     try:
+         barcode_product = request.session['barcode']
+         bin_data = request.session['bin_data']
+@@ -88,14 +89,40 @@
+             new_transaction.save()
+             request.session['barcode'] = -1
+             request.session['bin_data'] = -1
++            request.session['valid'] = -1
+         # Call a function that will take in the calculate the points for the user
+         # If the product is new add points, this is handle in the create product part
+         # def addstats(points,kg)
+             weight = product_data.weight
+             points = round(weight * 122)
+-            print("h")
+             addstats(request.user, product_data, points, weight)  # need to include the product
+-            print("j")
++
++            # If statement that checks what the products type is and then we set a variable that is litrally
++            # var = 'Put in the red bin'
++
++            product_type = product_data.material
++            could_recycle = product_data.recycle
++            new_home = ""
++            match (product_type, could_recycle):
++                case ("Paper", "True"):
++                    new_home = "My new home is the Paper bin, please help me find my home! :)"
++                case ("Plastic", "True"):
++                    new_home = "My new home is the Plastic bin, please help me find my home! :)"
++                case ("Cans", "True"):
++                    new_home = "My new home is the Cans bin, please help me find my home! :)"
++                case ("Glass", "True"):
++                    new_home = "My new home is the Glass bin, please help me find my home! :)"
++
++                case ("Paper", "False"):
++                    new_home = "I am non-recyclable, please put me into General Waste :("
++                case ("Plastic", "False"):
++                    new_home = "I am non-recyclable, please put me into General Waste :("
++                case ("Cans", "False"):
++                    new_home = "I am non-recyclable, please put me into General Waste :("
++                case ("Non-Recyclable", "False"):
++                    new_home = "I am non-recyclable, please put me into General Waste :("
++                case ("Glass", "False"):
++                    new_home = "I am non-recyclable, please put me into General Waste :("
+ 
+             data = Transaction.objects.all()
+             data_dict = {
+@@ -104,7 +131,7 @@
+                 'newPoints': 1,
+                 'product': product_data.name,
+                 'points': points,
+-
++                'newhome': new_home
+             }
+             print("k")
+             print(data_dict)
+@@ -116,12 +143,6 @@
+         return redirect('barcode_lookup')
+ 
+ 
+-def recycle_result_stats_view(request):
+-    # The function that shows when user finished recycle
+-    # The page have stats of points,
+-    pass
+-
+-
+ def api_lookup(barcode):
+     print("d")
+     api_key = "5bcg2pbed762819eeppkc2qhjak1l4"
+@@ -152,7 +173,7 @@
+     user_stats = Statistic.objects.get(user=user)
+     user_stats.points += points
+     kg *= 0.09
+-    print("added points")
++    kg = round(kg, 3)
+     user_stats.curweek += kg  # change field
+     print("added curweek")
+     user_stats.curmonth += kg

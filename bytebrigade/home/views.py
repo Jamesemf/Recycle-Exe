@@ -8,6 +8,7 @@ import geopy.distance
 # Create your views here.
 def getTransactions(request):
     # If user not login, redirect them to login page.
+    request.session['barcode'] = -1
     if not request.user.is_authenticated:
         return redirect('login')
 
@@ -49,6 +50,10 @@ def getLeaderboard(request):
     }
 
     return render(request, 'home/Leaderboard.html', data_dict)
+
+
+def instruction_view(request):
+    return render(request, 'home/about-me.html')
 
 
 def withinRange(request):

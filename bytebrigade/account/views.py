@@ -30,9 +30,9 @@ def register(request):
 def account(request):
     if request.user.is_authenticated:
         data = Statistic.objects.get(user=request.user)
-        maxWeek = Statistic.objects.all().order_by('curweek')[0]
-        maxMonth = Statistic.objects.all().order_by('curmonth')[0]
-        maxYear = Statistic.objects.all().order_by('curyear')[0]
+        maxWeek = Statistic.objects.all().order_by('-curweek')[0]
+        maxMonth = Statistic.objects.all().order_by('-curmonth')[0]
+        maxYear = Statistic.objects.all().order_by('-curyear')[0]
         goalData = Goal.objects.all()
         userGoal1 = UserGoal.objects.filter(Q(userGoalNum=1) & Q(user=request.user)).first()
         userGoal2 = UserGoal.objects.filter(Q(userGoalNum=2) & Q(user=request.user)).first()
