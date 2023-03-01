@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, HttpResponseRedirect
-from django.contrib.auth import authenticate, login
+from django.http import HttpResponseRedirect
 from .forms import RegistrationForm
 from home.models import Statistic, Goal, UserGoal, User
 from django.urls import reverse
@@ -13,7 +12,10 @@ def register(request):
 
     if request.method == 'POST':
         user_form = RegistrationForm(request.POST)
+
         if user_form.is_valid():
+            if user_form.cleaned_data['password'] != user_form.cleaned_data['password_confirm']:
+                return render(request, 'registration/register.html', {'user_form': user_form})
             # New user object without saving
             new_user = user_form.save(commit=False)
             # Set password
@@ -57,7 +59,7 @@ def password(request):
 def addUserGoal(request):
     x = request.POST['goalNum']
     y = request.POST['goal-options']
-    z = request.POST['goal-type']
+    z = request.POST['goal-type'] # this is plastic and all the others
     goalNumType = Goal.objects.get(pk=y)
     current_user = request.user
 

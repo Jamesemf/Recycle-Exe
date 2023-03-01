@@ -1,12 +1,8 @@
-from unicodedata import decimal
-
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
 import urllib.request
 import json
 from home.models import Statistic, Product, BinData, Transaction, UserGoal
 from datetime import datetime
-from django.contrib.auth.models import User
 from django.db.models import Q
 
 
@@ -116,8 +112,6 @@ def recycle_confirm(request):
                 case ("Glass", "True"):
                     new_home = "My new home is the Glass bin, please help me find my home! :)"
 
-                case ("Paper", "False"):
-                    new_home = "I am non-recyclable, please put me into General Waste :("
                 case ("Plastic", "False"):
                     new_home = "I am non-recyclable, please put me into General Waste :("
                 case ("Cans", "False"):
@@ -155,7 +149,7 @@ def recycle_confirm(request):
                         points += 100
 
 
-            data = Transaction.objects.all()
+            data = Transaction.objects.all()[:5]
             data_dict = {
                 'Transaction': data,
                 'popup': 1,
