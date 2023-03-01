@@ -4,6 +4,35 @@
 {% block title %} Home - Welcome! {% endblock %}
 
 {% block content %}
+    <style>
+    /* The Modal (background) */
+    .modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    }
+    /*Text color*/
+    .modal p{
+        color: black;
+    }
+    /* Modal Content */
+    .modal-content {
+    background-color: var(--bs-secondary);
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    }
+</style>
+
     <div class="fs-6" style="margin-right: 28px;margin-top: 14px;margin-bottom: 22px;color: var(--bs-secondary);margin-left: 28px;">
         <h1 style="background: #e1edbd;font-size: 30px;padding-bottom: 5px;color: var(--bs-black);">Daily Feed</h1>
         <div style="background: #e1edbd;">
@@ -19,7 +48,7 @@
                     {% for item in Transaction %}
                     <tr style = "border-bottom: #82b068 solid 2px;">
                         <td>{{item.time}}</td>
-                        <td>{{item.user}} just recycled {{item.product.name}} at Bin {{item.bin.binId}}</td>
+                        <td>{{item.user}} just recycled {{item.product.name}} at Bin {{item.bin.binName}}</td>
                         <td>{{item.likes}}</td>
                     </tr>
                     {% endfor %}
@@ -30,8 +59,42 @@
                 {% csrf_token %}
                 <input type="hidden" name="location_lat" id="lat" value=0>
                 <input type="hidden" name="location_long" id="long" value=0>
-                <div class="btn btn-light me-2"><button class="btn btn-primary d-block w-100" type="submit">{{message}}</button></div>
+                <div class="btn btn-light me-2"><button class="btn btn-primary d-block w-100" type="submit">Scan Item</button></div>
             </form>
+            <!-- If popup is set -->
+            {% if popup %}
+                <!-- If error is set -->
+                {% if error %}
+                    <!-- display info on nearest bin -->
+                <div id="infoModel" class="modal">
+                    <div class="modal-content" style="color:red">
+                        <p>Your closest bin is {{ Bin.binName }}, {{ Distance }}m from your location. follow the map to find</p>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- If successful scan -->
+                {% if newPoints %}
+                    <!-- display info on successful scan -->
+                    <div id="infoModel" class="modal">
+                        <div class="modal-content" style="color:green">
+                            <p>Thank you for recycling {{ product }} you gained {{ points }}</p>
+                        </div>
+                    </div>
+
+                {% endif %}
+
+                <script>
+                    var modal = document.getElementById("infoModel");
+                    modal.style.display = "block";
+                    window.onclick = function(event) {
+                        if (event.target == modal) {
+                            modal.style.display = "none";
+                            }
+                        }
+                </script>
+            {% endif %}
+
     </div>
     <script>
         currentLocationInsert();

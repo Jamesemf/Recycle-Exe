@@ -5,31 +5,19 @@ import time
 
 
 class BinData(models.Model):
-    binId = models.CharField(max_length=10, primary_key=True)  # Format AM-01-1 (Building-Floor-BinNo)
-    binLat = models.DecimalField(max_digits=25, decimal_places=22)
-    binLong = models.DecimalField(max_digits=25, decimal_places=22)
+    binId = models.CharField(max_length=100, primary_key=True)  # Format AM-01-1 (Building-Floor-BinNo)
+    binName = models.CharField(max_length=100, default="bin")
+    binLat = models.DecimalField(max_digits=100, decimal_places=22)
+    binLong = models.DecimalField(max_digits=100, decimal_places=22)
+    binPhoto = models.ImageField(default='figures/bins/default.jpg')
+    bin_general = models.BooleanField(default=False)
+    bin_recycle = models.BooleanField(default=False)
+    bin_paper = models.BooleanField(default=False)
+    bin_cans = models.BooleanField(default=False)
+    bin_glass = models.BooleanField(default=False)
+    bin_plastic = models.BooleanField(default=False)
+    bin_non_rec = models.BooleanField(default=False)
 
-    GENERAL = 'General Waste'
-    RECYCLING = 'Recycling'
-    PLASTIC = 'Plastic'
-    PAPER = 'Paper'
-    CANS = 'Cans'
-    GLASS = 'Glass'
-
-    binTypeChoices = [
-        (GENERAL, 'General Waste'),
-        (RECYCLING, 'Recycling'),
-        (PLASTIC, 'Plastic'),
-        (PAPER, 'Paper'),
-        (CANS, 'Cans'),
-        (GLASS, 'Glass'),
-    ]
-
-    binType = models.CharField(
-        max_length=25,
-        choices=binTypeChoices,
-        default=GENERAL
-    )
 
 
 class Product(models.Model):
@@ -55,10 +43,10 @@ class Transaction(models.Model):
 class Statistic(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     points = models.IntegerField(default=0)
-    carbon = models.DecimalField(default=0, max_digits=10, decimal_places=5)
-    curweek = models.DecimalField(default=0, max_digits=10, decimal_places=5)
-    curmonth = models.DecimalField(default=0, max_digits=10, decimal_places=5)
-    curyear = models.DecimalField(default=0, max_digits=10, decimal_places=5)
+    carbon = models.FloatField(default=0)
+    curweek = models.FloatField(default=0)
+    curmonth = models.FloatField(default=0)
+    curyear = models.FloatField(default=0)
     lastRecycle = models.ForeignKey(
         Product,
         related_name="lastRecycle",

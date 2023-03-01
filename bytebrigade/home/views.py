@@ -1,7 +1,6 @@
 from os import truncate
-
 from django.shortcuts import render, redirect
-from .models import Transaction, Statistic, Goal, UserGoal, BinData
+from .models import Transaction, Statistic, BinData
 from django.contrib.auth import authenticate, login
 import webbrowser
 import geopy.distance
@@ -17,13 +16,16 @@ def getTransactions(request):
 
     if request.method == 'POST':
         distance, close_bin, bin_object = withinRange(request)
+        x = round(distance)
         request.session['bin_data'] = bin_object.binId
         distance = 2
         if distance > 10:
-            msg = "You're too far from the bin by", distance, "metres"
             data_dict = {
                 'Transaction': data,
-                'message': msg
+                'popup': 1,
+                'error': 1,
+                'Bin': bin_object,
+                'Distance': x,
             }
             a_website = "http://maps.google.com/?q=" + str(close_bin[0]) + "," + str(close_bin[1])
             webbrowser.open_new_tab(a_website)
@@ -32,8 +34,7 @@ def getTransactions(request):
             return redirect('barcode_lookup')
     else:
         data_dict = {
-            'Transaction': data,
-            'message': 'Scan Item?'
+            'Transaction': data
         }
         return render(request, 'home/index.html', data_dict)
     # Default looking of index.
