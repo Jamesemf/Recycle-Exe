@@ -23,9 +23,9 @@ class BinData(models.Model):
 class Product(models.Model):
     barcode = models.CharField(max_length=30, primary_key=True)
     name = models.CharField(max_length=30)
-    type = models.CharField(max_length=100)
     weight = models.FloatField()
-    category = models.CharField(max_length=100)
+    material = models.CharField(max_length=100)
+    recycle = models.CharField(max_length=30)
 
     def __unicode__(self):
         return u'%s' % self.barcode

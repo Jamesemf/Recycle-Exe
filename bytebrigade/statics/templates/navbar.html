@@ -12,17 +12,6 @@
     {% block header %}  {% endblock %}
 </head>
 
-<style>
-body {
-  
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-size: 100% 100%;
-}
-</style>
-
-
-
 
 <body class="font-monospace text-center bg-secondary bg-gradient" style="--bs-body-bg: #E1EDBD;--bs-secondary: #E1EDBD;
     --bs-secondary-rgb: 225,237,189;--bs-primary: #82B068;--bs-primary-rgb: 130,176,104;--bs-dark: #426D34;
@@ -30,14 +19,7 @@ body {
     <nav class="navbar navbar-dark navbar-expand-md bg-dark d-flex justify-content-center align-items-center align-content-center py-3"
     style="color: var(--bs-black);">
     <div class="container"><a class="navbar-brand d-flex" href="#" style="margin-left: 50px;">
-        <span class="bs-icon-sm bs-icon-rounded bs-icon-primary d-flex justify-content-center align-items-center me-2 bs-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor"
-                    viewBox="0 0 16 16" class="bi bi-bar-chart" style="color: var(--bs-black);">
-                    <path
-                        d="M4 11H2v3h2v-3zm5-4H7v7h2V7zm5-5v12h-2V2h2zm-2-1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1h-2zM6 7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7zm-5 4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-3z">
-                    </path>
-            </svg>
-        </span><span class="text-center" style="color: var(--bs-black);">ByteBrigade</span></a>
+        <span class="text-center" style="color: var(--bs-black);">ByteBrigade</span></a>
         <div class="d-inline-flex">
             {% if request.user.is_authenticated %}
                 <div class="dropdown" style="border-radius: 8px;background: var(--bs-primary);padding: 8px;"><a class="dropdown-toggle text-center" aria-expanded="false" data-bs-toggle="dropdown" href="#" style="border-radius: 8px;color: var(--bs-black);background: var(--bs-primary); text-decoration: none;">Account</a>
@@ -74,21 +56,12 @@ body {
                         </li>
                     {% endif %}
                 </li>
-                <li>
-                    <div class="d-md-none my-2">
-                        <button class="btn btn-light me-2" type="button">Button</button>
-                    </div>
-                </li>
-                <li>
-                    <div class="d-md-none my-2">
-                        <button class="btn btn-light me-2" type="button">Button</button>
-                    </div>
+                <li class="nav-item">
+                    <a class="btn btn-light me-2" role="button
+                            href="{% url 'leaderboard' %}"
+                            style="background: var(--bs-primary);color: var(--bs-btn-disabled-color);">How to work?</a>
                 </li>
             </ul>
-
-            <div class="d-md-none my-2"><button class="btn btn-light me-2"
-                    type="button">Button</button><button class="btn btn-primary" type="button">Button</button>
-            </div>
         </div>
     </div>
     </nav>

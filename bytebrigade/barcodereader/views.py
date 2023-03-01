@@ -36,9 +36,9 @@ def create_product(request):
         new_product = Product.objects.create(
             barcode=form.get("barcode"),
             name=form.get("name"),
-            type=form.get("type"),
-            weight=form.get("weight") / 1000,
-            category=form.get("category"),
+            weight=float(form.get("weight")) / 1000,
+            material=form.get("material"),
+            recycle=form.get("recycle")
         )
         new_product.save()
 
@@ -108,7 +108,7 @@ def recycle_confirm(request):
             }
             print("k")
             print(data_dict)
-            return render(request, data_dict)
+            return render(request, 'home/index.html', data_dict)
         return redirect('barcode_lookup')
     except Exception as e:
         print(e)
