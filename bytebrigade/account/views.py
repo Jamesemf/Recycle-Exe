@@ -57,17 +57,18 @@ def password(request):
 def addUserGoal(request):
     x = request.POST['goalNum']
     y = request.POST['goal-options']
-    goalType = Goal.objects.get(pk=y)
+    z = request.POST['goal-type']
+    goalNumType = Goal.objects.get(pk=y)
     current_user = request.user
 
     # Checking if the user has already got a goal for this specific value
     goalSet = UserGoal.objects.filter(Q(userGoalNum=x) & Q(user=current_user))
     if not goalSet:
-        goal = UserGoal(userGoalNum = x, user = current_user, goal = goalType, value = 0)
+        goal = UserGoal(userGoalNum = x, user = current_user, goal = goalNumType, value = 0, goalType = z)
         goal.save()
     else:
         UserGoal.objects.filter(Q(userGoalNum=x) & Q(user=current_user)).delete()
-        goal = UserGoal(userGoalNum = x, user = current_user, goal = goalType, value = 0)
+        goal = UserGoal(userGoalNum = x, user = current_user, goal = goalNumType, value = 0, goalType = z)
         goal.save()
     
     return HttpResponseRedirect(reverse('account'))

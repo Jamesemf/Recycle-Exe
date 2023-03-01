@@ -2,9 +2,10 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 import urllib.request
 import json
-from home.models import Statistic, Product, BinData, Transaction
+from home.models import Statistic, Product, BinData, Transaction, UserGoal
 from datetime import datetime
 from django.contrib.auth.models import User
+from django.db.models import Q
 
 
 def barcode_lookup(request):
@@ -96,6 +97,32 @@ def recycle_confirm(request):
             print("h")
             addstats(request.user, product_data, points, weight)  # need to include the product
             print("j")
+
+            # Add points to user goals
+            current_user = request.user
+            if(bin_data.bin_recycle):
+                binType = 'Recycling'
+            if(bin_data.bin_paper):
+                binType = 'Paper'
+            if(bin_data.bin_cans):
+                binType = 'Cans'
+            if(bin_data.bin_glass):
+                binType = 'Glass'
+            if(bin_data.bin_plastic):
+                binType = 'Plastic'
+            else:
+                pass
+
+            if(binType):
+                thisUserGoals = UserGoal.objects.filter(Q(goalType=binType) & Q(user=current_user))
+                for item in thisUserGoals:
+                    item.value += points
+                
+                # Delete full goals and add points
+                for item in thisUserGoals:
+                    if(item.value >= 100):
+                        item.delete()
+                        points += 100
 
             data = Transaction.objects.all()
             data_dict = {
