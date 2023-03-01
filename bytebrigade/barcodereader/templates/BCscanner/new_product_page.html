@@ -5,24 +5,14 @@
 
 {% block content %}
     <style>
-        label {
-            color: black;
-        }
-        #new {
-            margin-bottom: 2vh;
-        }
-        #submit {
-            background-color: #719a5e;
-            border-color: #719a5e;
-            color: black;
-        }
+
     </style>
     <div class="fs-6"
          style="margin-right: 28px;margin-top: 14px;margin-bottom: 22px;color: var(--bs-secondary);margin-left: 28px;">
-        <h1 style="background: #e1edbd;font-size: 30px;padding-bottom: 5px;color: var(--bs-black);">New Product</h1>
+        <h1 style="font-size: 30px; padding-bottom: 5px; color: var(--bs-black);" class="">New Product</h1>
         <div style="background: #e1edbd;">
             <!-- form to input the item if it doesn't exist -->
-            <form method="POST" id="newItem">
+            <form method="POST" id="newItem" class="new-form">
                 {% csrf_token %}
                 <div class="form-group" id="new">
                     <label for="barcodeInput">Product Barcode</label>

@@ -9,69 +9,12 @@
     <link rel="shortcut icon" type="image/png" href="{% static 'figures/favicon.ico' %}"/>
     <link rel="stylesheet" href="{% static 'assets/bootstrap/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'assets/css/Navbar-Centered-Brand-Dark-icons.css' %}">
-    <!-- Slideshow Background -->
     <link rel="stylesheet" href="{% static 'style/css/background.css' %}">
+    <link rel="stylesheet" href="{% static 'style/css/styles.css' %}">
+    <!-- Slideshow Background -->
     {% block header %}  {% endblock %}
 </head>
 
-
-<body class="font-monospace text-center bg-secondary bg-gradient" style="--bs-body-bg: #E1EDBD;--bs-secondary: #E1EDBD;
-    --bs-secondary-rgb: 225,237,189;--bs-primary: #82B068;--bs-primary-rgb: 130,176,104;--bs-dark: #426D34;
-    --bs-dark-rgb: 66,109,52; ">
-<nav class="navbar navbar-dark navbar-expand-md bg-dark d-flex justify-content-center align-items-center align-content-center py-3"
-     style="color: var(--bs-black); position: relative; opacity: 70%">
-    <div class="container"><a class="navbar-brand d-flex" href="#" style="margin-left: 50px;">
-        <span class="text-center" style="color: var(--bs-black);">ByteBrigade</span></a>
-        <div class="d-inline-flex">
-            {% if request.user.is_authenticated %}
-                <div class="dropdown" style="border-radius: 8px;background: var(--bs-primary);padding: 8px;"><a
-                        class="dropdown-toggle text-center" aria-expanded="false" data-bs-toggle="dropdown" href="#"
-                        style="border-radius: 8px;color: var(--bs-black);background: var(--bs-primary); text-decoration: none;">Account</a>
-                    <div class="dropdown-menu">
-                        <p class="dropdown-item">Hello {{ request.user.username }}</p>
-                        <a class="dropdown-item" href="{% url 'account' %}">Profile</a>
-                        <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
-                    </div>
-                </div>
-            {% else %}
-                <div class="dropdown" style="border-radius: 8px;background: var(--bs-primary);padding: 8px;"><a
-                        class="dropdown-toggle text-center" aria-expanded="false" data-bs-toggle="dropdown" href="#"
-                        style="border-radius: 8px;color: var(--bs-black);background: var(--bs-primary); text-decoration: none;">Login</a>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" href="{% url 'login' %}">Log-In</a>
-                        <a class="dropdown-item" href="{% url 'registration' %}">Sign-Up</a>
-                    </div>
-                </div>
-            {% endif %}
-        </div>
-        <button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-6"
-                style="color: var(--bs-black);background: var(--bs-primary);"><span class="visually-hidden">Toggle
-            navigation</span><span class="navbar-toggler-icon"></span></button>
-        <div class="collapse navbar-collapse flex-grow-0 order-md-first" id="navcol-6">
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item">
-                    {% if request.get_full_path == "/" %}
-                        <li class="nav-item"><a class="btn btn-light me-2" role="button"
-                                                href="{% url 'leaderboard' %}"
-                                                style="background: var(--bs-primary);color: var(--bs-btn-disabled-color);">Leaderboard</a>
-                        </li>
-                    {% else %}
-                        <li class="nav-item"><a class="btn btn-light me-2" role="button"
-                                                href="{% url 'index' %}"
-                                                style="background: var(--bs-primary);color: var(--bs-btn-disabled-color);">Back
-                            Home</a>
-                        </li>
-                    {% endif %}
-                </li>
-                <li class="nav-item">
-                    <a class="btn btn-light me-2" role="button
-                            href="{% url 'leaderboard' %}"
-                    style="background: var(--bs-primary);color: var(--bs-btn-disabled-color);">How to work?</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
 <ul class="slideshow unordered">
     <li><span>Image 01</span></li>
     <li><span>Image 02</span></li>
@@ -83,9 +26,63 @@
     <li><span>Image 08</span></li>
 </ul>
 
-{% block content %}{% endblock %}
+<body class="font-monospace text-center bg-secondary bg-gradient navbar-styles">
+<nav class="navbar navbar-expand-md justify-content-center navbar-styles nav-show">
+    <div class="container">
+        <a class="navbar-brand d-flex" style="color: var(--primary)"><strong><h1>ByteBrigade</h1></strong></a>
+            <div class="d-inline-flex" >
+            {% if request.user.is_authenticated %}
+                <div class="dropdown" style="border-radius: 8px; background-color:var(--primary); padding: 8px;"><a
+                        class="dropdown-toggle text-center" aria-expanded="false" data-bs-toggle="dropdown" href="#"
+                        style="border-radius: 8px;color: var(--bs-black); text-decoration: none;">Account</a>
+                    <div class="dropdown-menu">
+                        <p class="dropdown-item">Hello {{ request.user.username }}</p>
+                        <a class="dropdown-item" href="{% url 'account' %}">Profile</a>
+                        <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+                    </div>
+                </div>
+            {% else %}
+                <div class="dropdown" style="border-radius: 8px;background: var(--primary);padding: 8px;"><a class="dropdown-toggle text-center" aria-expanded="false" data-bs-toggle="dropdown" style="border-radius: 8px;color: var(--bs-black); text-decoration: none;">Login</a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="{% url 'login' %}">Log-In</a>
+                        <a class="dropdown-item" href="{% url 'registration' %}">Sign-Up</a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        <button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-6"
+                style="color: var(--bs-black);background: var(--primary);"><span class="visually-hidden">Toggle
+            navigation</span><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse flex-grow-0 order-md-first" id="navcol-6">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    {% if request.get_full_path == "/" %}
+                        <li class="nav-item"><a class="btn btn-light me-2" role="button"
+                                                href="{% url 'leaderboard' %}"
+                                                style="background-color: var(--primary); color: var(--bs-btn-disabled-color);">Leaderboard</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item"><a class="btn btn-light me-2" role="button"
+                                                href="{% url 'index' %}"
+                                                style="background-color: var(--primary); color: var(--bs-btn-disabled-color);">Back Home</a>
+                        </li>
+                    {% endif %}
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-light me-2" role="button href="{% url 'leaderboard' %}" style="background: var(--primary);color: var(--bs-btn-disabled-color);">How to work?</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
 
-<footer class="text-center">
+<div class="main-content" >
+    {% block content %}{% endblock %}
+</div>
+<div style="flex: 121212;">
+
+</div>
+<footer class="text-center footer-styles mt-4" style="color: ">
     <div class="container text-muted py-4 py-lg-5">
         <ul class="list-inline">
             <li class="list-inline-item me-4"><a class="link-secondary" href="#">About</a></li>
@@ -121,6 +118,8 @@
         <p class="mb-0">Copyright © 2023 ByteBrigade</p>
     </div>
 </footer>
+</body>
+
 {% block script %}  {% endblock %}
 <script src="{% static 'assets/bootstrap/js/bootstrap.min.js' %}"></script>
 </body>
