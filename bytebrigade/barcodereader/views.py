@@ -198,7 +198,7 @@ def addstats(user, product, points: int, kg=0):
     user_stats = Statistic.objects.get(user=user)
     user_stats.points += points
     kg *= 0.09
-    kg = round(kg, 3)
+    kg = round(kg, 2)
     user_stats.curweek += kg  # change field
     user_stats.curmonth += kg
     user_stats.curyear += kg

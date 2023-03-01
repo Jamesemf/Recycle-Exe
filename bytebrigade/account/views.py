@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from .forms import RegistrationForm
-from home.models import Statistic, Goal, UserGoal, User
+from home.models import Statistic, Goal, UserGoal, User, Transaction
 from django.urls import reverse
 from django.db.models import Q
 
@@ -32,6 +32,11 @@ def register(request):
 def account(request):
     if request.user.is_authenticated:
         data = Statistic.objects.get(user=request.user)
+        lastTransaction = 0
+        if Transaction.objects.filter(user=request.user).exists():
+            lastTransaction = Transaction.objects.filter(user=request.user).latest('time')
+
+
         maxWeek = Statistic.objects.all().order_by('-curweek')[0]
         maxMonth = Statistic.objects.all().order_by('-curmonth')[0]
         maxYear = Statistic.objects.all().order_by('-curyear')[0]
@@ -48,6 +53,7 @@ def account(request):
             'UserGoal1': userGoal1,
             'UserGoal2': userGoal2,
             'UserGoal3': userGoal3,
+            'lastTrans': lastTransaction
         }
         return render(request, 'account/Profile_page.html', data_dict)
     else:
