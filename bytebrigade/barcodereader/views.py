@@ -1,32 +1,23 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, HttpResponseRedirect
-from django.urls import reverse
-from .forms import barcode_form, product_form
+from django.http import HttpResponse
 import urllib.request
 import json
-from home.models import Statistic, Product
+from home.models import Statistic, Product, BinData, Transaction
+from datetime import datetime
 
 
 def barcode_lookup(request):
     # If the user not log-in, redirect them to login page
     if not request.user.is_authenticated:
         return redirect('login')
-    # If
     if request.method == 'POST':
-        barcode_camera = request.POST.get("barcode")
-        print("Value is ", barcode_camera)
-        if Product.objects.filter(barcode=barcode_camera).exists():
-            print("in db")
-            product_data = Product.objects.get(barcode=barcode_camera)
-            print(product_data)
-            data_dict = {'Product': product_data}
-            print(data_dict)
+        barcode_product = request.POST.get("barcode")
+        # We set the session barcode so that we can then use it in the other areas of the project
+        request.session['barcode'] = barcode_product
+        if Product.objects.filter(barcode=barcode_product).exists():
             return redirect('recycle_confirm')
             # redirect to product recycle page
         else:
-            print("not in db")
-            barcode = barcode_camera
-            request.session['barcode'] = barcode
             return redirect('create_product')
 
     else:
@@ -37,14 +28,10 @@ def create_product(request):
     # we need to send the user to a page that contains a form
     # Ask the user for the weight and material of the product
     # Then add the product to the database
-    print(request.method)
     if not request.user.is_authenticated:
         return redirect('login')
     if request.method == 'POST':
-        request.session['barcode'] = ''
-        print('Get Post')
         form = request.POST
-        print("Made Form")
         new_product = Product.objects.create(
             barcode=form.get("barcode"),
             name=form.get("name"),
@@ -52,21 +39,62 @@ def create_product(request):
             weight=form.get("weight"),
             category=form.get("category"),
         )
-        print("temp_made")
         new_product.save()
-        print("Saved")
         return redirect('recycle_confirm')
-    if request.session['barcode']:
-        barcode = {'barcode': request.session['barcode']}
-        return render(request, 'BCscanner/new_product_page.html', barcode)
+    elif request.session['barcode']:
+        if not Product.objects.filter(barcode=request.session['barcode']).exists():
+            barcode = {'barcode': request.session['barcode']}
+            return render(request, 'BCscanner/new_product_page.html', barcode)
+        else:
+            return redirect('index')
 
 
-def success_submit(request):
+# create a function that is called by barcode_lookup() once the whole product shit is done
+# This function adds the transaction but doesn't render anything, it is a procedure
+
+
+def create_product_success(request):
     pass
+    # This function is called after a new product is made
+    # it present to the user what the product is and the points that they get
+    # Then it sends then to recycle_confirm
 
 
 def recycle_confirm(request):
-    return HttpResponse("You Just submit it!")
+    # The function that handles recording a transaction
+    # Then it takes you to a page showing what stats you gained
+    # There bottom for confirm
+    if not request.user.is_authenticated:
+        return redirect('login')
+    try:
+        barcode_product = request.session['barcode']
+        bin_data = request.session['bin_data']
+        if Product.objects.filter(barcode=barcode_product).exists() \
+                and BinData.objects.filter(binId=bin_data).exists():
+            product_data = Product.objects.get(barcode=barcode_product)
+            user_data = request.user
+            cur_time = (datetime.now()).strftime("%H:%M:%S")
+            bin_data = BinData.objects.get(binId=bin_data)
+            new_transaction = Transaction.objects.create(
+                product=product_data,
+                user=user_data,
+                time=cur_time,
+                bin=bin_data,
+            )
+            new_transaction.save()
+            request.session['barcode'] = -1
+            request.session['bin_data'] = -1
+        return HttpResponse("You Just submit it!")
+    except Exception as e:
+        print(e)
+        # They tried to scam us and haven't scanned a product
+        return redirect('barcode_lookup')
+
+
+def recycle_result_stats_view(request):
+    # The function that shows when user finished recycle
+    # The page have stats of points,
+    pass
 
 
 def api_lookup(barcode):

@@ -16,7 +16,8 @@ def getTransactions(request):
     data = Transaction.objects.all()
 
     if request.method == 'POST':
-        distance, closeBin = withinRange(request)
+        distance, close_bin, bin_object = withinRange(request)
+        request.session['bin_data'] = bin_object.binId
         distance = 2
         if distance > 10:
             msg = "You're too far from the bin by", distance, "metres"
@@ -24,7 +25,7 @@ def getTransactions(request):
                 'Transaction': data,
                 'message': msg
             }
-            a_website = "http://maps.google.com/?q=" + str(closeBin[0]) + "," + str(closeBin[1])
+            a_website = "http://maps.google.com/?q=" + str(close_bin[0]) + "," + str(close_bin[1])
             webbrowser.open_new_tab(a_website)
             return render(request, 'home/index.html', data_dict)
         else:
@@ -56,12 +57,14 @@ def withinRange(request):
 
     shortestDistance = 100000000
     closeBin = None
+    binObject = None
 
     for bin in BinData.objects.all():
         coords_2 = (bin.binLat, bin.binLong)
         distance = geopy.distance.geodesic(coords_1, coords_2).m
         if distance < shortestDistance:
             shortestDistance = distance
-            closeBin = coords_2
+            close_bin = coords_2
+            bin_object = bin
 
-    return shortestDistance, closeBin
+    return shortestDistance, close_bin, bin_object
