@@ -61,11 +61,22 @@
                     lastResult = decodedText;
                     // Handle on success condition with the decoded message.
                     document.getElementById('barcode').value = lastResult;
+                    Html5QrcodeScannerState.PAUSED = 1
                 }
             }
 
             var html5QrcodeScanner = new Html5QrcodeScanner(
-                "qr-reader", { fps: 10, qrbox: 250 });
+                "qr-reader", {
+                    fps: 10,
+                    qrbox: 250,
+                    rememberLastUsedCamera: true,
+                    formatsToSupport: [
+                        Html5QrcodeSupportedFormats.EAN_13,
+                        Html5QrcodeSupportedFormats.EAN_8,
+                    ],
+                    aspectRatio: 1.7777778
+                }
+            );
             html5QrcodeScanner.render(onScanSuccess);
         });
     </script>

@@ -4,6 +4,7 @@ import urllib.request
 import json
 from home.models import Statistic, Product, BinData, Transaction
 from datetime import datetime
+from django.contrib.auth.models import User
 
 
 def barcode_lookup(request):
@@ -36,10 +37,14 @@ def create_product(request):
             barcode=form.get("barcode"),
             name=form.get("name"),
             type=form.get("type"),
-            weight=form.get("weight"),
+            weight=form.get("weight") / 1000,
             category=form.get("category"),
         )
         new_product.save()
+
+        product_data = Product.objects.get(barcode=form.get("barcode"))
+        addstats(request.user, product_data, 50)
+
         return redirect('recycle_confirm')
     elif request.session['barcode']:
         if not Product.objects.filter(barcode=request.session['barcode']).exists():
@@ -62,8 +67,7 @@ def create_product_success(request):
 
 def recycle_confirm(request):
     # The function that handles recording a transaction
-    # Then it takes you to a page showing what stats you gained
-    # There bottom for confirm
+    # Then it shows you to a popup showing what stats you gained on the home_page
     if not request.user.is_authenticated:
         return redirect('login')
     try:
@@ -84,7 +88,28 @@ def recycle_confirm(request):
             new_transaction.save()
             request.session['barcode'] = -1
             request.session['bin_data'] = -1
-        return HttpResponse("You Just submit it!")
+        # Call a function that will take in the calculate the points for the user
+        # If the product is new add points, this is handle in the create product part
+        # def addstats(points,kg)
+            weight = product_data.weight
+            points = round(weight * 122)
+            print("h")
+            addstats(request.user, product_data, points, weight)  # need to include the product
+            print("j")
+
+            data = Transaction.objects.all()
+            data_dict = {
+                'Transaction': data,
+                'popup': 1,
+                'newPoints': 1,
+                'product': product_data.name,
+                'points': points,
+
+            }
+            print("k")
+            print(data_dict)
+            return render(request, data_dict)
+        return redirect('barcode_lookup')
     except Exception as e:
         print(e)
         # They tried to scam us and haven't scanned a product
@@ -121,3 +146,21 @@ def database_lookup(request):
         print(product_data)
     else:
         print("not in db")
+
+
+def addstats(user, product, points: int, kg=0):
+    user_stats = Statistic.objects.get(user=user)
+    user_stats.points += points
+    kg *= 0.09
+    print("added points")
+    user_stats.curweek += kg  # change field
+    print("added curweek")
+    user_stats.curmonth += kg
+    print("added curmonth")
+    user_stats.curyear += kg
+    print("added curyear")
+    user_stats.lastRecycle = product
+    print("added lastRecycle")
+    user_stats.save()  # this will update only
+
+
