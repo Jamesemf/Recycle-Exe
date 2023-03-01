@@ -83,7 +83,6 @@ class Statistic(models.Model):
     def calculateLove(self):
         pass
 
-
 class Goal(models.Model):
     goalID = models.AutoField(primary_key=True)
     name = models.CharField(max_length=200)
@@ -97,3 +96,23 @@ class UserGoal(models.Model):
     user = models.ForeignKey(User, default=-1, on_delete=models.CASCADE)
     goal = models.ForeignKey(Goal, default=-1, on_delete=models.CASCADE)
     value = models.DecimalField(max_digits=10, decimal_places=5)
+    
+    RECYCLING = 'Recycling'
+    PLASTIC = 'Plastic'
+    PAPER = 'Paper'
+    CANS = 'Cans'
+    GLASS = 'Glass'
+
+    goalTypeChoices = [
+        (RECYCLING, 'Recycling'),
+        (PLASTIC, 'Plastic'),
+        (PAPER, 'Paper'),
+        (CANS, 'Cans'),
+        (GLASS, 'Glass'),
+    ]
+
+    goalType = models.CharField(
+        max_length=25,
+        choices=goalTypeChoices,
+        default='Recycling'
+    )
