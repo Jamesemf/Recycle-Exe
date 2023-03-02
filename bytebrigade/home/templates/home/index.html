@@ -68,7 +68,7 @@
                     <!-- display info on nearest bin -->
                 <div id="infoModel" class="modal">
                     <div class="modal-content" style="color:red">
-                        <p>Your closest bin is {{ Bin.binName }}, {{ Distance }}m from your location. follow the map to find</p>
+                        <p>Your closest bin is {{ Bin.binName }}, {{ Distance }}m from your location. Follow the map to find the nearest bin</p>
                     </div>
                 </div>
                 {% endif %}
@@ -78,7 +78,9 @@
                     <!-- display info on successful scan -->
                     <div id="infoModel" class="modal">
                         <div class="modal-content" style="color:green">
-                            <p>Thank you for recycling {{ product }} you gained {{ points }}</p>
+                            <p>Thank you for recycling {{ product }} you gained {{ points }} points</p>
+                            <p>{{ newhome }}</p>
+
                         </div>
                     </div>
                 {% endif %}

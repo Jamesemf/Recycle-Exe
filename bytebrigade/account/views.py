@@ -1,8 +1,7 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, HttpResponseRedirect
-from django.contrib.auth import authenticate, login
+from django.http import HttpResponseRedirect
 from .forms import RegistrationForm
-from home.models import Statistic, Goal, UserGoal, User
+from home.models import Statistic, Goal, UserGoal, User, Transaction
 from django.urls import reverse
 from django.db.models import Q
 
@@ -13,7 +12,10 @@ def register(request):
 
     if request.method == 'POST':
         user_form = RegistrationForm(request.POST)
+
         if user_form.is_valid():
+            if user_form.cleaned_data['password'] != user_form.cleaned_data['password_confirm']:
+                return render(request, 'registration/register.html', {'user_form': user_form})
             # New user object without saving
             new_user = user_form.save(commit=False)
             # Set password
@@ -30,9 +32,14 @@ def register(request):
 def account(request):
     if request.user.is_authenticated:
         data = Statistic.objects.get(user=request.user)
-        maxWeek = Statistic.objects.all().order_by('curweek')[0]
-        maxMonth = Statistic.objects.all().order_by('curmonth')[0]
-        maxYear = Statistic.objects.all().order_by('curyear')[0]
+        lastTransaction = 0
+        if Transaction.objects.filter(user=request.user).exists():
+            lastTransaction = Transaction.objects.filter(user=request.user).latest('time')
+
+
+        maxWeek = Statistic.objects.all().order_by('-curweek')[0]
+        maxMonth = Statistic.objects.all().order_by('-curmonth')[0]
+        maxYear = Statistic.objects.all().order_by('-curyear')[0]
         goalData = Goal.objects.all()
         userGoal1 = UserGoal.objects.filter(Q(userGoalNum=1) & Q(user=request.user)).first()
         userGoal2 = UserGoal.objects.filter(Q(userGoalNum=2) & Q(user=request.user)).first()
@@ -46,6 +53,7 @@ def account(request):
             'UserGoal1': userGoal1,
             'UserGoal2': userGoal2,
             'UserGoal3': userGoal3,
+            'lastTrans': lastTransaction
         }
         return render(request, 'account/Profile_page.html', data_dict)
     else:
@@ -57,7 +65,7 @@ def password(request):
 def addUserGoal(request):
     x = request.POST['goalNum']
     y = request.POST['goal-options']
-    z = request.POST['goal-type']
+    z = request.POST['goal-type'] # this is plastic and all the others
     goalNumType = Goal.objects.get(pk=y)
     current_user = request.user
 

@@ -1,19 +1,18 @@
-from os import truncate
 from django.shortcuts import render, redirect
 from .models import Transaction, Statistic, BinData
-from django.contrib.auth import authenticate, login
 import webbrowser
 import geopy.distance
 
-# Create your views here.
+
 def getTransactions(request):
     # If user not login, redirect them to login page.
+    request.session['barcode'] = -1
     if not request.user.is_authenticated:
         return redirect('login')
 
-    # When user press the 'scan it!' button, check if they are within range.
-    data = Transaction.objects.all()
+    data = Transaction.objects.all()[:5]
 
+    # Called when a user clicks to scan an item
     if request.method == 'POST':
         distance, close_bin, bin_object = withinRange(request)
         x = round(distance)
@@ -29,17 +28,20 @@ def getTransactions(request):
             }
             a_website = "http://maps.google.com/?q=" + str(close_bin[0]) + "," + str(close_bin[1])
             webbrowser.open_new_tab(a_website)
-            return render(request, 'home/index.html', data_dict)
+            return render(request, 'home/index.html', data_dict)  # if the user is out of range, give directions
+
         else:
-            return redirect('barcode_lookup')
+            return redirect('barcode_lookup')  # If the user is within range redirect to scanner page
     else:
         data_dict = {
             'Transaction': data
         }
+        #Return normal feed page
         return render(request, 'home/index.html', data_dict)
     # Default looking of index.
 
 
+# Handles a request for the leaderboard page, ordering the users by their points
 def getLeaderboard(request):
     if not request.user.is_authenticated:
         return redirect('login')
@@ -51,6 +53,11 @@ def getLeaderboard(request):
     return render(request, 'home/Leaderboard.html', data_dict)
 
 
+def instruction_view(request):
+    return render(request, 'home/about-me.html')
+
+
+# Function that checks you are within the minimum range of a bin and return's information about your closest bin
 def withinRange(request):
     curr_lat = float(request.POST.get("location_lat"))
     curr_long = float(request.POST.get("location_long"))

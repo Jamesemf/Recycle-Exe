@@ -127,7 +127,13 @@
                             d="M3.05 3.05a7 7 0 0 0 0 9.9.5.5 0 0 1-.707.707 8 8 0 0 1 0-11.314.5.5 0 0 1 .707.707zm2.122 2.122a4 4 0 0 0 0 5.656.5.5 0 1 1-.708.708 5 5 0 0 1 0-7.072.5.5 0 0 1 .708.708zm5.656-.708a.5.5 0 0 1 .708 0 5 5 0 0 1 0 7.072.5.5 0 1 1-.708-.708 4 4 0 0 0 0-5.656.5.5 0 0 1 0-.708zm2.122-2.12a.5.5 0 0 1 .707 0 8 8 0 0 1 0 11.313.5.5 0 0 1-.707-.707 7 7 0 0 0 0-9.9.5.5 0 0 1 0-.707zM6 8a2 2 0 1 1 2.5 1.937V15.5a.5.5 0 0 1-1 0V9.937A2 2 0 0 1 6 8z">
                         </path>
                     </svg>
-                    <h4 class="card-title">Your last recycle</h4><img>
+                    <h4 class="card-title">Your last recycle</h4>
+                    {% if lastTrans != 0 %}
+                        <p>At {{ lastTrans.time }} you recycled {{ lastTrans.product.name }} at bin : {{ lastTrans.bin.binName}}</p>
+                    {% endif %}
+                    {% if lastTrans == 0 %}
+                        <p>No recent recycle</p>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -173,8 +179,8 @@
                         </ul>
                         <div class="tab-content">
                             <div class="tab-pane" role="tabpanel" id="tab-1">
-                                <p>{{ UserGoal1.goal.name }}</p>
-                                <p>{{ UserGoal1.goal.description }}</p>
+                                <p>{{ UserGoal1.goal.name }} {{ UserGoal1.goalType }} items</p>
+                                <p><em>{{ UserGoal1.goal.description }} {{ UserGoal1.goalType }} in order to gain 100 points and have the greatest impact on the environment</em></p>
                                 <div class="progress">
                                     <div class="progress-bar" aria-valuenow="{{ UserGoal1.value }}" aria-valuemin="0"
                                         aria-valuemax="100" style="width: {{ UserGoal1.value }}%;">
@@ -183,8 +189,8 @@
                                 </div>
                             </div>
                             <div class="tab-pane active" role="tabpanel" id="tab-2">
-                                <p>{{ UserGoal2.goal.name }}</p>
-                                <p>{{ UserGoal2.goal.description }}</p>
+                                <p>{{ UserGoal2.goal.name }} {{ UserGoal2.goalType }} items</p>
+                                <p><em>{{ UserGoal2.goal.description }} {{ UserGoal2.goalType }} in order to gain 100 points and have the greatest impact on the environment</em></p>
                                 <div class="progress">
                                     <div class="progress-bar" aria-valuenow="{{ UserGoal2.value }}" aria-valuemin="0"
                                         aria-valuemax="100" style="width: {{ UserGoal2.value }}%;">
@@ -193,8 +199,8 @@
                                 </div>
                             </div>
                             <div class="tab-pane" role="tabpanel" id="tab-3">
-                                <p>{{ UserGoal3.goal.name }}</p>
-                                <p>{{ UserGoal3.goal.description }}</p>
+                                <p>{{ UserGoal3.goal.name }} {{ UserGoal3.goalType }} items</p>
+                                <p><em>{{ UserGoal3.goal.description }} {{ UserGoal3.goalType }} in order to gain 100 points and have the greatest impact on the environment</em></p>
                                 <div class="progress">
                                     <div class="progress-bar" aria-valuenow="{{ UserGoal3.value }}" aria-valuemin="0"
                                         aria-valuemax="100" style="width: {{ UserGoal3.value }}%;">
