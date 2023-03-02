@@ -178,6 +178,7 @@
                             </li>
                         </ul>
                         <div class="tab-content">
+                            {% if UserGoal1 %}
                             <div class="tab-pane" role="tabpanel" id="tab-1">
                                 <p>{{ UserGoal1.goal.name }} {{ UserGoal1.goalType }} items</p>
                                 <p><em>{{ UserGoal1.goal.description }} {{ UserGoal1.goalType }} in order to gain 100 points and have the greatest impact on the environment</em></p>
@@ -188,6 +189,8 @@
                                     </div>
                                 </div>
                             </div>
+                            {% endif %}
+                            {% if UserGoal2 %}
                             <div class="tab-pane active" role="tabpanel" id="tab-2">
                                 <p>{{ UserGoal2.goal.name }} {{ UserGoal2.goalType }} items</p>
                                 <p><em>{{ UserGoal2.goal.description }} {{ UserGoal2.goalType }} in order to gain 100 points and have the greatest impact on the environment</em></p>
@@ -198,6 +201,8 @@
                                     </div>
                                 </div>
                             </div>
+                            {% endif %}
+                            {% if UserGoal2 %}
                             <div class="tab-pane" role="tabpanel" id="tab-3">
                                 <p>{{ UserGoal3.goal.name }} {{ UserGoal3.goalType }} items</p>
                                 <p><em>{{ UserGoal3.goal.description }} {{ UserGoal3.goalType }} in order to gain 100 points and have the greatest impact on the environment</em></p>
@@ -208,6 +213,7 @@
                                     </div>
                                 </div>
                             </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

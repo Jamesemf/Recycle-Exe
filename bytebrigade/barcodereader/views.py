@@ -105,13 +105,16 @@ def recycle_confirm(request):
             match (product_type, could_recycle):
                 case ("Paper", "True"):
                     new_home = "My new home is the Paper bin, please help me find my home! :)"
+                    binType = 'Paper'
                 case ("Plastic", "True"):
                     new_home = "My new home is the Plastic bin, please help me find my home! :)"
+                    binType = 'Plastic'
                 case ("Cans", "True"):
                     new_home = "My new home is the Cans bin, please help me find my home! :)"
+                    binType = 'Cans'
                 case ("Glass", "True"):
                     new_home = "My new home is the Glass bin, please help me find my home! :)"
-
+                    binType = 'Glass'
                 case ("Plastic", "False"):
                     new_home = "I am non-recyclable, please put me into General Waste :("
                 case ("Cans", "False"):
@@ -123,20 +126,9 @@ def recycle_confirm(request):
 
             # Add points to user goals
             current_user = request.user
-            if(bin_data.bin_recycle):
-                binType = 'Recycling'
-            if(bin_data.bin_paper):
-                binType = 'Paper'
-            if(bin_data.bin_cans):
-                binType = 'Cans'
-            if(bin_data.bin_glass):
-                binType = 'Glass'
-            if(bin_data.bin_plastic):
-                binType = 'Plastic'
-            else:
-                pass
 
             if(binType):
+                print(binType)
                 thisUserGoals = UserGoal.objects.filter(Q(goalType=binType) & Q(user=current_user))
                 for item in thisUserGoals:
                     item.value += 1
@@ -198,10 +190,10 @@ def addstats(user, product, points: int, kg=0):
     user_stats = Statistic.objects.get(user=user)
     user_stats.points += points
     kg *= 0.09
-    kg = round(kg, 2)
-    user_stats.curweek += kg  # change field
-    user_stats.curmonth += kg
-    user_stats.curyear += kg
+    kg = round(kg, 3)
+    user_stats.curweek = round((user_stats.curweek + kg), 3)  # change field
+    user_stats.curmonth = round((user_stats.curmonth + kg), 3)
+    user_stats.curyear = round((user_stats.curyear + kg), 3)
     user_stats.lastRecycle = product
     user_stats.save()  # this will update only
 

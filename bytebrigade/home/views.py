@@ -17,7 +17,7 @@ def getTransactions(request):
         distance, close_bin, bin_object = withinRange(request)
         x = round(distance)
         request.session['bin_data'] = bin_object.binId
-        distance = 2
+        #distance = 2
         if distance > 10:
             data_dict = {
                 'Transaction': data,
