@@ -5,7 +5,7 @@
 
 {% block content %}
     <div class="fs-6" style="margin-right: 28px;margin-top: 14px;margin-bottom: 22px;color: var(--bs-secondary);margin-left: 28px;">
-        <h1 style="background: #e1edbd;font-size: 30px;padding-bottom: 5px;color: var(--bs-black);">Leaderboard</h1>
+        <h1 style="background: var(--secondary);font-size: 30px;padding-bottom: 5px;color: var(--bs-black);">Leaderboard</h1>
         <div style="background: #e1edbd;">
         <table class = "table table-striped" id = "leaderboard">
                 <thead style="background: #82b068; padding: 10px">
@@ -26,7 +26,8 @@
                 </tbody>
             </table>
         </div>
-    <div><input type="search" id = "myInput" onkeyup="search()" style="background: #82b068;border-style: solid;border-color: var(--bs-success);margin-top: 10px" placeholder="Search for a user"></div>
+        <div><input type="search" id = "myInput" onkeyup="search()" style="background: #82b068;border-style: solid;border-color: var(--bs-success);margin-top: 10px" placeholder="Search for a user"></div>
+    </div>
 
 <script>
 function search() {

@@ -9,15 +9,22 @@
 {% endblock %}
 
 {% block content %}
-<div class="fs-6"
-    style="margin-right: 28px;margin-top: 14px;margin-bottom: 22px;color: var(--bs-secondary);padding-left: 0px;margin-left: 28px;">
-    <h1
-        style="background: #e1edbd;font-size: 30px;padding-bottom: 5px;color: var(--bs-black);--bs-body-color: var(--bs-primary);">
-        Profile</h1>
-</div>
-<div class="col-md-8 col-xl-6 text-center mx-auto">
-    <h2>Welcome {{ user.get_username }}&nbsp;</h2>
-    <p></p>
+<style>
+    .main-content {
+        background-color: var(--secondary) transparent;
+    }
+</style>
+<div class="profile-stat" style="display: inline-block">
+    <div class="fs-6"
+        style="margin-right: 28px;margin-top: 14px;margin-bottom: 22px;color: var(--bs-secondary);padding-left: 0px;margin-left: 28px;">
+        <h1
+            style=";font-size: 30px;padding-bottom: 5px;color: var(--bs-black);--bs-body-color: var(--bs-primary);">
+            <strong>Profile</strong></h1>
+    </div>
+    <div class="col-md-8 col-xl-6 text-center mx-auto">
+        <h2><strong>{{ user.get_username }}&nbsp;</strong></h2>
+        <p></p>
+    </div>
 </div>
 <div class="text-center d-flex flex-column justify-content-center align-items-center py-3">
     <div class="bs-icon-xl bs-icon-circle bs-icon-primary d-flex flex-shrink-0 justify-content-center align-items-center d-inline-block mb-2 bs-icon"
@@ -29,7 +36,7 @@
             <path d="M17 18.5a6 6 0 0 1 -5 0a6 6 0 0 0 -5 .5a3 3 0 0 0 2 -2.5v-7.5a4 4 0 0 1 7.45 -2m-2.55 6h-7"></path>
         </svg>
     </div>
-    <div class="px-3">
+    <div class="px-3 profile-stat">
         <h2 class="fw-bold mb-0">{{ Profile.points }}</h2>
         <p class="mb-0">Points</p>
     </div>
@@ -49,7 +56,7 @@
                         <circle cx="14.5" cy="7.5" r="4.5"></circle>
                     </svg>
                 </div>
-                <div class="px-3">
+                <div class="px-3 profile-stat">
                     <h2 class="fw-bold mb-0">{{ Profile.carbon }}</h2>
                     <p class="mb-0">Carbon FootPrint</p>
                 </div>
@@ -66,7 +73,7 @@
                         </path>
                     </svg>
                 </div>
-                <div class="px-3">
+                <div class="px-3 profile-stat">
                     <h2 class="fw-bold mb-0">{{ Profile.curweek }}</h2>
                     <p class="mb-0">Week Kg</p>
                 </div>
@@ -83,11 +90,10 @@
                         </path>
                     </svg>
                 </div>
-                <div class="px-3">
+                <div class="px-3 profile-stat">
                     <h2 class="fw-bold mb-0">{{ Profile.curmonth }}</h2>
-                    <p class="mb-0"></p>
+                    <p class="mb-0">Month Kg</p>
                 </div>
-                <p class="mb-0">Month Kg</p>
             </div>
         </div>
         <div class="col">
@@ -101,7 +107,7 @@
                         </path>
                     </svg>
                 </div>
-                <div class="px-3">
+                <div class="px-3 profile-stat">
                     <h2 class="fw-bold mb-0">{{ Profile.curyear }}</h2>
                     <p class="mb-0">Year Kg</p>
                 </div>

@@ -1,0 +1,70 @@
+:root {
+    --body-bg: #FBFAF8;
+    --secondary: #FBFAF8;
+    --secondary-rgb: 251, 250, 248;
+    --primary: #698F3F;
+    --primary-rgb: 10, 18, 42;
+    --dark: #0A122A;
+    --dark-rgb: 66, 109, 52;
+}
+
+/* Site wide styles */
+body {
+    min-height: 100vh;
+    padding-top: 2vh;
+    background-color: var(--secondary);
+    display: flex;
+    flex-direction: column;
+}
+.navbar-styles {
+    background-color: #FBFAF8;
+    opacity: 90%;
+}
+.navbar-styles button {
+    background-color: #698F3F;
+}
+.nav-show,
+.nav-show * {
+    z-index: 3;
+    opacity: 100%;
+}
+.main-content {
+    opacity: 90%;
+    background-color: #FBFAF8;
+    width: 85vw;
+    flex:1;
+    margin: 0 auto;
+    margin-top: 5vh;
+    padding-top: 2vh;
+    display: inline-block;
+    padding-bottom: 2vh;
+    /*border-radius: 2vw;*/
+}
+.footer-styles {
+    bottom: 0;
+    width: 100%;
+    background: #FBFAF8;
+    margin-top: 2vh;
+}
+
+/* profile styles */
+.profile-stat {
+    background-color: var(--secondary);
+    border-radius: 0.5vw;
+    opcaity: 90%;
+}
+
+/* new item styles */
+label {
+    color: black;
+}
+#new {
+    margin-bottom: 2vh;
+}
+#submit {
+    border-color: #719a5e;
+    color: black;
+}
+.new-form {
+    background-color: var(--secondary);
+}
