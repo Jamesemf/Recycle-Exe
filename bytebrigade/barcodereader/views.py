@@ -7,39 +7,27 @@ from django.db.models import Q
 from home.views import withinRange
 
 
-def prompt_recycle_product_view(request):
-    if not request.user.is_authenticated:
-        return redirect('login')
-    product = Product.objects.get(barcode=request.session['barcode'])
-    if request.method == 'POST':
-        binType = "General"
-        match (product.material, product.recycle):
-            case ("Paper", "True"):
-                binType = 'Paper'
-            case ("Plastic", "True"):
-                binType = 'Plastic'
-            case ("Cans", "True"):
-                binType = 'Cans'
-            case ("Glass", "True"):
-                binType = 'Glass'
-            case ("Plastic", "False"):
-                binType = 'General'
-            case ("Cans", "False"):
-                binType = 'General'
-            case ("Non-Recyclable", "False"):
-                binType = 'General'
-            case ("Glass", "False"):
-                binType = 'General'
-        request.session['newHome'] = binType
-        shortestDistance, close_bin, bin_object = withinRange(request)
-        request.session['newHome'] = bin_object  # Directly correlates to a bin
-        return redirect("bin_map")
-    data = {"name": product.name,
-            "weight": product.weight,
-            "material": product.material,
-            "recycle": product.recycle,
-            }
-    return render(request, 'info_product.html', data)
+def bin_map_view(request):
+    print(request.session['newHome'])
+    if request.session['newHome'] != -1:
+        print("H")
+        data = {'targetBin': BinData.objects.get(binId=request.session['newHome']),
+                'presentButton': 1
+        }
+    else:
+        print("J")
+        data = {'targetBin': None,
+                'presentButton': 0
+        }
+    return render(request, 'bin_map.html', data)
+
+
+def bin_nav_view(request):
+    return render(request, 'bin_nav.html')
+
+
+def bin_arrived_view(request):
+    return render(request, 'bin_arrived.html')
 
 
 def scanner_page_view(request):
@@ -91,6 +79,43 @@ def create_product_view(request):
         else:
             return redirect('index')
     return redirect('index')
+
+
+def prompt_recycle_product_view(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    product = Product.objects.get(barcode=request.session['barcode'])
+    if request.method == 'POST':
+        binType = "General"
+        match (product.material, product.recycle):
+            case ("Paper", "True"):
+                binType = 'Paper'
+            case ("Plastic", "True"):
+                binType = 'Plastic'
+            case ("Cans", "True"):
+                binType = 'Cans'
+            case ("Glass", "True"):
+                binType = 'Glass'
+            case ("Plastic", "False"):
+                binType = 'General'
+            case ("Cans", "False"):
+                binType = 'General'
+            case ("Non-Recyclable", "False"):
+                binType = 'General'
+            case ("Glass", "False"):
+                binType = 'General'
+        shortestDistance, close_bin, bin_object = withinRange(request, binType)
+        request.session['newHome'] = bin_object.binId  # Directly correlates to a bin
+        print(request.session['newHome'])
+        return redirect("bin_map")
+    data = {"name": product.name,
+            "barcode": request.session['barcode'],
+            "weight": product.weight,
+            "material": product.material,
+            "recycle": product.recycle,
+            "present_button": 1,
+            }
+    return render(request, 'info_product.html', data)
 
 
 def recycle_confirm_view(request):

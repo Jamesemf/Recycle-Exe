@@ -47,6 +47,7 @@ def getTransactions(request):
 def home_view(request):
     # If user not login, redirect them to login page.
     request.session['barcode'] = -1
+    request.session['newHome'] = -1
     if not request.user.is_authenticated:
         return redirect('login')
     data = Transaction.objects.all()[:5]
@@ -77,7 +78,7 @@ def instruction_view(request):
 
 
 # Function that checks you are within the minimum range of a bin and return's information about your closest bin
-def withinRange(request):
+def withinRange(request, binType):
     curr_lat = float(request.POST.get("location_lat"))
     curr_long = float(request.POST.get("location_long"))
     coords_1 = (curr_lat, curr_long)
@@ -90,23 +91,23 @@ def withinRange(request):
         coords_2 = (bin.binLat, bin.binLong)
         distance = geopy.distance.geodesic(coords_1, coords_2).m
         if distance < shortestDistance:
-            if bin.bin_general and (request.session['newHome'] == 'General'):
+            if bin.bin_general and (binType == 'General'):
                 shortestDistance = distance
                 close_bin = coords_2
                 bin_object = bin
-            if bin.bin_paper and (request.session['newHome'] == 'Paper'):
+            if bin.bin_paper and (binType == 'Paper'):
                 shortestDistance = distance
                 close_bin = coords_2
                 bin_object = bin
-            if bin.bin_cans and (request.session['newHome'] == 'Cans'):
+            if bin.bin_cans and (binType == 'Cans'):
                 shortestDistance = distance
                 close_bin = coords_2
                 bin_object = bin
-            if bin.bin_glass and (request.session['newHome'] == 'Glass'):
+            if bin.bin_glass and (binType == 'Glass'):
                 shortestDistance = distance
                 close_bin = coords_2
                 bin_object = bin
-            if bin.bin_plastic and (request.session['newHome'] == 'Plastic'):
+            if bin.bin_plastic and (binType == 'Plastic'):
                 shortestDistance = distance
                 close_bin = coords_2
                 bin_object = bin
