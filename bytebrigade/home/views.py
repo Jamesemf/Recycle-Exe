@@ -4,7 +4,6 @@ import webbrowser
 import geopy.distance
 
 
-
 """
 def getTransactions(request):
     # If user not login, redirect them to login page.
@@ -41,6 +40,24 @@ def getTransactions(request):
         #Return normal feed page
         return render(request, 'home/index.html', data_dict)
     # Default looking of index.
+"""
+
+
+# function for the home page backend
+def home_view(request):
+    # If user not login, redirect them to login page.
+    request.session['barcode'] = -1
+    if not request.user.is_authenticated:
+        return redirect('login')
+    data = Transaction.objects.all()[:5]
+    data_dict = {
+        'Transaction': data
+    }
+    if request.method == 'POST':
+        # If they want to go to scan an item then we redirect them.
+        return redirect('barcode_lookup')
+    # Return normal feed page
+    return render(request, 'home/index.html', data_dict)
 
 
 # Handles a request for the leaderboard page, ordering the users by their points

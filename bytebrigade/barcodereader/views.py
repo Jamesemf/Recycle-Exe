@@ -276,3 +276,19 @@ def addstats(user, product, points: int, kg=0):
     user_stats.save()  # this will update only
 
 
+def update_goal_stat(user, product):
+    material = product.material
+    recyclable = product.recycle
+    if recyclable:
+        bin_type = material
+    else:
+        bin_type = 'General Waste'
+    user_goals = UserGoal.objects.filter(Q(goalType=bin_type) & Q(user=user))
+    for item in user_goals:
+        item.value += 1
+        item.save()
+    # Delete full goals and add points
+    for item in user_goals:
+        if item.value >= 100:
+            item.delete()
+            user.points += 100
