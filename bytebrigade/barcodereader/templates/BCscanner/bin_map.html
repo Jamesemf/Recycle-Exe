@@ -1,0 +1,188 @@
+{% extends 'navbar.html' %}
+{% load static %}
+
+{% block title %} Scan Now! {% endblock %}
+
+{% block header%}
+<table id="BinTable" style="display: none;">
+    {% for bin in Bins %}
+    <tr>
+        <td>{{bin.binName}}</td>
+        <td>{{bin.binLat}}</td>
+        <td>{{bin.binLong}}</td>
+        <td>{{bin.bin_general}}</td>
+        <td>{{bin.bin_recycle}}</td>
+        <td>{{bin.bin_paper}}</td>
+        <td>{{bin.bin_cans}}</td>
+        <td>{{bin.bin_glass}}</td>
+        <td>{{bin.bin_plastic}}</td>
+        <td>{{bin.bin_non_rec}}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+<script>
+    let map, infoWindow;
+    var mapMarkers = [];
+    var dataMarkers = [];
+    // Initialize and add the map
+    function initMap() {
+        // The location of Exeter Forum
+        const exeter = { lat: 50.735861151838016, lng: -3.5339879052883316 };
+        // The map, centered at Exeter Forum
+        const map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 17,
+            center: exeter,
+        });
+
+        var table = document.getElementById("BinTable");
+        var data = [];
+        for (var i = 0, row; row = table.rows[i]; i++) {
+            var item = [];
+            var available = [];
+            for (var j = 0, col; col = row.cells[j]; j++) {
+                if (j == 0) {
+                    item.push(col.innerText);
+                } else if (j == 1 || j == 2) {
+                    item.push(Number(col.innerText));
+                } else {
+                    if (col.innerText == "True") {
+                        switch (j) {
+                            case 3:
+                                available.push("general");
+                                break;
+                            case 4:
+                                available.push("recycle");
+                                break;
+                            case 5:
+                                available.push("paper");
+                                break;
+                            case 6:
+                                available.push("cans");
+                                break;
+                            case 7:
+                                available.push("glass");
+                                break;
+                            case 8:
+                                available.push("plastic");
+                                break;
+                            case 9:
+                                available.push("non-recycle");
+                                break;
+                        }
+                    }
+                }
+            }
+            item.push(available);
+            data.push(item);
+        }
+
+        console.log(data);
+        // The marker, positioned at Exeter Forum
+        dataMarkers = data;
+        for (let i = 0; i < dataMarkers.length; i++) {
+            const marker = new google.maps.Marker({
+                position: { lat: dataMarkers[i][1], lng: dataMarkers[i][2] },
+                map: map,
+                category: dataMarkers[i][3],
+                label: dataMarkers[i][0]            
+            });
+            mapMarkers.push(marker)
+        }
+        const locationButton = document.createElement("button");
+        infoWindow = new google.maps.InfoWindow();
+        locationButton.textContent = "Pan to Current Location";
+        locationButton.classList.add("custom-map-control-button");
+        map.controls[google.maps.ControlPosition.TOP_CENTER].push(locationButton);
+        locationButton.addEventListener("click", () => {
+            // Try HTML5 geolocation.
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const pos = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude,
+                        };
+
+                        infoWindow.setPosition(pos);
+                        infoWindow.setContent("Location found.");
+                        infoWindow.open(map);
+                        map.setCenter(pos);
+                    },
+                    () => {
+                        handleLocationError(true, infoWindow, map.getCenter());
+                    }
+                );
+            } else {
+                // Browser doesn't support Geolocation
+                handleLocationError(false, infoWindow, map.getCenter());
+            }
+        });
+    }
+
+    function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+        infoWindow.setPosition(pos);
+        infoWindow.setContent(
+            browserHasGeolocation
+                ? "Error: The Geolocation service failed."
+                : "Error: Your browser doesn't support geolocation."
+        );
+        infoWindow.open(map);
+    }
+
+
+    function filterMarkers(category) {
+        for (i = 0; i < mapMarkers.length; i++) {
+            marker = mapMarkers[i];
+
+            // If is same category or category not picked
+            if ((typeof marker.category == 'object' && marker.category.indexOf(category) >= 0) || category.length == 0) {
+                marker.setVisible(true);
+            }
+            // Categories don't match 
+            else {
+                marker.setVisible(false);
+            }
+        }
+    }
+
+
+    window.initMap = initMap;
+</script>
+
+
+{% endblock %}
+
+{% block content %}
+
+<style>
+    #map {
+        height: 400px;
+        /* The height is 400 pixels */
+        width: 100%;
+        /* The width is the width of the web page */
+    }
+</style>
+
+<body>
+
+    <h3>My Google Maps Demo</h3>
+    <!--The div element for the map -->
+    <div id="map"></div>
+    <select id="type" onchange=filterMarkers(this.value)>
+        
+        <option value="">Please select category</option>
+        <option value="general">General</option>
+        <option value="recycle">Recycle</option>
+        <option value="paper">Paper</option>
+        <option value="cans">Cans</option>
+        <option value="glass">Glass</option>
+        <option value="plastic">Plastic</option>
+        <option value="non-recycle">Non-Recycle</option>
+    </select>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCeauTIEx5Oz2I6sV3M7zdyqS1kZ074l3A&callback=initMap"
+        defer></script>
+</body>
+
+{% endblock %}
