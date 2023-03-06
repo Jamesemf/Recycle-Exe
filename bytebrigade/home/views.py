@@ -4,6 +4,8 @@ import webbrowser
 import geopy.distance
 
 
+
+"""
 def getTransactions(request):
     # If user not login, redirect them to login page.
     request.session['barcode'] = -1
@@ -64,15 +66,33 @@ def withinRange(request):
     coords_1 = (curr_lat, curr_long)
 
     shortestDistance = 100000000
-    closeBin = None
-    binObject = None
+    close_bin = None
+    bin_object = None
 
     for bin in BinData.objects.all():
         coords_2 = (bin.binLat, bin.binLong)
         distance = geopy.distance.geodesic(coords_1, coords_2).m
         if distance < shortestDistance:
-            shortestDistance = distance
-            close_bin = coords_2
-            bin_object = bin
-
+            if bin.bin_general and (request.session['newHome'] == 'General'):
+                shortestDistance = distance
+                close_bin = coords_2
+                bin_object = bin
+            if bin.bin_paper and (request.session['newHome'] == 'Paper'):
+                shortestDistance = distance
+                close_bin = coords_2
+                bin_object = bin
+            if bin.bin_cans and (request.session['newHome'] == 'Cans'):
+                shortestDistance = distance
+                close_bin = coords_2
+                bin_object = bin
+            if bin.bin_glass and (request.session['newHome'] == 'Glass'):
+                shortestDistance = distance
+                close_bin = coords_2
+                bin_object = bin
+            if bin.bin_plastic and (request.session['newHome'] == 'Plastic'):
+                shortestDistance = distance
+                close_bin = coords_2
+                bin_object = bin
     return shortestDistance, close_bin, bin_object
+
+
