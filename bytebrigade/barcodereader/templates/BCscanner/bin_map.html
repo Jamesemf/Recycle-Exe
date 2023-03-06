@@ -79,16 +79,21 @@
         }
 
         console.log(data);
-        // The marker, positioned at Exeter Forum
+        // Marker creation
         dataMarkers = data;
         for (let i = 0; i < dataMarkers.length; i++) {
             const marker = new google.maps.Marker({
                 position: { lat: dataMarkers[i][1], lng: dataMarkers[i][2] },
                 map: map,
                 category: dataMarkers[i][3],
-                label: dataMarkers[i][0]            
+                title: dataMarkers[i][0]
             });
             mapMarkers.push(marker)
+            marker.addListener("click", () => {
+                infoWindow.close();
+                infoWindow.setContent(marker.getTitle());
+                infoWindow.open(marker.getMap(), marker);
+            });
         }
         const locationButton = document.createElement("button");
         infoWindow = new google.maps.InfoWindow();
@@ -171,7 +176,7 @@
     <!--The div element for the map -->
     <div id="map"></div>
     <select id="type" onchange=filterMarkers(this.value)>
-        
+
         <option value="">Please select category</option>
         <option value="general">General</option>
         <option value="recycle">Recycle</option>
