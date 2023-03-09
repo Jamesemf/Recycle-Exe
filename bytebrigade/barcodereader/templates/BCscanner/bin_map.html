@@ -164,30 +164,60 @@
 <style>
     #map {
         height: 400px;
-        /* The height is 400 pixels */
         width: 100%;
-        /* The width is the width of the web page */
     }
 </style>
 
 <body>
 
-    <h3>My Google Maps Demo</h3>
-    <!--The div element for the map -->
-    <div id="map"></div>
-    <select id="type" onchange=filterMarkers(this.value)>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body d-flex"><img>
+                        <p style="text-align: left;">Paragraph</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        <option value="">Please select category</option>
-        <option value="general">General</option>
-        <option value="recycle">Recycle</option>
-        <option value="paper">Paper</option>
-        <option value="cans">Cans</option>
-        <option value="glass">Glass</option>
-        <option value="plastic">Plastic</option>
-        <option value="non-recycle">Non-Recycle</option>
-    </select>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCeauTIEx5Oz2I6sV3M7zdyqS1kZ074l3A&callback=initMap"
-        defer></script>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+
+                        <!--The div element for the map -->
+                        <div id="map"></div>
+                        <select id="type" onchange=filterMarkers(this.value)>
+
+                            <option value="">Please select category</option>
+                            <option value="general">General</option>
+                            <option value="recycle">Recycle</option>
+                            <option value="paper">Paper</option>
+                            <option value="cans">Cans</option>
+                            <option value="glass">Glass</option>
+                            <option value="plastic">Plastic</option>
+                            <option value="non-recycle">Non-Recycle</option>
+                        </select>
+                        <script
+                            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCeauTIEx5Oz2I6sV3M7zdyqS1kZ074l3A&callback=initMap"
+                            defer></script>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="card">
+            <div class="card-body d-lg-flex justify-content-lg-center"><button class="btn btn-primary"
+                    type="button">Button for something to do with starting a new&nbsp; journey</button></div>
+        </div>
+    </div>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+
 </body>
 
 {% endblock %}
