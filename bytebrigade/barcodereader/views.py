@@ -52,7 +52,7 @@ def create_product_view(request):
     # we need to send the user to a page that contains a form
     # Ask the user for the weight and material of the product
     # Then add the product to the database
-    #request.session['new_product'] = False
+    # request.session['new_product'] = False
     if not request.user.is_authenticated:
         return redirect('login')
     if request.method == 'POST':
@@ -196,7 +196,8 @@ def recycle_confirm(request):
         # def addstats(points,kg)
             weight = product_data.weight
             points = round(weight * 122)
-            addstats(request.user, product_data, points, weight)  # need to include the product
+            # need to include the product
+            addstats(request.user, product_data, points, weight)
 
             # If statement that checks what the products type is and then we set a variable that is litrally
             # var = 'Put in the red bin'
@@ -229,19 +230,19 @@ def recycle_confirm(request):
             # Add points to user goals
             current_user = request.user
 
-            if(binType):
+            if (binType):
                 print(binType)
-                thisUserGoals = UserGoal.objects.filter(Q(goalType=binType) & Q(user=current_user))
+                thisUserGoals = UserGoal.objects.filter(
+                    Q(goalType=binType) & Q(user=current_user))
                 for item in thisUserGoals:
                     item.value += 1
                     item.save()
-                
+
                 # Delete full goals and add points
                 for item in thisUserGoals:
-                    if(item.value >= 100):
+                    if (item.value >= 100):
                         item.delete()
                         points += 100
-
 
             data = Transaction.objects.all()[:5]
             data_dict = {
@@ -266,7 +267,8 @@ def recycle_confirm(request):
 def api_lookup(barcode):
     print("d")
     api_key = "5bcg2pbed762819eeppkc2qhjak1l4"
-    url = "https://api.barcodelookup.com/v3/products?barcode=" + barcode + "&formatted=y&key=" + api_key
+    url = "https://api.barcodelookup.com/v3/products?barcode=" + \
+        barcode + "&formatted=y&key=" + api_key
     print("j")
     with urllib.request.urlopen(url) as url:
         data = json.loads(url.read().decode())
@@ -300,7 +302,6 @@ def addstats(user, product, points: int, kg=0):
     user_stats.lastRecycle = product
     user_stats.save()  # this will update only
 
-
 def update_goal_stat(user, product):
     material = product.material
     recyclable = product.recycle
@@ -317,3 +318,19 @@ def update_goal_stat(user, product):
         if item.value >= 100:
             item.delete()
             user.points += 100
+            
+def bin_map(request):
+
+    # bin_general = models.BooleanField(default=False)
+    # bin_recycle = models.BooleanField(default=False)
+    # bin_paper = models.BooleanField(default=False)
+    # bin_cans = models.BooleanField(default=False)
+    # bin_glass = models.BooleanField(default=False)
+    # bin_plastic = models.BooleanField(default=False)
+    # bin_non_rec = models.BooleanField(default=False)
+
+    data = BinData.objects.all()
+    
+    data_dict = {'Bins': data}
+
+    return render(request, 'BCscanner/bin_map.html', data_dict)
