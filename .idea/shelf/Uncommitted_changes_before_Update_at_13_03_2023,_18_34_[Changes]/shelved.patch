@@ -1,0 +1,1054 @@
+Index: bytebrigade/barcodereader/views.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from django.shortcuts import render, redirect\nimport urllib.request\nimport json\nfrom home.models import Statistic, Product, BinData, Transaction, UserGoal\nfrom datetime import datetime\nfrom django.db.models import Q\n\n\ndef barcode_lookup(request):\n    # If the user not log-in, redirect them to login page\n    if not request.user.is_authenticated:\n        return redirect('login')\n    if request.method == 'POST':\n        barcode_product = request.POST.get(\"barcode\")\n        # We set the session barcode so that we can then use it in the other areas of the project\n        request.session['barcode'] = barcode_product\n        request.session['valid'] = 1\n        if Product.objects.filter(barcode=barcode_product).exists():\n            return redirect('recycle_confirm')\n            # redirect to product recycle page\n        else:\n            return redirect('create_product')\n\n    else:\n        return render(request, 'BCscanner/Scanner_page.html')\n\n\ndef create_product(request):\n    # we need to send the user to a page that contains a form\n    # Ask the user for the weight and material of the product\n    # Then add the product to the database\n    # request.session['new_product'] = False\n    if not request.user.is_authenticated:\n        return redirect('login')\n    if request.method == 'POST':\n        form = request.POST\n        new_product = Product.objects.create(\n            barcode=form.get(\"barcode\"),\n            name=form.get(\"name\"),\n            weight=float(form.get(\"weight\")) / 1000,\n            material=form.get(\"material\"),\n            recycle=form.get(\"recycle\")\n        )\n        new_product.save()\n\n        product_data = Product.objects.get(barcode=form.get(\"barcode\"))\n        addstats(request.user, product_data, 50)\n\n        request.session['new_product'] = True\n\n        return redirect('recycle_confirm')\n    elif request.session['barcode'] != -1:\n        if not Product.objects.filter(barcode=request.session['barcode']).exists():\n            barcode = {'barcode': request.session['barcode']}\n            return render(request, 'BCscanner/new_product_page.html', barcode)\n        else:\n            return redirect('index')\n    return redirect('index')\n\n\ndef recycle_confirm(request):\n    # The function that handles recording a transaction\n    # Then it shows you to a popup showing what stats you gained on the home_page\n    if not request.user.is_authenticated:\n        return redirect('login')\n    try:\n        if not request.session['valid'] == 1:\n            return redirect('index')\n    except Exception as e:\n        print(e)\n        return redirect(\"index\")\n\n    try:\n        barcode_product = request.session['barcode']\n        bin_data = request.session['bin_data']\n        if Product.objects.filter(barcode=barcode_product).exists() \\\n                and BinData.objects.filter(binId=bin_data).exists():\n            product_data = Product.objects.get(barcode=barcode_product)\n            user_data = request.user\n            cur_time = (datetime.now()).strftime(\"%H:%M:%S\")\n            bin_data = BinData.objects.get(binId=bin_data)\n            new_transaction = Transaction.objects.create(\n                product=product_data,\n                user=user_data,\n                time=cur_time,\n                bin=bin_data,\n            )\n            new_transaction.save()\n            request.session['barcode'] = -1\n            request.session['bin_data'] = -1\n            request.session['valid'] = -1\n        # Call a function that will take in the calculate the points for the user\n        # If the product is new add points, this is handle in the create product part\n        # def addstats(points,kg)\n            weight = product_data.weight\n            points = round(weight * 122)\n            # need to include the product\n            addstats(request.user, product_data, points, weight)\n\n            # If statement that checks what the products type is and then we set a variable that is litrally\n            # var = 'Put in the red bin'\n\n            product_type = product_data.material\n            could_recycle = product_data.recycle\n            new_home = \"\"\n            match (product_type, could_recycle):\n                case (\"Paper\", \"True\"):\n                    new_home = \"My new home is the Paper bin, please help me find my home! :)\"\n                    binType = 'Paper'\n                case (\"Plastic\", \"True\"):\n                    new_home = \"My new home is the Plastic bin, please help me find my home! :)\"\n                    binType = 'Plastic'\n                case (\"Cans\", \"True\"):\n                    new_home = \"My new home is the Cans bin, please help me find my home! :)\"\n                    binType = 'Cans'\n                case (\"Glass\", \"True\"):\n                    new_home = \"My new home is the Glass bin, please help me find my home! :)\"\n                    binType = 'Glass'\n                case (\"Plastic\", \"False\"):\n                    new_home = \"I am non-recyclable, please put me into General Waste :(\"\n                case (\"Cans\", \"False\"):\n                    new_home = \"I am non-recyclable, please put me into General Waste :(\"\n                case (\"Non-Recyclable\", \"False\"):\n                    new_home = \"I am non-recyclable, please put me into General Waste :(\"\n                case (\"Glass\", \"False\"):\n                    new_home = \"I am non-recyclable, please put me into General Waste :(\"\n\n            # Add points to user goals\n            current_user = request.user\n\n            if (binType):\n                print(binType)\n                thisUserGoals = UserGoal.objects.filter(\n                    Q(goalType=binType) & Q(user=current_user))\n                for item in thisUserGoals:\n                    item.value += 1\n                    item.save()\n\n                # Delete full goals and add points\n                for item in thisUserGoals:\n                    if (item.value >= 100):\n                        item.delete()\n                        points += 100\n\n            data = Transaction.objects.all()[:5]\n            data_dict = {\n                'Transaction': data,\n                'popup': 1,\n                'newPoints': 1,\n                'product': product_data.name,\n                'points': points,\n                'newhome': new_home\n            }\n            print(\"k\")\n            print(data_dict)\n            return render(request, 'home/index.html', data_dict)\n        return redirect('barcode_lookup')\n    except Exception as e:\n        print(e)\n        # They tried to scam us and haven't scanned a product\n        return redirect('barcode_lookup')\n\n\ndef api_lookup(barcode):\n    print(\"d\")\n    api_key = \"5bcg2pbed762819eeppkc2qhjak1l4\"\n    url = \"https://api.barcodelookup.com/v3/products?barcode=\" + \\\n        barcode + \"&formatted=y&key=\" + api_key\n    print(\"j\")\n    with urllib.request.urlopen(url) as url:\n        data = json.loads(url.read().decode())\n    print(\"l\")\n    print(data)\n    print(\"\\n\")\n    data = data[\"products\"][0]\n    return data\n\n\ndef database_lookup(request):\n    print(request.POST)\n    barcode_camera = request.POST.get(\"barcode\")\n    print(\"Value is \", barcode_camera)\n    if Product.objects.filter(barcode=barcode_camera).exists():\n        print(\"in db\")\n        product_data = Product.objects.get(barcode=barcode_camera)\n        print(product_data)\n    else:\n        print(\"not in db\")\n\n\ndef addstats(user, product, points: int, kg=0):\n    user_stats = Statistic.objects.get(user=user)\n    user_stats.points += points\n    kg *= 0.09\n    kg = round(kg, 3)\n    user_stats.curweek = round((user_stats.curweek + kg), 3)  # change field\n    user_stats.curmonth = round((user_stats.curmonth + kg), 3)\n    user_stats.curyear = round((user_stats.curyear + kg), 3)\n    user_stats.lastRecycle = product\n    user_stats.save()  # this will update only\n\n\ndef bin_map(request):\n\n    # bin_general = models.BooleanField(default=False)\n    # bin_recycle = models.BooleanField(default=False)\n    # bin_paper = models.BooleanField(default=False)\n    # bin_cans = models.BooleanField(default=False)\n    # bin_glass = models.BooleanField(default=False)\n    # bin_plastic = models.BooleanField(default=False)\n    # bin_non_rec = models.BooleanField(default=False)\n\n    data = BinData.objects.all()\n    \n    data_dict = {'Bins': data}\n\n    return render(request, 'BCscanner/bin_map.html', data_dict)\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/bytebrigade/barcodereader/views.py b/bytebrigade/barcodereader/views.py
+--- a/bytebrigade/barcodereader/views.py	(revision a890114a1dd82451762cccd74de8892c6801417c)
++++ b/bytebrigade/barcodereader/views.py	(date 1678731773334)
+@@ -1,7 +1,10 @@
+ from django.shortcuts import render, redirect
+ import urllib.request
+ import json
+-from home.models import Statistic, Product, BinData, Transaction, UserGoal
++from home.models import Transaction
++from account.models import UserGoal
++from account.views import addstats
++from products.models import Product
+ from datetime import datetime
+ from django.db.models import Q
+ 
+@@ -97,6 +100,7 @@
+             # need to include the product
+             addstats(request.user, product_data, points, weight)
+ 
++
+             # If statement that checks what the products type is and then we set a variable that is litrally
+             # var = 'Put in the red bin'
+ 
+@@ -200,18 +204,18 @@
+     user_stats.save()  # this will update only
+ 
+ 
+-def bin_map(request):
+-
+-    # bin_general = models.BooleanField(default=False)
+-    # bin_recycle = models.BooleanField(default=False)
+-    # bin_paper = models.BooleanField(default=False)
+-    # bin_cans = models.BooleanField(default=False)
+-    # bin_glass = models.BooleanField(default=False)
+-    # bin_plastic = models.BooleanField(default=False)
+-    # bin_non_rec = models.BooleanField(default=False)
+-
+-    data = BinData.objects.all()
+-    
+-    data_dict = {'Bins': data}
+-
+-    return render(request, 'BCscanner/bin_map.html', data_dict)
++# def bin_map(request):
++#
++#     # bin_general = models.BooleanField(default=False)
++#     # bin_recycle = models.BooleanField(default=False)
++#     # bin_paper = models.BooleanField(default=False)
++#     # bin_cans = models.BooleanField(default=False)
++#     # bin_glass = models.BooleanField(default=False)
++#     # bin_plastic = models.BooleanField(default=False)
++#     # bin_non_rec = models.BooleanField(default=False)
++#
++#     data = BinData.objects.all()
++#
++#     data_dict = {'Bins': data}
++#
++#     return render(request, 'BCscanner/bin_map.html', data_dict)
+Index: bytebrigade/account/models.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from django.db import models\n\n# Create your models here.\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/bytebrigade/account/models.py b/bytebrigade/account/models.py
+--- a/bytebrigade/account/models.py	(revision a890114a1dd82451762cccd74de8892c6801417c)
++++ b/bytebrigade/account/models.py	(date 1678728204103)
+@@ -1,3 +1,82 @@
+ from django.db import models
++from django.contrib.auth.models import User
++from products.models import Product
++
+ 
+-# Create your models here.
++class Statistic(models.Model):
++    user = models.ForeignKey(User, on_delete=models.CASCADE)
++    points = models.IntegerField(default=0)
++    carbon = models.FloatField(default=0)
++    curweek = models.FloatField(default=0)
++    curmonth = models.FloatField(default=0)
++    curyear = models.FloatField(default=0)
++    lastRecycle = models.ForeignKey(
++        Product,
++        related_name="lastRecycle",
++        on_delete=models.SET_DEFAULT,
++        to_field='barcode',
++        default='1'
++    )
++    loveRecycling = models.ForeignKey(
++        Product,
++        related_name="loveRecycle",
++        on_delete=models.SET_DEFAULT,
++        to_field='barcode',
++        default='1'
++    )
++
++    # def addToWeek(self, product: dict):
++    #     # as transaction occurs add to 4 cols, points, carbon, cur week, last recycle.
++    #     # add to year and month, but all are reset at the end of a cycle (week, month, year)
++    #     # love = self.calculateLove()
++    #     pass
++    #
++    # def addCurMonth(self, kg):
++    #     # month += last week
++    #     pass
++    #
++    # def addCurYear(self, kg):
++    #     # year += last month
++    #     pass
++    #
++    # def addPoint(self, pts):
++    #     pass
++    #
++    # # goes through transactions and get the product that they recycle the most. This occurs at each recycle event
++    # def calculateLove(self):
++    #     pass
++
++
++class Goal(models.Model):
++    goalID = models.AutoField(primary_key=True)
++    name = models.CharField(max_length=200)
++    description = models.CharField(max_length=200)
++    target = models.DecimalField(max_digits=10, decimal_places=5)
++
++
++class UserGoal(models.Model):
++    userGoalID = models.AutoField(primary_key=True)
++    userGoalNum = models.IntegerField()
++    user = models.ForeignKey(User, default=-1, on_delete=models.CASCADE)
++    goal = models.ForeignKey(Goal, default=-1, on_delete=models.CASCADE)
++    value = models.DecimalField(max_digits=10, decimal_places=5)
++
++    RECYCLING = 'Recycling'
++    PLASTIC = 'Plastic'
++    PAPER = 'Paper'
++    CANS = 'Cans'
++    GLASS = 'Glass'
++
++    goalTypeChoices = [
++        (RECYCLING, 'Recycling'),
++        (PLASTIC, 'Plastic'),
++        (PAPER, 'Paper'),
++        (CANS, 'Cans'),
++        (GLASS, 'Glass'),
++    ]
++
++    goalType = models.CharField(
++        max_length=25,
++        choices=goalTypeChoices,
++        default='Recycling'
++    )
+\ No newline at end of file
+Index: bytebrigade/home/models.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from django.db import models\nfrom django.contrib.auth.models import User\nimport time\n# Create your models here.\n\n\nclass BinData(models.Model):\n    binId = models.CharField(max_length=100, primary_key=True)  # Format AM-01-1 (Building-Floor-BinNo)\n    binName = models.CharField(max_length=100, default=\"bin\")\n    binLat = models.DecimalField(max_digits=100, decimal_places=22)\n    binLong = models.DecimalField(max_digits=100, decimal_places=22)\n    binPhoto = models.ImageField(default='figures/bins/default.jpg')\n    bin_general = models.BooleanField(default=False)\n    bin_recycle = models.BooleanField(default=False)\n    bin_paper = models.BooleanField(default=False)\n    bin_cans = models.BooleanField(default=False)\n    bin_glass = models.BooleanField(default=False)\n    bin_plastic = models.BooleanField(default=False)\n    bin_non_rec = models.BooleanField(default=False)\n\n\n\nclass Product(models.Model):\n    barcode = models.CharField(max_length=30, primary_key=True)\n    name = models.CharField(max_length=30)\n    weight = models.FloatField()\n    material = models.CharField(max_length=100)\n    recycle = models.CharField(max_length=30)\n\n    def __unicode__(self):\n        return u'%s' % self.barcode\n\n\nclass Transaction(models.Model):\n    transaction_id = models.AutoField(primary_key=True)\n    time = models.DateTimeField(auto_now_add=True)\n    bin = models.ForeignKey(BinData, on_delete=models.CASCADE)  # need to assign as foreign key to bin application\n    user = models.ForeignKey(User, default=-1, on_delete=models.CASCADE)\n    product = models.ForeignKey(Product, on_delete=models.CASCADE)\n    likes = models.IntegerField(default=0)\n\n\nclass Statistic(models.Model):\n    user = models.ForeignKey(User, on_delete=models.CASCADE)\n    points = models.IntegerField(default=0)\n    carbon = models.FloatField(default=0)\n    curweek = models.FloatField(default=0)\n    curmonth = models.FloatField(default=0)\n    curyear = models.FloatField(default=0)\n    lastRecycle = models.ForeignKey(\n        Product,\n        related_name=\"lastRecycle\",\n        on_delete=models.SET_DEFAULT,\n        to_field='barcode',\n        default='1'\n    )\n    loveRecycling = models.ForeignKey(\n        Product,\n        related_name=\"loveRecycle\",\n        on_delete=models.SET_DEFAULT,\n        to_field='barcode',\n        default='1'\n    )\n\n    def addToWeek(self, product:dict):\n        # as transaction occurs add to 4 cols, points, carbon, cur week, last recycle.\n        # add to year and month, but all are reset at the end of a cycle (week, month, year)\n        # love = self.calculateLove()\n        pass\n\n    def addCurMonth(self, kg):\n        # month += last week\n        pass\n\n    def addCurYear(self, kg):\n        # year += last month\n        pass\n\n    def addPoint(self, pts):\n        pass\n\n    # goes through transactions and get the product that they recycle the most. This occurs at each recycle event\n    def calculateLove(self):\n        pass\n\nclass Goal(models.Model):\n    goalID = models.AutoField(primary_key=True)\n    name = models.CharField(max_length=200)\n    description = models.CharField(max_length=200)\n    target = models.DecimalField(max_digits=10, decimal_places=5)\n\n\nclass UserGoal(models.Model):\n    userGoalID = models.AutoField(primary_key=True)\n    userGoalNum = models.IntegerField()\n    user = models.ForeignKey(User, default=-1, on_delete=models.CASCADE)\n    goal = models.ForeignKey(Goal, default=-1, on_delete=models.CASCADE)\n    value = models.DecimalField(max_digits=10, decimal_places=5)\n    \n    RECYCLING = 'Recycling'\n    PLASTIC = 'Plastic'\n    PAPER = 'Paper'\n    CANS = 'Cans'\n    GLASS = 'Glass'\n\n    goalTypeChoices = [\n        (RECYCLING, 'Recycling'),\n        (PLASTIC, 'Plastic'),\n        (PAPER, 'Paper'),\n        (CANS, 'Cans'),\n        (GLASS, 'Glass'),\n    ]\n\n    goalType = models.CharField(\n        max_length=25,\n        choices=goalTypeChoices,\n        default='Recycling'\n    )\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/bytebrigade/home/models.py b/bytebrigade/home/models.py
+--- a/bytebrigade/home/models.py	(revision a890114a1dd82451762cccd74de8892c6801417c)
++++ b/bytebrigade/home/models.py	(date 1678729088206)
+@@ -1,35 +1,38 @@
+ from django.db import models
+ from django.contrib.auth.models import User
++from bins.models import BinData
++from products.models import Product
++
+ import time
+ # Create your models here.
+ 
+ 
+-class BinData(models.Model):
+-    binId = models.CharField(max_length=100, primary_key=True)  # Format AM-01-1 (Building-Floor-BinNo)
+-    binName = models.CharField(max_length=100, default="bin")
+-    binLat = models.DecimalField(max_digits=100, decimal_places=22)
+-    binLong = models.DecimalField(max_digits=100, decimal_places=22)
+-    binPhoto = models.ImageField(default='figures/bins/default.jpg')
+-    bin_general = models.BooleanField(default=False)
+-    bin_recycle = models.BooleanField(default=False)
+-    bin_paper = models.BooleanField(default=False)
+-    bin_cans = models.BooleanField(default=False)
+-    bin_glass = models.BooleanField(default=False)
+-    bin_plastic = models.BooleanField(default=False)
+-    bin_non_rec = models.BooleanField(default=False)
+-
++# class BinData(models.Model):
++#     binId = models.CharField(max_length=100, primary_key=True)  # Format AM-01-1 (Building-Floor-BinNo)
++#     binName = models.CharField(max_length=100, default="bin")
++#     binLat = models.DecimalField(max_digits=100, decimal_places=22)
++#     binLong = models.DecimalField(max_digits=100, decimal_places=22)
++#     binPhoto = models.ImageField(default='figures/bins/default.jpg')
++#     bin_general = models.BooleanField(default=False)
++#     bin_recycle = models.BooleanField(default=False)
++#     bin_paper = models.BooleanField(default=False)
++#     bin_cans = models.BooleanField(default=False)
++#     bin_glass = models.BooleanField(default=False)
++#     bin_plastic = models.BooleanField(default=False)
++#     bin_non_rec = models.BooleanField(default=False)
+ 
+ 
+-class Product(models.Model):
+-    barcode = models.CharField(max_length=30, primary_key=True)
+-    name = models.CharField(max_length=30)
+-    weight = models.FloatField()
+-    material = models.CharField(max_length=100)
+-    recycle = models.CharField(max_length=30)
+ 
+-    def __unicode__(self):
+-        return u'%s' % self.barcode
+-
++# class Product(models.Model):
++#     barcode = models.CharField(max_length=30, primary_key=True)
++#     name = models.CharField(max_length=30)
++#     weight = models.FloatField()
++#     material = models.CharField(max_length=100)
++#     recycle = models.CharField(max_length=30)
++#
++#     def __unicode__(self):
++#         return u'%s' % self.barcode
++#
+ 
+ class Transaction(models.Model):
+     transaction_id = models.AutoField(primary_key=True)
+@@ -40,79 +43,79 @@
+     likes = models.IntegerField(default=0)
+ 
+ 
+-class Statistic(models.Model):
+-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+-    points = models.IntegerField(default=0)
+-    carbon = models.FloatField(default=0)
+-    curweek = models.FloatField(default=0)
+-    curmonth = models.FloatField(default=0)
+-    curyear = models.FloatField(default=0)
+-    lastRecycle = models.ForeignKey(
+-        Product,
+-        related_name="lastRecycle",
+-        on_delete=models.SET_DEFAULT,
+-        to_field='barcode',
+-        default='1'
+-    )
+-    loveRecycling = models.ForeignKey(
+-        Product,
+-        related_name="loveRecycle",
+-        on_delete=models.SET_DEFAULT,
+-        to_field='barcode',
+-        default='1'
+-    )
+-
+-    def addToWeek(self, product:dict):
+-        # as transaction occurs add to 4 cols, points, carbon, cur week, last recycle.
+-        # add to year and month, but all are reset at the end of a cycle (week, month, year)
+-        # love = self.calculateLove()
+-        pass
+-
+-    def addCurMonth(self, kg):
+-        # month += last week
+-        pass
+-
+-    def addCurYear(self, kg):
+-        # year += last month
+-        pass
+-
+-    def addPoint(self, pts):
+-        pass
+-
+-    # goes through transactions and get the product that they recycle the most. This occurs at each recycle event
+-    def calculateLove(self):
+-        pass
+-
+-class Goal(models.Model):
+-    goalID = models.AutoField(primary_key=True)
+-    name = models.CharField(max_length=200)
+-    description = models.CharField(max_length=200)
+-    target = models.DecimalField(max_digits=10, decimal_places=5)
+-
+-
+-class UserGoal(models.Model):
+-    userGoalID = models.AutoField(primary_key=True)
+-    userGoalNum = models.IntegerField()
+-    user = models.ForeignKey(User, default=-1, on_delete=models.CASCADE)
+-    goal = models.ForeignKey(Goal, default=-1, on_delete=models.CASCADE)
+-    value = models.DecimalField(max_digits=10, decimal_places=5)
+-    
+-    RECYCLING = 'Recycling'
+-    PLASTIC = 'Plastic'
+-    PAPER = 'Paper'
+-    CANS = 'Cans'
+-    GLASS = 'Glass'
+-
+-    goalTypeChoices = [
+-        (RECYCLING, 'Recycling'),
+-        (PLASTIC, 'Plastic'),
+-        (PAPER, 'Paper'),
+-        (CANS, 'Cans'),
+-        (GLASS, 'Glass'),
+-    ]
+-
+-    goalType = models.CharField(
+-        max_length=25,
+-        choices=goalTypeChoices,
+-        default='Recycling'
+-    )
++# class Statistic(models.Model):
++#     user = models.ForeignKey(User, on_delete=models.CASCADE)
++#     points = models.IntegerField(default=0)
++#     carbon = models.FloatField(default=0)
++#     curweek = models.FloatField(default=0)
++#     curmonth = models.FloatField(default=0)
++#     curyear = models.FloatField(default=0)
++#     lastRecycle = models.ForeignKey(
++#         Product,
++#         related_name="lastRecycle",
++#         on_delete=models.SET_DEFAULT,
++#         to_field='barcode',
++#         default='1'
++#     )
++#     loveRecycling = models.ForeignKey(
++#         Product,
++#         related_name="loveRecycle",
++#         on_delete=models.SET_DEFAULT,
++#         to_field='barcode',
++#         default='1'
++#     )
++#
++#     def addToWeek(self, product:dict):
++#         # as transaction occurs add to 4 cols, points, carbon, cur week, last recycle.
++#         # add to year and month, but all are reset at the end of a cycle (week, month, year)
++#         # love = self.calculateLove()
++#         pass
++#
++#     def addCurMonth(self, kg):
++#         # month += last week
++#         pass
++#
++#     def addCurYear(self, kg):
++#         # year += last month
++#         pass
++#
++#     def addPoint(self, pts):
++#         pass
++#
++#     # goes through transactions and get the product that they recycle the most. This occurs at each recycle event
++#     def calculateLove(self):
++#         pass
++#
++# class Goal(models.Model):
++#     goalID = models.AutoField(primary_key=True)
++#     name = models.CharField(max_length=200)
++#     description = models.CharField(max_length=200)
++#     target = models.DecimalField(max_digits=10, decimal_places=5)
++#
++#
++# class UserGoal(models.Model):
++#     userGoalID = models.AutoField(primary_key=True)
++#     userGoalNum = models.IntegerField()
++#     user = models.ForeignKey(User, default=-1, on_delete=models.CASCADE)
++#     goal = models.ForeignKey(Goal, default=-1, on_delete=models.CASCADE)
++#     value = models.DecimalField(max_digits=10, decimal_places=5)
++#
++#     RECYCLING = 'Recycling'
++#     PLASTIC = 'Plastic'
++#     PAPER = 'Paper'
++#     CANS = 'Cans'
++#     GLASS = 'Glass'
++#
++#     goalTypeChoices = [
++#         (RECYCLING, 'Recycling'),
++#         (PLASTIC, 'Plastic'),
++#         (PAPER, 'Paper'),
++#         (CANS, 'Cans'),
++#         (GLASS, 'Glass'),
++#     ]
++#
++#     goalType = models.CharField(
++#         max_length=25,
++#         choices=goalTypeChoices,
++#         default='Recycling'
++#     )
+Index: bytebrigade/account/views.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from django.shortcuts import render, redirect\nfrom django.http import HttpResponseRedirect\nfrom .forms import RegistrationForm\nfrom home.models import Statistic, Goal, UserGoal, User, Transaction\nfrom django.urls import reverse\nfrom django.db.models import Q\n\n\ndef register(request):\n    if request.user.is_authenticated:\n        return redirect('index')\n\n    if request.method == 'POST':\n        user_form = RegistrationForm(request.POST)\n\n        if user_form.is_valid():\n            if user_form.cleaned_data['password'] != user_form.cleaned_data['password_confirm']:\n                return render(request, 'registration/register.html', {'user_form': user_form})\n            # New user object without saving\n            new_user = user_form.save(commit=False)\n            # Set password\n            new_user.set_password(user_form.cleaned_data['password'])\n            new_user.save()\n            new_statistic = Statistic.objects.create(user=new_user)\n            new_statistic.save()\n            return render(request, 'registration/register_done.html', {'new_user': new_user})\n    else:\n        user_form = RegistrationForm()\n    return render(request, 'registration/register.html', {'user_form': user_form})\n\n\ndef account(request):\n    if request.user.is_authenticated:\n        data = Statistic.objects.get(user=request.user)\n        lastTransaction = 0\n        if Transaction.objects.filter(user=request.user).exists():\n            lastTransaction = Transaction.objects.filter(user=request.user).latest('time')\n\n\n        maxWeek = Statistic.objects.all().order_by('-curweek')[0]\n        maxMonth = Statistic.objects.all().order_by('-curmonth')[0]\n        maxYear = Statistic.objects.all().order_by('-curyear')[0]\n        goalData = Goal.objects.all()\n        userGoal1 = UserGoal.objects.filter(Q(userGoalNum=1) & Q(user=request.user)).first()\n        userGoal2 = UserGoal.objects.filter(Q(userGoalNum=2) & Q(user=request.user)).first()\n        userGoal3 = UserGoal.objects.filter(Q(userGoalNum=3) & Q(user=request.user)).first()\n        data_dict = {\n            'Profile': data,\n            'maxWeek': maxWeek,\n            'maxMonth': maxMonth,\n            'maxYear': maxYear,\n            'Goals': goalData,\n            'UserGoal1': userGoal1,\n            'UserGoal2': userGoal2,\n            'UserGoal3': userGoal3,\n            'lastTrans': lastTransaction\n        }\n        return render(request, 'account/Profile_page.html', data_dict)\n    else:\n        return redirect('login')\n\ndef password(request):\n    return render(request, 'account/password.html')\n\ndef addUserGoal(request):\n    x = request.POST['goalNum']\n    y = request.POST['goal-options']\n    z = request.POST['goal-type'] # this is plastic and all the others\n    goalNumType = Goal.objects.get(pk=y)\n    current_user = request.user\n\n    # Checking if the user has already got a goal for this specific value\n    goalSet = UserGoal.objects.filter(Q(userGoalNum=x) & Q(user=current_user))\n    if not goalSet:\n        goal = UserGoal(userGoalNum = x, user = current_user, goal = goalNumType, value = 0, goalType = z)\n        goal.save()\n    else:\n        UserGoal.objects.filter(Q(userGoalNum=x) & Q(user=current_user)).delete()\n        goal = UserGoal(userGoalNum = x, user = current_user, goal = goalNumType, value = 0, goalType = z)\n        goal.save()\n    \n    return HttpResponseRedirect(reverse('account'))\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/bytebrigade/account/views.py b/bytebrigade/account/views.py
+--- a/bytebrigade/account/views.py	(revision a890114a1dd82451762cccd74de8892c6801417c)
++++ b/bytebrigade/account/views.py	(date 1678729504148)
+@@ -1,7 +1,8 @@
+ from django.shortcuts import render, redirect
+ from django.http import HttpResponseRedirect
+ from .forms import RegistrationForm
+-from home.models import Statistic, Goal, UserGoal, User, Transaction
++from account.models import Statistic, Goal, UserGoal
++from home.models import Transaction
+ from django.urls import reverse
+ from django.db.models import Q
+ 
+@@ -80,3 +81,16 @@
+         goal.save()
+     
+     return HttpResponseRedirect(reverse('account'))
++
++
++def addstats(user, product, points: int, kg=0):
++    user_stats = Statistic.objects.get(user=user)
++    user_stats.points += points
++    kg *= 0.09
++    kg = round(kg, 3)
++    user_stats.curweek = round((user_stats.curweek + kg), 3)  # change field
++    user_stats.curmonth = round((user_stats.curmonth + kg), 3)
++    user_stats.curyear = round((user_stats.curyear + kg), 3)
++    user_stats.lastRecycle = product
++    user_stats.save()  # this will update only
++
+Index: bytebrigade/account/urls.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from django.urls import path\nfrom . import views\nfrom django.contrib.auth import views as auth_views\n\nurlpatterns = [\n    path('', views.account, name='account'),\n    path('login/', auth_views.LoginView.as_view(), name='login'),\n    path('logout/', auth_views.LogoutView.as_view(), name='logout'),\n    path('registration/', views.register, name='registration'),\n    path('password/', views.password, name='password'),\n    path('password/reset', auth_views.PasswordResetView.as_view(), name='password_reset'),\n    path('password/change', auth_views.PasswordChangeView.as_view(), name='password_change'),\n    path('password/change/done/', auth_views.PasswordChangeDoneView.as_view(), name='password_change_done'),\n    path('addUserGoal/', views.addUserGoal, name='addUserGoal'),\n]
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/bytebrigade/account/urls.py b/bytebrigade/account/urls.py
+--- a/bytebrigade/account/urls.py	(revision a890114a1dd82451762cccd74de8892c6801417c)
++++ b/bytebrigade/account/urls.py	(date 1678730345155)
+@@ -12,4 +12,5 @@
+     path('password/change', auth_views.PasswordChangeView.as_view(), name='password_change'),
+     path('password/change/done/', auth_views.PasswordChangeDoneView.as_view(), name='password_change_done'),
+     path('addUserGoal/', views.addUserGoal, name='addUserGoal'),
+-]
+\ No newline at end of file
++]
++
+Index: bytebrigade/bytebrigade/settings.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>\"\"\"\nDjango settings for bytebrigade project.\nGenerated by 'django-admin startproject' using Django 4.1.5.\nFor more information on this file, see\nhttps://docs.djangoproject.com/en/4.1/topics/settings/\nFor the full list of settings and their values, see\nhttps://docs.djangoproject.com/en/4.1/ref/settings/\n\"\"\"\nfrom pathlib import Path\nimport os\n\n# Build paths inside the project like this: BASE_DIR / 'subdir'.\nBASE_DIR = Path(__file__).resolve().parent.parent\n\n\n# Quick-start development settings - unsuitable for production\n# See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/\n\n# SECURITY WARNING: keep the secret key used in production secret!\nSECRET_KEY = 'django-insecure-ovp+eko5grgmht+ng&i+4go=0ui9jnk+1zp90yr!+y2bvk8m%m'\n\n# SECURITY WARNING: don't run with debug turned on in production!\nDEBUG = True\n\nALLOWED_HOSTS = []\n\n\n# Application definition\n\nINSTALLED_APPS = [\n    'home',\n    'account',\n    'barcodereader',\n    'django.contrib.admin',\n    'django.contrib.auth',\n    'django.contrib.contenttypes',\n    'django.contrib.sessions',\n    'django.contrib.messages',\n    'django.contrib.staticfiles',\n]\n\nMIDDLEWARE = [\n    'django.middleware.security.SecurityMiddleware',\n    'django.contrib.sessions.middleware.SessionMiddleware',\n    'django.middleware.common.CommonMiddleware',\n    'django.middleware.csrf.CsrfViewMiddleware',\n    'django.contrib.auth.middleware.AuthenticationMiddleware',\n    'django.contrib.messages.middleware.MessageMiddleware',\n    'django.middleware.clickjacking.XFrameOptionsMiddleware',\n]\n\nROOT_URLCONF = 'bytebrigade.urls'\n\nTEMPLATES = [\n    {\n        'BACKEND': 'django.template.backends.django.DjangoTemplates',\n        'DIRS': [\n            os.path.join(BASE_DIR, 'statics/templates'),\n        ],\n        'APP_DIRS': True,\n        'OPTIONS': {\n            'context_processors': [\n                'django.template.context_processors.debug',\n                'django.template.context_processors.request',\n                'django.contrib.auth.context_processors.auth',\n                'django.contrib.messages.context_processors.messages',\n            ],\n        },\n    },\n]\n\nWSGI_APPLICATION = 'bytebrigade.wsgi.application'\n\n\n# Database\n# https://docs.djangoproject.com/en/4.1/ref/settings/#databases\n\nDATABASES = {\n    'default': {\n        'ENGINE': 'django.db.backends.sqlite3',\n        'NAME': BASE_DIR / 'db.sqlite3',\n    }\n}\n\n\n# Password validation\n# https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators\n\nAUTH_PASSWORD_VALIDATORS = [\n    {\n        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',\n    },\n    {\n        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',\n    },\n    {\n        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',\n    },\n    {\n        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',\n    },\n]\n\n\n# Internationalization\n# https://docs.djangoproject.com/en/4.1/topics/i18n/\n\nLANGUAGE_CODE = 'en-us'\n\nTIME_ZONE = 'UTC'\n\nUSE_I18N = True\n\nUSE_TZ = True\n\n\n# Static files (CSS, JavaScript, Images)\n# https://docs.djangoproject.com/en/4.1/howto/static-files/\n\n\nSTATIC_ROOT = 'staticfiles'\n\nSTATIC_URL = 'static/'\n\n# Super General Staticfiles for all application\nSTATICFILES_DIRS = [\n    BASE_DIR / \"statics\",\n]\n\n# Default primary key field type\n# https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field\n\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'\n\n\n# Default URL for user authentication pages\n\nLOGIN_URL = 'login'\n\nLOGOUT_REDIRECT_URL = 'logout'\n\nLOGIN_REDIRECT_URL = 'index'\n\n\n# Verification Email Backend\n\nEMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/bytebrigade/bytebrigade/settings.py b/bytebrigade/bytebrigade/settings.py
+--- a/bytebrigade/bytebrigade/settings.py	(revision a890114a1dd82451762cccd74de8892c6801417c)
++++ b/bytebrigade/bytebrigade/settings.py	(date 1678730463603)
+@@ -31,6 +31,8 @@
+     'home',
+     'account',
+     'barcodereader',
++    'bins',
++    'products',
+     'django.contrib.admin',
+     'django.contrib.auth',
+     'django.contrib.contenttypes',
+Index: location/index.html
+===================================================================
+diff --git a/location/index.html b/location/index.html
+deleted file mode 100644
+--- a/location/index.html	(revision a890114a1dd82451762cccd74de8892c6801417c)
++++ /dev/null	(revision a890114a1dd82451762cccd74de8892c6801417c)
+@@ -1,117 +0,0 @@
+-<!DOCTYPE html>
+-
+-<html lang="en">
+-
+-<head>
+-    <meta charset="UTF-8">
+-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+-    <title>Location Template</title>
+-</head>
+-
+-<body>
+-
+-    <p>Click the button to get your coordinates.</p>
+-
+-    <button onclick="closestBin()">Try It</button>
+-
+-    <p id="demo"></p>
+-
+-    <script>
+-        var x = document.getElementById("demo");
+-
+-        function closestBin() {
+-            // Get DB data about bins
+-            // Go through each bin etc. to find closest bin
+-
+-            var testBins = [[50.730827200860205, -3.5159728963712626], [50, 7], [50, 3], [50, 7]];
+-            var minBinDist = [0, testBins[0], 0] // index, element, distance
+-
+-            function getLocation() {
+-                if (navigator.geolocation) {
+-                    navigator.geolocation.getCurrentPosition(binDistCalc);
+-                } else {
+-                    x.innerHTML = "Geolocation is not supported by this browser.";
+-                }
+-            }
+-            function binDistCalc(position) {
+-                var lat = position.coords.latitude;
+-                var long = position.coords.longitude;
+-
+-                // Loop through test bins array and compare each set of values
+-                for (let y = 0; y < testBins.length; y++) {
+-                    var binLat = testBins[y][0];
+-                    var binLong = testBins[y][1];
+-
+-                    var distance = calculateDistance(lat, long, binLat, binLong);
+-
+-                    if (y == 0) {
+-                        minBinDist = [];
+-                        minBinDist = [y, testBins[y], distance]; 
+-                    } else {
+-                        if (distance < minBinDist[2]) {
+-                            minBinDist = [];
+-                            minBinDist = [y, testBins[y], distance];
+-                        }
+-                    }                    
+-                }
+-                console.log(minBinDist);
+-            }
+-            getLocation();
+-        }
+-
+-        function binDistance() {
+-            // Get DB data about bins
+-            // Go through each bin etc. until found (from QR code)
+-
+-            var binLat = 50.730827200860205;
+-            var binLong = -3.5159728963712626;
+-            function getLocation() {
+-                if (navigator.geolocation) {
+-                    navigator.geolocation.getCurrentPosition(binDistCalc);
+-                } else {
+-                    x.innerHTML = "Geolocation is not supported by this browser.";
+-                }
+-            }
+-            function binDistCalc(position) {
+-                var lat = position.coords.latitude;
+-                var long = position.coords.longitude;
+-
+-                //calculate the distance between user and a given location (bin)
+-                var distance = calculateDistance(lat, long, binLat, binLong);
+-
+-                // checks the tolerence
+-                console.log(tolerance(distance));
+-            }
+-            getLocation();
+-        }
+-
+-
+-        function calculateDistance(lat1, lon1, lat2, lon2) {
+-            var R = 6371; // Radius of the earth in km
+-            var dLat = deg2rad(lat2 - lat1);  // deg2rad below
+-            var dLon = deg2rad(lon2 - lon1);
+-            var a =
+-                Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+-                Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+-                Math.sin(dLon / 2) * Math.sin(dLon / 2)
+-                ;
+-            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+-            var d = 1000 * R * c; // Distance in m
+-
+-            return d;
+-        }
+-        function deg2rad(deg) {
+-            return deg * (Math.PI / 180);
+-        }
+-        function tolerance(distance) {
+-            if (distance < 25) {
+-                return true;
+-            } else {
+-                return false;
+-            }
+-        }
+-    </script>
+-</body>
+-
+-</html>
+\ No newline at end of file
+Index: .idea/shelf/Uncommitted_changes_before_Checkout_at_27_02_2023__14_32__Changes_.xml
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Checkout_at_27_02_2023__14_32__Changes_.xml b/.idea/shelf/Uncommitted_changes_before_Checkout_at_27_02_2023__14_32__Changes_.xml
+deleted file mode 100644
+--- a/.idea/shelf/Uncommitted_changes_before_Checkout_at_27_02_2023__14_32__Changes_.xml	(revision a890114a1dd82451762cccd74de8892c6801417c)
++++ /dev/null	(revision a890114a1dd82451762cccd74de8892c6801417c)
+@@ -1,4 +0,0 @@
+-<changelist name="Uncommitted_changes_before_Checkout_at_27_02_2023,_14_32_[Changes]" date="1677508336497" recycled="true" deleted="true">
+-  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_27_02_2023,_14_32_[Changes]/shelved.patch" />
+-  <option name="DESCRIPTION" value="Uncommitted changes before Checkout at 27/02/2023, 14:32 [Changes]" />
+-</changelist>
+\ No newline at end of file
+Index: bytebrigade/home/migrations/0001_initial.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/bytebrigade/home/migrations/0001_initial.py b/bytebrigade/home/migrations/0001_initial.py
+deleted file mode 100644
+--- a/bytebrigade/home/migrations/0001_initial.py	(revision a890114a1dd82451762cccd74de8892c6801417c)
++++ /dev/null	(revision a890114a1dd82451762cccd74de8892c6801417c)
+@@ -1,89 +0,0 @@
+-# Generated by Django 4.1.5 on 2023-03-02 00:04
+-
+-from django.conf import settings
+-from django.db import migrations, models
+-import django.db.models.deletion
+-
+-
+-class Migration(migrations.Migration):
+-
+-    initial = True
+-
+-    dependencies = [
+-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+-    ]
+-
+-    operations = [
+-        migrations.CreateModel(
+-            name='BinData',
+-            fields=[
+-                ('binId', models.CharField(max_length=100, primary_key=True, serialize=False)),
+-                ('binName', models.CharField(default='bin', max_length=100)),
+-                ('binLat', models.DecimalField(decimal_places=22, max_digits=100)),
+-                ('binLong', models.DecimalField(decimal_places=22, max_digits=100)),
+-                ('binPhoto', models.ImageField(default='figures/bins/default.jpg', upload_to='')),
+-                ('bin_general', models.BooleanField(default=False)),
+-                ('bin_recycle', models.BooleanField(default=False)),
+-                ('bin_paper', models.BooleanField(default=False)),
+-                ('bin_cans', models.BooleanField(default=False)),
+-                ('bin_glass', models.BooleanField(default=False)),
+-                ('bin_plastic', models.BooleanField(default=False)),
+-                ('bin_non_rec', models.BooleanField(default=False)),
+-            ],
+-        ),
+-        migrations.CreateModel(
+-            name='Goal',
+-            fields=[
+-                ('goalID', models.AutoField(primary_key=True, serialize=False)),
+-                ('name', models.CharField(max_length=200)),
+-                ('description', models.CharField(max_length=200)),
+-                ('target', models.DecimalField(decimal_places=5, max_digits=10)),
+-            ],
+-        ),
+-        migrations.CreateModel(
+-            name='Product',
+-            fields=[
+-                ('barcode', models.CharField(max_length=30, primary_key=True, serialize=False)),
+-                ('name', models.CharField(max_length=30)),
+-                ('weight', models.FloatField()),
+-                ('material', models.CharField(max_length=100)),
+-                ('recycle', models.CharField(max_length=30)),
+-            ],
+-        ),
+-        migrations.CreateModel(
+-            name='UserGoal',
+-            fields=[
+-                ('userGoalID', models.AutoField(primary_key=True, serialize=False)),
+-                ('userGoalNum', models.IntegerField()),
+-                ('value', models.DecimalField(decimal_places=5, max_digits=10)),
+-                ('goalType', models.CharField(choices=[('Recycling', 'Recycling'), ('Plastic', 'Plastic'), ('Paper', 'Paper'), ('Cans', 'Cans'), ('Glass', 'Glass')], default='Recycling', max_length=25)),
+-                ('goal', models.ForeignKey(default=-1, on_delete=django.db.models.deletion.CASCADE, to='home.goal')),
+-                ('user', models.ForeignKey(default=-1, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+-            ],
+-        ),
+-        migrations.CreateModel(
+-            name='Transaction',
+-            fields=[
+-                ('transaction_id', models.AutoField(primary_key=True, serialize=False)),
+-                ('time', models.DateTimeField(auto_now_add=True)),
+-                ('likes', models.IntegerField(default=0)),
+-                ('bin', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='home.bindata')),
+-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='home.product')),
+-                ('user', models.ForeignKey(default=-1, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+-            ],
+-        ),
+-        migrations.CreateModel(
+-            name='Statistic',
+-            fields=[
+-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+-                ('points', models.IntegerField(default=0)),
+-                ('carbon', models.FloatField(default=0)),
+-                ('curweek', models.FloatField(default=0)),
+-                ('curmonth', models.FloatField(default=0)),
+-                ('curyear', models.FloatField(default=0)),
+-                ('lastRecycle', models.ForeignKey(default='1', on_delete=django.db.models.deletion.SET_DEFAULT, related_name='lastRecycle', to='home.product')),
+-                ('loveRecycling', models.ForeignKey(default='1', on_delete=django.db.models.deletion.SET_DEFAULT, related_name='loveRecycle', to='home.product')),
+-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+-            ],
+-        ),
+-    ]
+Index: .idea/shelf/Uncommitted_changes_before_Checkout_at_27_02_2023,_14_32_[Changes]/shelved.patch
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Checkout_at_27_02_2023,_14_32_[Changes]/shelved.patch b/.idea/shelf/Uncommitted_changes_before_Checkout_at_27_02_2023,_14_32_[Changes]/shelved.patch
+deleted file mode 100644
+--- a/.idea/shelf/Uncommitted_changes_before_Checkout_at_27_02_2023,_14_32_[Changes]/shelved.patch	(revision a890114a1dd82451762cccd74de8892c6801417c)
++++ /dev/null	(revision a890114a1dd82451762cccd74de8892c6801417c)
+@@ -1,80 +0,0 @@
+-Index: .idea/workspace.xml
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"AutoImportSettings\">\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\n  </component>\n  <component name=\"ChangeListManager\">\n    <list default=\"true\" id=\"3049aee3-629a-4512-8969-d528f414ba99\" name=\"Changes\" comment=\"Adding variables to profile page and making navbar link to pages\" />\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\n  </component>\n  <component name=\"DjangoConsoleOptions\" custom-start-script=\"import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)\">\n    <option name=\"myCustomStartScript\" value=\"import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)\" />\n  </component>\n  <component name=\"FileTemplateManagerImpl\">\n    <option name=\"RECENT_TEMPLATES\">\n      <list>\n        <option value=\"Python Script\" />\n        <option value=\"HTML File\" />\n      </list>\n    </option>\n  </component>\n  <component name=\"Git.Merge.Settings\">\n    <option name=\"BRANCH\" value=\"Barcode+Camera\" />\n  </component>\n  <component name=\"Git.Settings\">\n    <option name=\"PREVIOUS_COMMIT_AUTHORS\">\n      <list>\n        <option value=\"sccthomas &lt;95318179+sccthomas@users.noreply.github.com&gt;, cameron hallett,oscar norris &lt;oscarhfnorris@gmail.com&gt; ,howardcui-super &lt;78500597+howardcui-super@users.noreply.github.com&gt;, james ford &lt;57077523+jamesemf@users.noreply.github.com&gt;, angelopalmer &lt;95857532+angelopalmer@users.noreply.github.com&gt;\" />\n        <option value=\"Cameron Hallett, sccthomas &lt;95318179+sccthomas@users.noreply.github.com&gt; ,oscar norris &lt;oscarhfnorris@gmail.com&gt; ,howardcui-super &lt;78500597+howardcui-super@users.noreply.github.com&gt;, james ford &lt;57077523+jamesemf@users.noreply.github.com&gt;, angelopalmer &lt;95857532+angelopalmer@users.noreply.github.com&gt;\" />\n        <option value=\"Cam sccthomas &lt;95318179+sccthomas@users.noreply.github.com&gt; oscar norris &lt;oscarhfnorris@gmail.com&gt; howardcui-super &lt;78500597+howardcui-super@users.noreply.github.com&gt; james ford &lt;57077523+jamesemf@users.noreply.github.com&gt; angelopalmer &lt;95857532+angelopalmer@users.noreply.github.com&gt;\" />\n        <option value=\"sccthomas &lt;95318179+sccthomas@users.noreply.github.com&gt; oscar norris &lt;oscarhfnorris@gmail.com&gt; howardcui-super &lt;78500597+howardcui-super@users.noreply.github.com&gt; james ford &lt;57077523+jamesemf@users.noreply.github.com&gt; angelopalmer &lt;95857532+angelopalmer@users.noreply.github.com&gt;\" />\n      </list>\n    </option>\n    <option name=\"RECENT_BRANCH_BY_REPOSITORY\">\n      <map>\n        <entry key=\"$PROJECT_DIR$\" value=\"main\" />\n      </map>\n    </option>\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\n  </component>\n  <component name=\"GitHubPullRequestSearchHistory\"><![CDATA[{\n  \"lastFilter\": {\n    \"state\": \"OPEN\"\n  }\n}]]></component>\n  <component name=\"GithubPullRequestsUISettings\">\n    <option name=\"recentNewPullRequestHead\">\n      <RepoCoordinatesHolder>\n        <option name=\"owner\" value=\"Jamesemf\" />\n        <option name=\"repository\" value=\"ECM2434\" />\n      </RepoCoordinatesHolder>\n    </option>\n    <option name=\"selectedUrlAndAccountId\">\n      <UrlAndAccount>\n        <option name=\"accountId\" value=\"09cb8358-9d65-4f26-afd7-1e3c1e858a5f\" />\n        <option name=\"url\" value=\"https://github.com/Jamesemf/ECM2434.git\" />\n      </UrlAndAccount>\n    </option>\n  </component>\n  <component name=\"MarkdownSettingsMigration\">\n    <option name=\"stateVersion\" value=\"1\" />\n  </component>\n  <component name=\"ProjectId\" id=\"2LYOSN1qQ4Qflkn3cgn0YGfsjfw\" />\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\">\n    <ConfirmationsSetting value=\"2\" id=\"Add\" />\n  </component>\n  <component name=\"ProjectViewState\">\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\n    <option name=\"showLibraryContents\" value=\"true\" />\n  </component>\n  <component name=\"PropertiesComponent\"><![CDATA[{\n  \"keyToString\": {\n    \"ASKED_ADD_EXTERNAL_FILES\": \"true\",\n    \"ASKED_SHARE_PROJECT_CONFIGURATION_FILES\": \"true\",\n    \"DefaultHtmlFileTemplate\": \"HTML File\",\n    \"Git.Branch.Popup.ShowAllRemotes\": \"true\",\n    \"RunOnceActivity.OpenProjectViewOnStart\": \"true\",\n    \"RunOnceActivity.ShowReadmeOnStart\": \"true\",\n    \"SHARE_PROJECT_CONFIGURATION_FILES\": \"true\",\n    \"TODO_SCOPE\": \"All Places\",\n    \"WebServerToolWindowFactoryState\": \"false\",\n    \"codeWithMe.voiceChat.enabledByDefault\": \"false\",\n    \"last_opened_file_path\": \"/Users/samuelthomas/Documents/University/2ndYr/ECM2434GroupSoftwareEngineeringProject/versions/ECM2434\",\n    \"node.js.detected.package.eslint\": \"true\",\n    \"node.js.detected.package.stylelint\": \"true\",\n    \"node.js.detected.package.tslint\": \"true\",\n    \"node.js.selected.package.eslint\": \"(autodetect)\",\n    \"node.js.selected.package.stylelint\": \"\",\n    \"node.js.selected.package.tslint\": \"(autodetect)\",\n    \"nodejs_package_manager_path\": \"npm\",\n    \"settings.editor.selected.configurable\": \"com.jetbrains.django.DjangoModulesConfigurable\",\n    \"vue.rearranger.settings.migration\": \"true\"\n  }\n}]]></component>\n  <component name=\"RecentsManager\">\n    <key name=\"CopyFile.RECENT_KEYS\">\n      <recent name=\"$PROJECT_DIR$/bytebrigade/home/static\" />\n    </key>\n    <key name=\"MoveFile.RECENT_KEYS\">\n      <recent name=\"C:\\Users\\HAOYA\\OneDrive\\文档\\GitHub\\J-ECM2434\\ECM2434\\bytebrigade\\account\\templates\\registration\" />\n      <recent name=\"C:\\Users\\HAOYA\\OneDrive\\文档\\GitHub\\J-ECM2434\\ECM2434\\bytebrigade\\account\\templates\\account\" />\n      <recent name=\"C:\\Users\\HAOYA\\OneDrive\\文档\\GitHub\\J-ECM2434\\ECM2434\\bytebrigade\\barcodereader\\templates\\BCscanner\" />\n      <recent name=\"C:\\Users\\HAOYA\\OneDrive\\文档\\GitHub\\J-ECM2434\\ECM2434\\bytebrigade\\home\\templates\\home\" />\n      <recent name=\"C:\\Users\\HAOYA\\OneDrive\\文档\\GitHub\\J-ECM2434\\ECM2434\\bytebrigade\\statics\" />\n    </key>\n  </component>\n  <component name=\"RunManager\">\n    <configuration name=\"Unnamed\" type=\"Python.DjangoServer\" factoryName=\"Django server\" nameIsGenerated=\"true\">\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\n      <option name=\"PARENT_ENVS\" value=\"true\" />\n      <envs>\n        <env name=\"PYTHONUNBUFFERED\" value=\"1\" />\n      </envs>\n      <option name=\"SDK_HOME\" value=\"$PROJECT_DIR$/venv/bin/python\" />\n      <option name=\"WORKING_DIRECTORY\" value=\"\" />\n      <option name=\"IS_MODULE_SDK\" value=\"false\" />\n      <option name=\"ADD_CONTENT_ROOTS\" value=\"true\" />\n      <option name=\"ADD_SOURCE_ROOTS\" value=\"true\" />\n      <module name=\"\" />\n      <option name=\"launchJavascriptDebuger\" value=\"false\" />\n      <option name=\"port\" value=\"8000\" />\n      <option name=\"host\" value=\"\" />\n      <option name=\"additionalOptions\" value=\"\" />\n      <option name=\"browserUrl\" value=\"http://127.0.0.1:8000/\" />\n      <option name=\"runTestServer\" value=\"false\" />\n      <option name=\"runNoReload\" value=\"false\" />\n      <option name=\"useCustomRunCommand\" value=\"false\" />\n      <option name=\"customRunCommand\" value=\"\" />\n      <method v=\"2\" />\n    </configuration>\n  </component>\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\n  <component name=\"TaskManager\">\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\n      <changelist id=\"3049aee3-629a-4512-8969-d528f414ba99\" name=\"Changes\" comment=\"\" />\n      <created>1676044548517</created>\n      <option name=\"number\" value=\"Default\" />\n      <option name=\"presentableId\" value=\"Default\" />\n      <updated>1676044548517</updated>\n      <workItem from=\"1676044549692\" duration=\"4464000\" />\n      <workItem from=\"1676464887425\" duration=\"4008000\" />\n      <workItem from=\"1676468913901\" duration=\"7457000\" />\n      <workItem from=\"1676544833863\" duration=\"2258000\" />\n      <workItem from=\"1676557565627\" duration=\"232000\" />\n      <workItem from=\"1677163052654\" duration=\"181000\" />\n      <workItem from=\"1677163264665\" duration=\"4626000\" />\n    </task>\n    <task id=\"LOCAL-00001\" summary=\"Checkout\">\n      <created>1676046271071</created>\n      <option name=\"number\" value=\"00001\" />\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1676046271071</updated>\n    </task>\n    <task id=\"LOCAL-00002\" summary=\"Checkout\">\n      <created>1676047169678</created>\n      <option name=\"number\" value=\"00002\" />\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1676047169678</updated>\n    </task>\n    <task id=\"LOCAL-00003\" summary=\"Checkout\">\n      <created>1676047191430</created>\n      <option name=\"number\" value=\"00003\" />\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1676047191430</updated>\n    </task>\n    <task id=\"LOCAL-00004\" summary=\"Checkout\">\n      <created>1676048626569</created>\n      <option name=\"number\" value=\"00004\" />\n      <option name=\"presentableId\" value=\"LOCAL-00004\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1676048626569</updated>\n    </task>\n    <task id=\"LOCAL-00005\" summary=\"urls index made\">\n      <created>1676468893254</created>\n      <option name=\"number\" value=\"00005\" />\n      <option name=\"presentableId\" value=\"LOCAL-00005\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1676468893254</updated>\n    </task>\n    <task id=\"LOCAL-00006\" summary=\"Adding variables to profile page and making navbar link to pages\">\n      <created>1677176894385</created>\n      <option name=\"number\" value=\"00006\" />\n      <option name=\"presentableId\" value=\"LOCAL-00006\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1677176894385</updated>\n    </task>\n    <task id=\"LOCAL-00007\" summary=\"Adding variables to profile page and making navbar link to pages\">\n      <created>1677177151761</created>\n      <option name=\"number\" value=\"00007\" />\n      <option name=\"presentableId\" value=\"LOCAL-00007\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1677177151761</updated>\n    </task>\n    <option name=\"localTasksCounter\" value=\"8\" />\n    <servers />\n  </component>\n  <component name=\"TypeScriptGeneratedFilesManager\">\n    <option name=\"version\" value=\"3\" />\n  </component>\n  <component name=\"Vcs.Log.Tabs.Properties\">\n    <option name=\"TAB_STATES\">\n      <map>\n        <entry key=\"MAIN\">\n          <value>\n            <State />\n          </value>\n        </entry>\n      </map>\n    </option>\n  </component>\n  <component name=\"VcsManagerConfiguration\">\n    <option name=\"ADD_EXTERNAL_FILES_SILENTLY\" value=\"true\" />\n    <MESSAGE value=\"Checkout\" />\n    <MESSAGE value=\"urls index made\" />\n    <MESSAGE value=\"James and Sam\" />\n    <MESSAGE value=\"Co-authored-by: Samuel Thomas&#10;Co-authored-by: Angelo Palmer&#10;Co-authored-by: James Ford&#10;Co-authored-by: Oscar Norris&#10;Co-authored-by: Cameron Hallett&#10;Co-authored-by: Howard Cui\" />\n    <MESSAGE value=\"Adding variables to profile page and making navbar link to pages\" />\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"Adding variables to profile page and making navbar link to pages\" />\n  </component>\n</project>
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+---- a/.idea/workspace.xml	(revision 0fa77d2b14f974b759f82a4ae86ffb07123c6ace)
+-+++ b/.idea/workspace.xml	(date 1677508290991)
+-@@ -40,11 +40,11 @@
+-     </option>
+-     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+-   </component>
+--  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+--  "lastFilter": {
+--    "state": "OPEN"
+-+  <component name="GitHubPullRequestSearchHistory">{
+-+  &quot;lastFilter&quot;: {
+-+    &quot;state&quot;: &quot;OPEN&quot;
+-   }
+--}]]></component>
+-+}</component>
+-   <component name="GithubPullRequestsUISettings">
+-     <option name="recentNewPullRequestHead">
+-       <RepoCoordinatesHolder>
+-@@ -70,30 +70,30 @@
+-     <option name="hideEmptyMiddlePackages" value="true" />
+-     <option name="showLibraryContents" value="true" />
+-   </component>
+--  <component name="PropertiesComponent"><![CDATA[{
+--  "keyToString": {
+--    "ASKED_ADD_EXTERNAL_FILES": "true",
+--    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+--    "DefaultHtmlFileTemplate": "HTML File",
+--    "Git.Branch.Popup.ShowAllRemotes": "true",
+--    "RunOnceActivity.OpenProjectViewOnStart": "true",
+--    "RunOnceActivity.ShowReadmeOnStart": "true",
+--    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+--    "TODO_SCOPE": "All Places",
+--    "WebServerToolWindowFactoryState": "false",
+--    "codeWithMe.voiceChat.enabledByDefault": "false",
+--    "last_opened_file_path": "/Users/samuelthomas/Documents/University/2ndYr/ECM2434GroupSoftwareEngineeringProject/versions/ECM2434",
+--    "node.js.detected.package.eslint": "true",
+--    "node.js.detected.package.stylelint": "true",
+--    "node.js.detected.package.tslint": "true",
+--    "node.js.selected.package.eslint": "(autodetect)",
+--    "node.js.selected.package.stylelint": "",
+--    "node.js.selected.package.tslint": "(autodetect)",
+--    "nodejs_package_manager_path": "npm",
+--    "settings.editor.selected.configurable": "com.jetbrains.django.DjangoModulesConfigurable",
+--    "vue.rearranger.settings.migration": "true"
+-+  <component name="PropertiesComponent">{
+-+  &quot;keyToString&quot;: {
+-+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+-+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+-+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+-+    &quot;Git.Branch.Popup.ShowAllRemotes&quot;: &quot;true&quot;,
+-+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+-+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+-+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+-+    &quot;TODO_SCOPE&quot;: &quot;All Places&quot;,
+-+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+-+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+-+    &quot;last_opened_file_path&quot;: &quot;/Users/samuelthomas/Documents/University/2ndYr/ECM2434GroupSoftwareEngineeringProject/versions/ECM2434&quot;,
+-+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+-+    &quot;node.js.detected.package.stylelint&quot;: &quot;true&quot;,
+-+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+-+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+-+    &quot;node.js.selected.package.stylelint&quot;: &quot;&quot;,
+-+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+-+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+-+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.django.DjangoModulesConfigurable&quot;,
+-+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+-   }
+--}]]></component>
+-+}</component>
+-   <component name="RecentsManager">
+-     <key name="CopyFile.RECENT_KEYS">
+-       <recent name="$PROJECT_DIR$/bytebrigade/home/static" />
+Index: .idea/shelf/Uncommitted_changes_before_Update_at_01_03_2023__12_17__Changes_.xml
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Update_at_01_03_2023__12_17__Changes_.xml b/.idea/shelf/Uncommitted_changes_before_Update_at_01_03_2023__12_17__Changes_.xml
+deleted file mode 100644
+--- a/.idea/shelf/Uncommitted_changes_before_Update_at_01_03_2023__12_17__Changes_.xml	(revision a890114a1dd82451762cccd74de8892c6801417c)
++++ /dev/null	(revision a890114a1dd82451762cccd74de8892c6801417c)
+@@ -1,9 +0,0 @@
+-<changelist name="Uncommitted_changes_before_Update_at_01_03_2023,_12_17_[Changes]" date="1677673051538" recycled="true" deleted="true">
+-  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_01_03_2023,_12_17_[Changes]/shelved.patch" />
+-  <option name="DESCRIPTION" value="Uncommitted changes before Update at 01/03/2023, 12:17 [Changes]" />
+-  <binary>
+-    <option name="BEFORE_PATH" value="bytebrigade/db.sqlite3" />
+-    <option name="AFTER_PATH" value="bytebrigade/db.sqlite3" />
+-    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_01_03_2023,_12_17_[Changes]/db.sqlite3" />
+-  </binary>
+-</changelist>
+\ No newline at end of file
+Index: .idea/shelf/Uncommitted_changes_before_Update_at_01_03_2023,_12_17_[Changes]/shelved.patch
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Update_at_01_03_2023,_12_17_[Changes]/shelved.patch b/.idea/shelf/Uncommitted_changes_before_Update_at_01_03_2023,_12_17_[Changes]/shelved.patch
+deleted file mode 100644
+--- a/.idea/shelf/Uncommitted_changes_before_Update_at_01_03_2023,_12_17_[Changes]/shelved.patch	(revision a890114a1dd82451762cccd74de8892c6801417c)
++++ /dev/null	(revision a890114a1dd82451762cccd74de8892c6801417c)
+@@ -1,219 +0,0 @@
+-Index: bytebrigade/barcodereader/urls.py
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+>from django.urls import path\nfrom . import views\nurlpatterns = [\n        path('', views.barcode_lookup, name='barcode_lookup'),\n        path('recycle/', views.recycle_confirm, name='recycle_confirm'),\n        path('recycle/create/', views.create_product, name='create_product'),\n        path('recycle/create/success/', views.success_submit, name='success_submit'),\n    ]
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/bytebrigade/barcodereader/urls.py b/bytebrigade/barcodereader/urls.py
+---- a/bytebrigade/barcodereader/urls.py	(revision 1d3fc3bbf94927ad5ff6a20838bddeca385c140f)
+-+++ b/bytebrigade/barcodereader/urls.py	(date 1677625220075)
+-@@ -4,5 +4,5 @@
+-         path('', views.barcode_lookup, name='barcode_lookup'),
+-         path('recycle/', views.recycle_confirm, name='recycle_confirm'),
+-         path('recycle/create/', views.create_product, name='create_product'),
+--        path('recycle/create/success/', views.success_submit, name='success_submit'),
+-+        path('recycle/create/success/', views.create_product_success, name='success_submit'),
+-     ]
+-\ No newline at end of file
+-Index: bytebrigade/home/views.py
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+>from os import truncate\n\nfrom django.shortcuts import render, redirect\nfrom .models import Transaction, Statistic, BinData\nimport webbrowser\nimport geopy.distance\n\n\n# Create your views here.\ndef getTransactions(request):\n    # If user not login, redirect them to login page.\n    if not request.user.is_authenticated:\n        return redirect('login')\n\n    # When user press the 'scan it!' button, check if they are within range.\n    data = Transaction.objects.all()\n\n    if request.method == 'POST':\n        distance, closeBin = withinRange(request)\n        distance = 2\n        if distance > 10:\n            msg = \"You're too far from the bin by\", distance, \"metres\"\n            data_dict = {\n                'Transaction': data,\n                'message': msg\n            }\n            a_website = \"http://maps.google.com/?q=\" + str(closeBin[0]) + \",\" + str(closeBin[1])\n            webbrowser.open_new_tab(a_website)\n            return render(request, 'home/index.html', data_dict)\n        else:\n            return redirect('barcode_lookup')\n    else:\n        data_dict = {\n            'Transaction': data,\n            'message': 'Scan Item?'\n        }\n        return render(request, 'home/index.html', data_dict)\n    # Default looking of index.\n\n\ndef getLeaderboard(request):\n    if not request.user.is_authenticated:\n        return redirect('login')\n    statData = Statistic.objects.all().order_by('-points')\n    data_dict = {\n        'Statistics': statData,\n    }\n    return render(request, 'home/Leaderboard.html', data_dict)\n\n\ndef withinRange(request):\n    curr_lat = float(request.POST.get(\"location_lat\"))\n    curr_long = float(request.POST.get(\"location_long\"))\n    coords_1 = (curr_lat, curr_long)\n\n    shortestDistance = 100000000\n    closeBin = None\n\n    for bin in BinData.objects.all():\n        coords_2 = (bin.binLat, bin.binLong)\n        distance = geopy.distance.geodesic(coords_1, coords_2).m\n        if distance < shortestDistance:\n            shortestDistance = distance\n            closeBin = coords_2\n\n    return shortestDistance, closeBin\n\n
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/bytebrigade/home/views.py b/bytebrigade/home/views.py
+---- a/bytebrigade/home/views.py	(revision 1d3fc3bbf94927ad5ff6a20838bddeca385c140f)
+-+++ b/bytebrigade/home/views.py	(date 1677627942695)
+-@@ -16,7 +16,8 @@
+-     data = Transaction.objects.all()
+- 
+-     if request.method == 'POST':
+--        distance, closeBin = withinRange(request)
+-+        distance, close_bin, bin_object = withinRange(request)
+-+        request.session['bin_data'] = bin_object.binId
+-         distance = 2
+-         if distance > 10:
+-             msg = "You're too far from the bin by", distance, "metres"
+-@@ -24,7 +25,7 @@
+-                 'Transaction': data,
+-                 'message': msg
+-             }
+--            a_website = "http://maps.google.com/?q=" + str(closeBin[0]) + "," + str(closeBin[1])
+-+            a_website = "http://maps.google.com/?q=" + str(close_bin[0]) + "," + str(close_bin[1])
+-             webbrowser.open_new_tab(a_website)
+-             return render(request, 'home/index.html', data_dict)
+-         else:
+-@@ -55,13 +56,15 @@
+- 
+-     shortestDistance = 100000000
+-     closeBin = None
+-+    binObject = None
+- 
+-     for bin in BinData.objects.all():
+-         coords_2 = (bin.binLat, bin.binLong)
+-         distance = geopy.distance.geodesic(coords_1, coords_2).m
+-         if distance < shortestDistance:
+-             shortestDistance = distance
+--            closeBin = coords_2
+-+            close_bin = coords_2
+-+            bin_object = bin
+- 
+--    return shortestDistance, closeBin
+-+    return shortestDistance, close_bin, bin_object
+- 
+-Index: bytebrigade/barcodereader/views.py
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+>from django.shortcuts import render, redirect\nfrom django.http import HttpResponse, HttpResponseRedirect\nfrom django.urls import reverse\nfrom .forms import barcode_form, product_form\nimport urllib.request\nimport json\nfrom home.models import Statistic, Product\n\n\ndef barcode_lookup(request):\n    # If the user not log-in, redirect them to login page\n    if not request.user.is_authenticated:\n        return redirect('login')\n    # If\n    if request.method == 'POST':\n        barcode_camera = request.POST.get(\"barcode\")\n        print(\"Value is \", barcode_camera)\n        if Product.objects.filter(barcode=barcode_camera).exists():\n            print(\"in db\")\n            product_data = Product.objects.get(barcode=barcode_camera)\n            print(product_data)\n            data_dict = {'Product': product_data}\n            print(data_dict)\n            return redirect('recycle_confirm')\n            # redirect to product recycle page\n        else:\n            print(\"not in db\")\n            barcode = barcode_camera\n            request.session['barcode'] = barcode\n            return redirect('create_product')\n\n    else:\n        return render(request, 'BCscanner/Scanner_page.html')\n\n\ndef create_product(request):\n    # we need to send the user to a page that contains a form\n    # Ask the user for the weight and material of the product\n    # Then add the product to the database\n    print(request.method)\n    if not request.user.is_authenticated:\n        return redirect('login')\n    if request.method == 'POST':\n        request.session['barcode'] = ''\n        print('Get Post')\n        form = request.POST\n        print(\"Made Form\")\n        new_product = Product.objects.create(\n            barcode=form.get(\"barcode\"),\n            name=form.get(\"name\"),\n            type=form.get(\"type\"),\n            weight=form.get(\"weight\"),\n            category=form.get(\"category\"),\n        )\n        print(\"temp_made\")\n        new_product.save()\n        print(\"Saved\")\n        return redirect('recycle_confirm')\n    if request.session['barcode']:\n        barcode = {'barcode': request.session['barcode']}\n        return render(request, 'BCscanner/new_product_page.html', barcode)\n\n\ndef success_submit(request):\n    pass\n\n\ndef recycle_confirm(request):\n    return HttpResponse(\"You Just submit it!\")\n\n\ndef api_lookup(barcode):\n    print(\"d\")\n    api_key = \"5bcg2pbed762819eeppkc2qhjak1l4\"\n    url = \"https://api.barcodelookup.com/v3/products?barcode=\" + barcode + \"&formatted=y&key=\" + api_key\n    print(\"j\")\n    with urllib.request.urlopen(url) as url:\n        data = json.loads(url.read().decode())\n    print(\"l\")\n    print(data)\n    print(\"\\n\")\n    data = data[\"products\"][0]\n    return data\n\n\ndef database_lookup(request):\n    print(request.POST)\n    barcode_camera = request.POST.get(\"barcode\")\n    print(\"Value is \", barcode_camera)\n    if Product.objects.filter(barcode=barcode_camera).exists():\n        print(\"in db\")\n        product_data = Product.objects.get(barcode=barcode_camera)\n        print(product_data)\n    else:\n        print(\"not in db\")
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/bytebrigade/barcodereader/views.py b/bytebrigade/barcodereader/views.py
+---- a/bytebrigade/barcodereader/views.py	(revision 1d3fc3bbf94927ad5ff6a20838bddeca385c140f)
+-+++ b/bytebrigade/barcodereader/views.py	(date 1677630133716)
+-@@ -1,32 +1,23 @@
+- from django.shortcuts import render, redirect
+--from django.http import HttpResponse, HttpResponseRedirect
+--from django.urls import reverse
+--from .forms import barcode_form, product_form
+-+from django.http import HttpResponse
+- import urllib.request
+- import json
+--from home.models import Statistic, Product
+-+from home.models import Statistic, Product, BinData, Transaction
+-+from datetime import datetime
+- 
+- 
+- def barcode_lookup(request):
+-     # If the user not log-in, redirect them to login page
+-     if not request.user.is_authenticated:
+-         return redirect('login')
+--    # If
+-     if request.method == 'POST':
+--        barcode_camera = request.POST.get("barcode")
+--        print("Value is ", barcode_camera)
+--        if Product.objects.filter(barcode=barcode_camera).exists():
+--            print("in db")
+--            product_data = Product.objects.get(barcode=barcode_camera)
+--            print(product_data)
+--            data_dict = {'Product': product_data}
+--            print(data_dict)
+-+        barcode_product = request.POST.get("barcode")
+-+        # We set the session barcode so that we can then use it in the other areas of the project
+-+        request.session['barcode'] = barcode_product
+-+        if Product.objects.filter(barcode=barcode_product).exists():
+-             return redirect('recycle_confirm')
+-             # redirect to product recycle page
+-         else:
+--            print("not in db")
+--            barcode = barcode_camera
+--            request.session['barcode'] = barcode
+-             return redirect('create_product')
+- 
+-     else:
+-@@ -37,14 +28,10 @@
+-     # we need to send the user to a page that contains a form
+-     # Ask the user for the weight and material of the product
+-     # Then add the product to the database
+--    print(request.method)
+-     if not request.user.is_authenticated:
+-         return redirect('login')
+-     if request.method == 'POST':
+--        request.session['barcode'] = ''
+--        print('Get Post')
+-         form = request.POST
+--        print("Made Form")
+-         new_product = Product.objects.create(
+-             barcode=form.get("barcode"),
+-             name=form.get("name"),
+-@@ -52,21 +39,62 @@
+-             weight=form.get("weight"),
+-             category=form.get("category"),
+-         )
+--        print("temp_made")
+-         new_product.save()
+--        print("Saved")
+-         return redirect('recycle_confirm')
+--    if request.session['barcode']:
+--        barcode = {'barcode': request.session['barcode']}
+--        return render(request, 'BCscanner/new_product_page.html', barcode)
+-+    elif request.session['barcode']:
+-+        if not Product.objects.filter(barcode=request.session['barcode']).exists():
+-+            barcode = {'barcode': request.session['barcode']}
+-+            return render(request, 'BCscanner/new_product_page.html', barcode)
+-+        else:
+-+            return redirect('index')
+-+
+- 
+-+# create a function that is called by barcode_lookup() once the whole product shit is done
+-+# This function adds the transaction but doesn't render anything, it is a procedure
+- 
+--def success_submit(request):
+-+
+-+def create_product_success(request):
+-     pass
+-+    # This function is called after a new product is made
+-+    # it present to the user what the product is and the points that they get
+-+    # Then it sends then to recycle_confirm
+- 
+- 
+- def recycle_confirm(request):
+--    return HttpResponse("You Just submit it!")
+-+    # The function that handles recording a transaction
+-+    # Then it takes you to a page showing what stats you gained
+-+    # There bottom for confirm
+-+    if not request.user.is_authenticated:
+-+        return redirect('login')
+-+    try:
+-+        barcode_product = request.session['barcode']
+-+        bin_data = request.session['bin_data']
+-+        if Product.objects.filter(barcode=barcode_product).exists() \
+-+                and BinData.objects.filter(binId=bin_data).exists():
+-+            product_data = Product.objects.get(barcode=barcode_product)
+-+            user_data = request.user
+-+            cur_time = (datetime.now()).strftime("%H:%M:%S")
+-+            bin_data = BinData.objects.get(binId=bin_data)
+-+            new_transaction = Transaction.objects.create(
+-+                product=product_data,
+-+                user=user_data,
+-+                time=cur_time,
+-+                bin=bin_data,
+-+            )
+-+            new_transaction.save()
+-+            request.session['barcode'] = -1
+-+            request.session['bin_data'] = -1
+-+        return HttpResponse("You Just submit it!")
+-+    except Exception as e:
+-+        print(e)
+-+        # They tried to scam us and haven't scanned a product
+-+        return redirect('barcode_lookup')
+-+
+-+
+-+def recycle_result_stats_view(request):
+-+    # The function that shows when user finished recycle
+-+    # The page have stats of points,
+-+    pass
+- 
+- 
+- def api_lookup(barcode):
+-Index: bytebrigade/home/templates/home/index.html
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+>{% extends 'navbar.html' %}\n{% load static %}\n\n{% block title %} Home - Welcome! {% endblock %}\n\n{% block content %}\n    <div class=\"fs-6\" style=\"margin-right: 28px;margin-top: 14px;margin-bottom: 22px;color: var(--bs-secondary);margin-left: 28px;\">\n        <h1 style=\"background: #e1edbd;font-size: 30px;padding-bottom: 5px;color: var(--bs-black);\">Daily Feed</h1>\n        <div style=\"background: #e1edbd;\">\n        <table class = \"table table-striped\">\n                <thead style=\"background: #82b068; padding: 10px\">\n                    <tr>\n                        <th style=\"width: 200px\">Time</th>\n                        <th style=\"width: 200px\">Recycled</th>\n                        <th style=\"width: 200px\">Likes</th>\n                    </tr>\n                </thead>\n                <tbody style=\"color: black;\">\n                    {% for item in Transaction %}\n                    <tr style = \"border-bottom: #82b068 solid 2px;\">\n                        <td>{{item.time}}</td>\n                        <td>{{item.user}} just recycled {{item.product}} at {{item.bin.binId}}</td>\n                        <td>{{item.likes}}</td>\n                    </tr>\n                    {% endfor %}\n                </tbody>\n            </table>\n        </div>\n            <form id = \"formId\" method=\"POST\">\n                {% csrf_token %}\n                <input type=\"hidden\" name=\"location_lat\" id=\"lat\" value=0>\n                <input type=\"hidden\" name=\"location_long\" id=\"long\" value=0>\n                <div class=\"btn btn-light me-2\"><button class=\"btn btn-primary d-block w-100\" type=\"submit\">{{message}}</button></div>\n            </form>\n    </div>\n    <script>\n        currentLocationInsert();\n\n        function currentLocationInsert() {\n            function getLocation() {\n                if (navigator.geolocation) {\n                    navigator.geolocation.getCurrentPosition(binDistCalc);\n                } else {\n                    x.innerHTML = \"Geolocation is not supported by this browser.\";\n                }\n            }\n\n            function binDistCalc(position) {\n                var lat = position.coords.latitude;\n                var long = position.coords.longitude;\n                document.getElementById(\"lat\").value = lat;\n                document.getElementById(\"long\").value = long;\n            }\n            getLocation();\n        }\n    </script>\n{% endblock %}\n\n
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/bytebrigade/home/templates/home/index.html b/bytebrigade/home/templates/home/index.html
+---- a/bytebrigade/home/templates/home/index.html	(revision 1d3fc3bbf94927ad5ff6a20838bddeca385c140f)
+-+++ b/bytebrigade/home/templates/home/index.html	(date 1677628228264)
+-@@ -19,7 +19,7 @@
+-                     {% for item in Transaction %}
+-                     <tr style = "border-bottom: #82b068 solid 2px;">
+-                         <td>{{item.time}}</td>
+--                        <td>{{item.user}} just recycled {{item.product}} at {{item.bin.binId}}</td>
+-+                        <td>{{item.user}} just recycled {{item.product.name}} at Bin {{item.bin.binId}}</td>
+-                         <td>{{item.likes}}</td>
+-                     </tr>
+-                     {% endfor %}
+Index: bytebrigade/home/admin.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from django.contrib import admin\n\nfrom .models import Transaction, BinData, Product, Statistic, UserGoal, Goal\n# Register your models here.\nadmin.site.register(Transaction)\nadmin.site.register(BinData)\nadmin.site.register(Product)\nadmin.site.register(Statistic)\nadmin.site.register(UserGoal)\nadmin.site.register(Goal)\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/bytebrigade/home/admin.py b/bytebrigade/home/admin.py
+--- a/bytebrigade/home/admin.py	(revision a890114a1dd82451762cccd74de8892c6801417c)
++++ b/bytebrigade/home/admin.py	(date 1678730577083)
+@@ -1,6 +1,9 @@
+ from django.contrib import admin
+ 
+-from .models import Transaction, BinData, Product, Statistic, UserGoal, Goal
++from .models import Transaction
++from bins.models import BinData
++from products.models import Product
++from account.models import Statistic, UserGoal, Goal
+ # Register your models here.
+ admin.site.register(Transaction)
+ admin.site.register(BinData)
+diff --git a/bytebrigade/account/migrations/__init__.py b/bytebrigade/account/migrations/__init__.py
+new file mode 100644
+diff --git a/bytebrigade/barcodereader/migrations/__init__.py b/bytebrigade/barcodereader/migrations/__init__.py
+new file mode 100644
+diff --git a/bytebrigade/products/migrations/__init__.py b/bytebrigade/products/migrations/__init__.py
+new file mode 100644
