@@ -31,6 +31,8 @@ INSTALLED_APPS = [
     'home',
     'account',
     'barcodereader',
+    'products',
+    'bins',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

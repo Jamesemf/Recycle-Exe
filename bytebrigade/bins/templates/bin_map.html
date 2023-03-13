@@ -5,20 +5,37 @@
 
 {% block header%}
 <table id="BinTable" style="display: none;">
-    {% for bin in Bins %}
-    <tr>
-        <td>{{bin.binName}}</td>
-        <td>{{bin.binLat}}</td>
-        <td>{{bin.binLong}}</td>
-        <td>{{bin.bin_general}}</td>
-        <td>{{bin.bin_recycle}}</td>
-        <td>{{bin.bin_paper}}</td>
-        <td>{{bin.bin_cans}}</td>
-        <td>{{bin.bin_glass}}</td>
-        <td>{{bin.bin_plastic}}</td>
-        <td>{{bin.bin_non_rec}}</td>
-    </tr>
-    {% endfor %}
+    {% if presentButton == 1%}
+        <tr>
+            <td>{{bin.binName}}</td>
+            <td>{{bin.binLat}}</td>
+            <td>{{bin.binLong}}</td>
+            <td>{{bin.bin_general}}</td>
+            <td>{{bin.bin_recycle}}</td>
+            <td>{{bin.bin_paper}}</td>
+            <td>{{bin.bin_cans}}</td>
+            <td>{{bin.bin_glass}}</td>
+            <td>{{bin.bin_plastic}}</td>
+            <td>{{bin.bin_non_rec}}</td>
+        </tr>
+    {% endif %}
+
+    {% if presentButton == 0 %}
+        {% for bin in Bins %}
+            <tr>
+                <td>{{bin.binName}}</td>
+                <td>{{bin.binLat}}</td>
+                <td>{{bin.binLong}}</td>
+                <td>{{bin.bin_general}}</td>
+                <td>{{bin.bin_recycle}}</td>
+                <td>{{bin.bin_paper}}</td>
+                <td>{{bin.bin_cans}}</td>
+                <td>{{bin.bin_glass}}</td>
+                <td>{{bin.bin_plastic}}</td>
+                <td>{{bin.bin_non_rec}}</td>
+            </tr>
+        {% endfor %}
+    {% endif %}
 </table>
 
 <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
@@ -34,6 +51,7 @@
         const map = new google.maps.Map(document.getElementById("map"), {
             zoom: 17,
             center: exeter,
+            mapTypeId: 'satellite'
         });
 
         var table = document.getElementById("BinTable");
@@ -145,7 +163,7 @@
             if ((typeof marker.category == 'object' && marker.category.indexOf(category) >= 0) || category.length == 0) {
                 marker.setVisible(true);
             }
-            // Categories don't match 
+            // Categories don't match
             else {
                 marker.setVisible(false);
             }
@@ -210,13 +228,19 @@
             </div>
         </div>
     </div>
+    {% if  presentButton == 1 %}
     <div class="container">
         <div class="card">
-            <div class="card-body d-lg-flex justify-content-lg-center"><button class="btn btn-primary"
-                    type="button">Button for something to do with starting a new&nbsp; journey</button></div>
+            <div class="card-body d-lg-flex justify-content-lg-center">
+                <form method="POST">
+                    <button class="btn btn-primary" type="submit">Would you like to start you adventure</button>
+                    {% csrf_token %}
+                </form>
+            </div>
         </div>
     </div>
-    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    {% endif %}
+    <script src="{% static "assets/bootstrap/js/bootstrap.min.js" %}"></script>
 
 </body>
 

@@ -1,55 +1,15 @@
 from django.shortcuts import render, redirect
-from .models import Transaction
+from home.models import Transaction
 from account.models import Statistic
 from bins.models import BinData
-import webbrowser
 import geopy.distance
-
-
-"""
-def getTransactions(request):
-    # If user not login, redirect them to login page.
-    request.session['barcode'] = -1
-    if not request.user.is_authenticated:
-        return redirect('login')
-
-    data = Transaction.objects.all()[:5]
-
-    # Called when a user clicks to scan an item
-    if request.method == 'POST':
-        distance, close_bin, bin_object = withinRange(request)
-        x = round(distance)
-        request.session['bin_data'] = bin_object.binId
-        #distance = 2
-        if distance > 10:
-            data_dict = {
-                'Transaction': data,
-                'popup': 1,
-                'error': 1,
-                'Bin': bin_object,
-                'Distance': x,
-            }
-            a_website = "http://maps.google.com/?q=" + str(close_bin[0]) + "," + str(close_bin[1])
-            webbrowser.open_new_tab(a_website)
-            return render(request, 'home/index.html', data_dict)  # if the user is out of range, give directions
-
-        else:
-            return redirect('barcode_lookup')  # If the user is within range redirect to scanner page
-    else:
-        data_dict = {
-            'Transaction': data
-        }
-        #Return normal feed page
-        return render(request, 'home/index.html', data_dict)
-    # Default looking of index.
-"""
-
 
 # function for the home page backend
 def home_view(request):
     # If user not login, redirect them to login page.
-    request.session['barcode'] = -1
-    request.session['newHome'] = -1
+    request.session['barcode'] = -1  # The barcode that the user has scanned
+    request.session['newHome'] = -1  # The closest bin
+    request.session['valid'] = -1  # If the user has scanned a product, they are valid for the scanner page
     if not request.user.is_authenticated:
         return redirect('login')
     data = Transaction.objects.all()[:5]

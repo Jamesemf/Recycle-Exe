@@ -3,5 +3,6 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('product/create/', views.create_product, name='create_product'),
+    path('create/', views.create_product_view, name='create_product'),
+    path('', views.prompt_recycle_product_view, name='product_info'),
 ]

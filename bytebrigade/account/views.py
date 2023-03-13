@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from .forms import RegistrationForm
-from home.models import Statistic, Goal, UserGoal, User, Transaction
+from .models import Statistic, Goal, UserGoal
+from home.models import Transaction
 from django.urls import reverse
 from django.db.models import Q
 
@@ -80,3 +81,35 @@ def addUserGoal(request):
         goal.save()
     
     return HttpResponseRedirect(reverse('account'))
+
+
+def addstats(user, product, points: int, kg=0):
+    print("In add stats")
+    user_stats = Statistic.objects.get(user=user)
+    user_stats.points += points
+    kg *= 0.09
+    kg = round(kg, 3)
+    user_stats.curweek = round((user_stats.curweek + kg), 3)  # change field
+    user_stats.curmonth = round((user_stats.curmonth + kg), 3)
+    user_stats.curyear = round((user_stats.curyear + kg), 3)
+    user_stats.lastRecycle = product
+    user_stats.save()  # this will update only
+
+
+def update_goal_stat(user, product):
+    material = product.material
+    recyclable = product.recycle
+    if recyclable:
+        bin_type = material
+    else:
+        bin_type = 'General Waste'
+    user_goals = UserGoal.objects.filter(Q(goalType=bin_type) & Q(user=user))
+    for item in user_goals:
+        item.value += 1
+        item.save()
+    # Delete full goals and add points
+    for item in user_goals:
+        if item.value >= 100:
+            item.delete()
+            user.points += 100
+
