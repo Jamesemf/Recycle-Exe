@@ -5,7 +5,7 @@
 
 {% block header%}
 <table id="BinTable" style="display: none;">
-    {% if presentButton == 1%}
+    {% if presentButton %}
         <tr>
             <td>{{bin.binName}}</td>
             <td>{{bin.binLat}}</td>
@@ -20,7 +20,7 @@
         </tr>
     {% endif %}
 
-    {% if presentButton == 0 %}
+    {% if not presentButton %}
         {% for bin in Bins %}
             <tr>
                 <td>{{bin.binName}}</td>

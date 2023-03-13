@@ -9,12 +9,12 @@ def bin_map_view(request):
         return redirect('recycle_confirm')
     if request.session['newHome'] != -1:
         data_dict = {
-            'bin': BinData.objects.get(binId=request.session['newHome']),
+            'Bins': BinData.objects.get(binId=request.session['newHome']),
             'presentButton': 1,
         }
     else:
         data_dict = {
-            'bins': BinData.objects.all(),
+            'Bins': BinData.objects.all(),
             'presentButton': 0
         }
 
