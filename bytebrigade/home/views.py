@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect
-from .models import Transaction, Statistic, BinData
+from .models import Transaction
+from account.models import Statistic
+from bins.models import BinData
 import webbrowser
 import geopy.distance
 
@@ -49,7 +51,6 @@ def getLeaderboard(request):
     data_dict = {
         'Statistics': statData,
     }
-
     return render(request, 'home/Leaderboard.html', data_dict)
 
 

@@ -1,0 +1,186 @@
+Index: bytebrigade/barcodereader/views.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from django.shortcuts import render, redirect\nimport urllib.request\nimport json\nfrom home.models import Statistic, Product, BinData, Transaction, UserGoal\nfrom datetime import datetime\nfrom django.db.models import Q\n\n\ndef barcode_lookup(request):\n    # If the user not log-in, redirect them to login page\n    if not request.user.is_authenticated:\n        return redirect('login')\n    if request.method == 'POST':\n        barcode_product = request.POST.get(\"barcode\")\n        # We set the session barcode so that we can then use it in the other areas of the project\n        request.session['barcode'] = barcode_product\n        request.session['valid'] = 1\n        if Product.objects.filter(barcode=barcode_product).exists():\n            return redirect('recycle_confirm')\n            # redirect to product recycle page\n        else:\n            return redirect('create_product')\n\n    else:\n        return render(request, 'BCscanner/Scanner_page.html')\n\n\ndef create_product(request):\n    # we need to send the user to a page that contains a form\n    # Ask the user for the weight and material of the product\n    # Then add the product to the database\n    # request.session['new_product'] = False\n    if not request.user.is_authenticated:\n        return redirect('login')\n    if request.method == 'POST':\n        form = request.POST\n        new_product = Product.objects.create(\n            barcode=form.get(\"barcode\"),\n            name=form.get(\"name\"),\n            weight=float(form.get(\"weight\")) / 1000,\n            material=form.get(\"material\"),\n            recycle=form.get(\"recycle\")\n        )\n        new_product.save()\n\n        product_data = Product.objects.get(barcode=form.get(\"barcode\"))\n        addstats(request.user, product_data, 50)\n\n        request.session['new_product'] = True\n\n        return redirect('recycle_confirm')\n    elif request.session['barcode'] != -1:\n        if not Product.objects.filter(barcode=request.session['barcode']).exists():\n            barcode = {'barcode': request.session['barcode']}\n            return render(request, 'BCscanner/new_product_page.html', barcode)\n        else:\n            return redirect('index')\n    return redirect('index')\n\n\ndef recycle_confirm(request):\n    # The function that handles recording a transaction\n    # Then it shows you to a popup showing what stats you gained on the home_page\n    if not request.user.is_authenticated:\n        return redirect('login')\n    try:\n        if not request.session['valid'] == 1:\n            return redirect('index')\n    except Exception as e:\n        print(e)\n        return redirect(\"index\")\n\n    try:\n        barcode_product = request.session['barcode']\n        bin_data = request.session['bin_data']\n        if Product.objects.filter(barcode=barcode_product).exists() \\\n                and BinData.objects.filter(binId=bin_data).exists():\n            product_data = Product.objects.get(barcode=barcode_product)\n            user_data = request.user\n            cur_time = (datetime.now()).strftime(\"%H:%M:%S\")\n            bin_data = BinData.objects.get(binId=bin_data)\n            new_transaction = Transaction.objects.create(\n                product=product_data,\n                user=user_data,\n                time=cur_time,\n                bin=bin_data,\n            )\n            new_transaction.save()\n            request.session['barcode'] = -1\n            request.session['bin_data'] = -1\n            request.session['valid'] = -1\n        # Call a function that will take in the calculate the points for the user\n        # If the product is new add points, this is handle in the create product part\n        # def addstats(points,kg)\n            weight = product_data.weight\n            points = round(weight * 122)\n            # need to include the product\n            addstats(request.user, product_data, points, weight)\n\n            # If statement that checks what the products type is and then we set a variable that is litrally\n            # var = 'Put in the red bin'\n\n            product_type = product_data.material\n            could_recycle = product_data.recycle\n            new_home = \"\"\n            match (product_type, could_recycle):\n                case (\"Paper\", \"True\"):\n                    new_home = \"My new home is the Paper bin, please help me find my home! :)\"\n                    binType = 'Paper'\n                case (\"Plastic\", \"True\"):\n                    new_home = \"My new home is the Plastic bin, please help me find my home! :)\"\n                    binType = 'Plastic'\n                case (\"Cans\", \"True\"):\n                    new_home = \"My new home is the Cans bin, please help me find my home! :)\"\n                    binType = 'Cans'\n                case (\"Glass\", \"True\"):\n                    new_home = \"My new home is the Glass bin, please help me find my home! :)\"\n                    binType = 'Glass'\n                case (\"Plastic\", \"False\"):\n                    new_home = \"I am non-recyclable, please put me into General Waste :(\"\n                case (\"Cans\", \"False\"):\n                    new_home = \"I am non-recyclable, please put me into General Waste :(\"\n                case (\"Non-Recyclable\", \"False\"):\n                    new_home = \"I am non-recyclable, please put me into General Waste :(\"\n                case (\"Glass\", \"False\"):\n                    new_home = \"I am non-recyclable, please put me into General Waste :(\"\n\n            # Add points to user goals\n            current_user = request.user\n\n            if (binType):\n                print(binType)\n                thisUserGoals = UserGoal.objects.filter(\n                    Q(goalType=binType) & Q(user=current_user))\n                for item in thisUserGoals:\n                    item.value += 1\n                    item.save()\n\n                # Delete full goals and add points\n                for item in thisUserGoals:\n                    if (item.value >= 100):\n                        item.delete()\n                        points += 100\n\n            data = Transaction.objects.all()[:5]\n            data_dict = {\n                'Transaction': data,\n                'popup': 1,\n                'newPoints': 1,\n                'product': product_data.name,\n                'points': points,\n                'newhome': new_home\n            }\n            print(\"k\")\n            print(data_dict)\n            return render(request, 'home/index.html', data_dict)\n        return redirect('barcode_lookup')\n    except Exception as e:\n        print(e)\n        # They tried to scam us and haven't scanned a product\n        return redirect('barcode_lookup')\n\n\ndef api_lookup(barcode):\n    print(\"d\")\n    api_key = \"5bcg2pbed762819eeppkc2qhjak1l4\"\n    url = \"https://api.barcodelookup.com/v3/products?barcode=\" + \\\n        barcode + \"&formatted=y&key=\" + api_key\n    print(\"j\")\n    with urllib.request.urlopen(url) as url:\n        data = json.loads(url.read().decode())\n    print(\"l\")\n    print(data)\n    print(\"\\n\")\n    data = data[\"products\"][0]\n    return data\n\n\ndef database_lookup(request):\n    print(request.POST)\n    barcode_camera = request.POST.get(\"barcode\")\n    print(\"Value is \", barcode_camera)\n    if Product.objects.filter(barcode=barcode_camera).exists():\n        print(\"in db\")\n        product_data = Product.objects.get(barcode=barcode_camera)\n        print(product_data)\n    else:\n        print(\"not in db\")\n\n\ndef addstats(user, product, points: int, kg=0):\n    user_stats = Statistic.objects.get(user=user)\n    user_stats.points += points\n    kg *= 0.09\n    kg = round(kg, 3)\n    user_stats.curweek = round((user_stats.curweek + kg), 3)  # change field\n    user_stats.curmonth = round((user_stats.curmonth + kg), 3)\n    user_stats.curyear = round((user_stats.curyear + kg), 3)\n    user_stats.lastRecycle = product\n    user_stats.save()  # this will update only\n\n\ndef bin_map(request):\n\n    # bin_general = models.BooleanField(default=False)\n    # bin_recycle = models.BooleanField(default=False)\n    # bin_paper = models.BooleanField(default=False)\n    # bin_cans = models.BooleanField(default=False)\n    # bin_glass = models.BooleanField(default=False)\n    # bin_plastic = models.BooleanField(default=False)\n    # bin_non_rec = models.BooleanField(default=False)\n\n    data = BinData.objects.all()\n    \n    data_dict = {'Bins': data}\n\n    return render(request, 'BCscanner/bin_map.html', data_dict)\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/bytebrigade/barcodereader/views.py b/bytebrigade/barcodereader/views.py
+--- a/bytebrigade/barcodereader/views.py	(revision a890114a1dd82451762cccd74de8892c6801417c)
++++ b/bytebrigade/barcodereader/views.py	(date 1678731773334)
+@@ -25,37 +25,37 @@
+         return render(request, 'BCscanner/Scanner_page.html')
+ 
+ 
+-def create_product(request):
+-    # we need to send the user to a page that contains a form
+-    # Ask the user for the weight and material of the product
+-    # Then add the product to the database
+-    # request.session['new_product'] = False
+-    if not request.user.is_authenticated:
+-        return redirect('login')
+-    if request.method == 'POST':
+-        form = request.POST
+-        new_product = Product.objects.create(
+-            barcode=form.get("barcode"),
+-            name=form.get("name"),
+-            weight=float(form.get("weight")) / 1000,
+-            material=form.get("material"),
+-            recycle=form.get("recycle")
+-        )
+-        new_product.save()
+-
+-        product_data = Product.objects.get(barcode=form.get("barcode"))
+-        addstats(request.user, product_data, 50)
+-
+-        request.session['new_product'] = True
+-
+-        return redirect('recycle_confirm')
+-    elif request.session['barcode'] != -1:
+-        if not Product.objects.filter(barcode=request.session['barcode']).exists():
+-            barcode = {'barcode': request.session['barcode']}
+-            return render(request, 'BCscanner/new_product_page.html', barcode)
+-        else:
+-            return redirect('index')
+-    return redirect('index')
++# def create_product(request):
++#     # we need to send the user to a page that contains a form
++#     # Ask the user for the weight and material of the product
++#     # Then add the product to the database
++#     # request.session['new_product'] = False
++#     if not request.user.is_authenticated:
++#         return redirect('login')
++#     if request.method == 'POST':
++#         form = request.POST
++#         new_product = Product.objects.create(
++#             barcode=form.get("barcode"),
++#             name=form.get("name"),
++#             weight=float(form.get("weight")) / 1000,
++#             material=form.get("material"),
++#             recycle=form.get("recycle")
++#         )
++#         new_product.save()
++#
++#         product_data = Product.objects.get(barcode=form.get("barcode"))
++#         addstats(request.user, product_data, 50)
++#
++#         request.session['new_product'] = True
++#
++#         return redirect('recycle_confirm')
++#     elif request.session['barcode'] != -1:
++#         if not Product.objects.filter(barcode=request.session['barcode']).exists():
++#             barcode = {'barcode': request.session['barcode']}
++#             return render(request, 'BCscanner/new_product_page.html', barcode)
++#         else:
++#             return redirect('index')
++#     return redirect('index')
+ 
+ 
+ def recycle_confirm(request):
+@@ -89,6 +89,7 @@
+             request.session['barcode'] = -1
+             request.session['bin_data'] = -1
+             request.session['valid'] = -1
++
+         # Call a function that will take in the calculate the points for the user
+         # If the product is new add points, this is handle in the create product part
+         # def addstats(points,kg)
+@@ -176,28 +177,28 @@
+     return data
+ 
+ 
+-def database_lookup(request):
+-    print(request.POST)
+-    barcode_camera = request.POST.get("barcode")
+-    print("Value is ", barcode_camera)
+-    if Product.objects.filter(barcode=barcode_camera).exists():
+-        print("in db")
+-        product_data = Product.objects.get(barcode=barcode_camera)
+-        print(product_data)
+-    else:
+-        print("not in db")
++# def database_lookup(request):
++#     print(request.POST)
++#     barcode_camera = request.POST.get("barcode")
++#     print("Value is ", barcode_camera)
++#     if Product.objects.filter(barcode=barcode_camera).exists():
++#         print("in db")
++#         product_data = Product.objects.get(barcode=barcode_camera)
++#         print(product_data)
++#     else:
++#         print("not in db")
+ 
+ 
+-def addstats(user, product, points: int, kg=0):
+-    user_stats = Statistic.objects.get(user=user)
+-    user_stats.points += points
+-    kg *= 0.09
+-    kg = round(kg, 3)
+-    user_stats.curweek = round((user_stats.curweek + kg), 3)  # change field
+-    user_stats.curmonth = round((user_stats.curmonth + kg), 3)
+-    user_stats.curyear = round((user_stats.curyear + kg), 3)
+-    user_stats.lastRecycle = product
+-    user_stats.save()  # this will update only
++# def addstats(user, product, points: int, kg=0):
++#     user_stats = Statistic.objects.get(user=user)
++#     user_stats.points += points
++#     kg *= 0.09
++#     kg = round(kg, 3)
++#     user_stats.curweek = round((user_stats.curweek + kg), 3)  # change field
++#     user_stats.curmonth = round((user_stats.curmonth + kg), 3)
++#     user_stats.curyear = round((user_stats.curyear + kg), 3)
++#     user_stats.lastRecycle = product
++#     user_stats.save()  # this will update only
+ 
+ 
+ def bin_map(request):
+Index: bytebrigade/home/views.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from django.shortcuts import render, redirect\nfrom .models import Transaction, Statistic, BinData\nimport webbrowser\nimport geopy.distance\n\n\ndef getTransactions(request):\n    # If user not login, redirect them to login page.\n    request.session['barcode'] = -1\n    if not request.user.is_authenticated:\n        return redirect('login')\n\n    data = Transaction.objects.all()[:5]\n\n    # Called when a user clicks to scan an item\n    if request.method == 'POST':\n        distance, close_bin, bin_object = withinRange(request)\n        x = round(distance)\n        request.session['bin_data'] = bin_object.binId\n        #distance = 2\n        if distance > 10:\n            data_dict = {\n                'Transaction': data,\n                'popup': 1,\n                'error': 1,\n                'Bin': bin_object,\n                'Distance': x,\n            }\n            a_website = \"http://maps.google.com/?q=\" + str(close_bin[0]) + \",\" + str(close_bin[1])\n            webbrowser.open_new_tab(a_website)\n            return render(request, 'home/index.html', data_dict)  # if the user is out of range, give directions\n\n        else:\n            return redirect('barcode_lookup')  # If the user is within range redirect to scanner page\n    else:\n        data_dict = {\n            'Transaction': data\n        }\n        #Return normal feed page\n        return render(request, 'home/index.html', data_dict)\n    # Default looking of index.\n\n\n# Handles a request for the leaderboard page, ordering the users by their points\ndef getLeaderboard(request):\n    if not request.user.is_authenticated:\n        return redirect('login')\n    statData = Statistic.objects.all().order_by('-points')\n    data_dict = {\n        'Statistics': statData,\n    }\n\n    return render(request, 'home/Leaderboard.html', data_dict)\n\n\ndef instruction_view(request):\n    return render(request, 'home/about-me.html')\n\n\n# Function that checks you are within the minimum range of a bin and return's information about your closest bin\ndef withinRange(request):\n    curr_lat = float(request.POST.get(\"location_lat\"))\n    curr_long = float(request.POST.get(\"location_long\"))\n    coords_1 = (curr_lat, curr_long)\n\n    shortestDistance = 100000000\n    closeBin = None\n    binObject = None\n\n    for bin in BinData.objects.all():\n        coords_2 = (bin.binLat, bin.binLong)\n        distance = geopy.distance.geodesic(coords_1, coords_2).m\n        if distance < shortestDistance:\n            shortestDistance = distance\n            close_bin = coords_2\n            bin_object = bin\n\n    return shortestDistance, close_bin, bin_object\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/bytebrigade/home/views.py b/bytebrigade/home/views.py
+--- a/bytebrigade/home/views.py	(revision a890114a1dd82451762cccd74de8892c6801417c)
++++ b/bytebrigade/home/views.py	(date 1678731722697)
+@@ -1,5 +1,7 @@
+ from django.shortcuts import render, redirect
+-from .models import Transaction, Statistic, BinData
++from .models import Transaction
++from account.models import Statistic
++from bins.models import BinData
+ import webbrowser
+ import geopy.distance
+ 
+@@ -49,7 +51,6 @@
+     data_dict = {
+         'Statistics': statData,
+     }
+-
+     return render(request, 'home/Leaderboard.html', data_dict)
+ 
+ 
+Index: bytebrigade/barcodereader/urls.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from django.urls import path\nfrom . import views\nurlpatterns = [\n        path('', views.barcode_lookup, name='barcode_lookup'),\n        path('recycle/', views.recycle_confirm, name='recycle_confirm'),\n        path('recycle/create/', views.create_product, name='create_product'),\n        path('bin_map', views.bin_map, name='bin_map')\n    ]
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/bytebrigade/barcodereader/urls.py b/bytebrigade/barcodereader/urls.py
+--- a/bytebrigade/barcodereader/urls.py	(revision a890114a1dd82451762cccd74de8892c6801417c)
++++ b/bytebrigade/barcodereader/urls.py	(date 1678731596600)
+@@ -1,8 +1,9 @@
+ from django.urls import path
+ from . import views
++
+ urlpatterns = [
+         path('', views.barcode_lookup, name='barcode_lookup'),
+         path('recycle/', views.recycle_confirm, name='recycle_confirm'),
+-        path('recycle/create/', views.create_product, name='create_product'),
+-        path('bin_map', views.bin_map, name='bin_map')
++        # path('recycle/create/', views.create_product, name='create_product'),
++        # path('bin_map', views.bin_map, name='bin_map')
+     ]
+\ No newline at end of file
