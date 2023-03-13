@@ -16,8 +16,6 @@ class BinData(models.Model):
     bin_cans = models.BooleanField(default=False)
     bin_glass = models.BooleanField(default=False)
     bin_plastic = models.BooleanField(default=False)
-    bin_non_rec = models.BooleanField(default=False)
-
 
 
 class Product(models.Model):
