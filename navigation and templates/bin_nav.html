@@ -8,24 +8,275 @@
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/css/Material%20Icons.css">
     <link rel="stylesheet" href="assets/css/simple-line-icons.css">
-    <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 
+<style>
+    :root {
+    --body-bg: #FBFAF8;
+    --secondary: #FBFAF8;
+    --secondary-rgb: 251, 250, 248;
+    --primary: #698F3F;
+    --primary-rgb: 10, 18, 42;
+    --dark: #0A122A;
+    --dark-rgb: 66, 109, 52;
+}
+
+/* Site wide styles */
+body {
+    min-height: 100vh;
+    padding-top: 2vh;
+    background-color: var(--secondary);
+    display: flex;
+    flex-direction: column;
+}
+.navbar-styles {
+    background-color: #FBFAF8;
+    opacity: 90%;
+}
+.navbar-styles button {
+    background-color: #698F3F;
+}
+.nav-show,
+.nav-show * {
+    z-index: 3;
+    opacity: 100%;
+}
+.main-content {
+    opacity: 90%;
+    background-color: #FBFAF8;
+    width: 85vw;
+    flex:1;
+    margin: 0 auto;
+    margin-top: 5vh;
+    padding-top: 2vh;
+    display: inline-block;
+    padding-bottom: 2vh;
+    /*border-radius: 2vw;*/
+}
+.footer-styles {
+    bottom: 0;
+    width: 100%;
+    background: #FBFAF8;
+    margin-top: 2vh;
+}
+
+/* profile styles */
+.profile-stat {
+    background-color: var(--secondary);
+    border-radius: 0.5vw;
+    opcaity: 90%;
+}
+
+/* new item styles */
+label {
+    color: black;
+}
+#new {
+    margin-bottom: 2vh;
+}
+#submit {
+    border-color: #719a5e;
+    color: black;
+}
+.new-form {
+    background-color: var(--secondary);
+}
+</style>
+
+<style>
+    body {
+        /*display: flex;
+        flex-direction: column;
+        /*height: 100vh;*/
+    }
+
+    .compass {
+        position: relative;
+        width: 70vw;
+        height: 70vw;
+        border-radius: 50%;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        margin: auto;
+    }
+
+    .compass > .arrow {
+        position: absolute;
+        width: 0;
+        height: 0;
+        top: -20px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-style: solid;
+        border-width: 30px 20px 0 20px;
+        border-color: red transparent transparent transparent;
+        z-index: 1;
+    }
+
+    .compass > .compass-circle,
+    .compass > .my-point {
+        position: absolute;
+        width: 90%;
+        height: 90%;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        transition: transform 0.1s ease-out;
+        background: url(assets/img/Arrow.png)
+            center no-repeat;
+        background-size: contain;
+    }
+
+    .compass > .my-point {
+        opacity: 0;
+        width: 20%;
+        height: 20%;
+        background: rgb(8, 223, 69);
+        border-radius: 50%;
+        transition: opacity 0.5s ease-out;
+    }
+
+    .start-btn {
+        margin-bottom: auto;
+    }
+</style>
+
 <body>
-    <div class="card">
-        <div class="card-body">
-            <div class="card">
+    <div class="card main-content">
                 <div class="card-body">
                     <div style="text-align: center;">
+                        <h6 class="text-muted mb-2">Finding</h6>
                         <h4>Bin Name</h4>
-                        <h6 class="text-muted mb-2">Distance</h6>
                     </div>
-                    <div id="fff"><img></div>
+                    <div style="text-align: center;">
+
+                            <div class="compass">
+                                <!-- <div class="arrow"></div> -->
+                                <div class="compass-circle"></div>
+                                <div class="my-point"></div>
+                              </div>
+                              <button class="start-btn" style="visibility: hidden;">Start compass</button>
+
+                    </div>
+                    <div style="text-align: center;">
+                        <h6 class="text-muted mb-2">Distance {{  }}</h6>
+                        <h6 class="text-muted mb-2">Direction</h6>
+                    </div>
+                    <div>
+                        <form id = "formId" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="distance" id="distance" value=0>
+                        </form>
+                    </div>
                 </div>
-            </div>
-        </div>
     </div>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
 </body>
+
+<script>
+    const compassCircle = document.querySelector(".compass-circle");
+    const myPoint = document.querySelector(".my-point");
+    const startBtn = document.querySelector(".start-btn");
+    const isIOS =
+      navigator.userAgent.match(/(iPod|iPhone|iPad)/) &&
+      navigator.userAgent.match(/AppleWebKit/);
+
+    function init() {
+      startBtn.addEventListener("click", startCompass);
+      navigator.geolocation.getCurrentPosition(locationHandler);
+
+      if (!isIOS) {
+        window.addEventListener("deviceorientationabsolute", handler, true);
+      }
+    }
+
+    function startCompass() {
+      if (isIOS) {
+        DeviceOrientationEvent.requestPermission()
+          .then((response) => {
+            if (response === "granted") {
+              window.addEventListener("deviceorientation", handler, true);
+            } else {
+              alert("has to be allowed!");
+            }
+          })
+          .catch(() => alert("not supported"));
+      }
+    }
+
+    function handler(e) {
+      compass = e.webkitCompassHeading || Math.abs(e.alpha - 360);
+      compassCircle.style.transform = `translate(-50%, -50%) rotate(${-compass}deg)`;
+
+      // ±15 degree
+      if (
+        (pointDegree < Math.abs(compass) &&
+          pointDegree + 15 > Math.abs(compass)) ||
+        pointDegree > Math.abs(compass + 15) ||
+        pointDegree < Math.abs(compass)
+      ) {
+        myPoint.style.opacity = 0;
+      } else if (pointDegree) {
+        myPoint.style.opacity = 1;
+      }
+    }
+
+    let pointDegree;
+
+    function locationHandler(position) {
+      const { latitude, longitude } = position.coords;
+      pointDegree = calcDegreeToPoint(latitude, longitude);
+
+      if (pointDegree < 0) {
+        pointDegree = pointDegree + 360;
+      }
+    }
+
+    function calcDegreeToPoint(latitude, longitude) {
+      {# Chaneg this to be the bin location#}
+      const point = {
+        lat: {{BinGoal.binLat}} ,
+        long: {{BinGoal.binLong}} };
+
+      const psi = bearing(latitude, longitude, point.lat, point.long);
+
+      return Math.round(psi);
+    }
+
+    // Converts from degrees to radians.
+    function toRadians(degrees) {
+      return degrees * Math.PI / 180;
+    };
+
+    // Converts from radians to degrees.
+    function toDegrees(radians) {
+      return radians * 180 / Math.PI;
+    }
+
+    function bearing(startLat, startLng, destLat, destLng){
+      startLat = toRadians(startLat);
+      startLng = toRadians(startLng);
+      destLat = toRadians(destLat);
+      destLng = toRadians(destLng);
+
+      y = Math.sin(destLng - startLng) * Math.cos(destLat);
+      x = Math.cos(startLat) * Math.sin(destLat) -
+            Math.sin(startLat) * Math.cos(destLat) * Math.cos(destLng - startLng);
+      brng = Math.atan2(y, x);
+      brng = toDegrees(brng);
+      return (brng + 360) % 360;
+    }
+    let auto_refresh = setInterval(function() { binDistance(); }, 100);
+    function binDistance(){
+        const { latitude, longitude } = position.coords;
+        var haversine = require("haversine-distance");
+        //First point in your haversine calculation
+        var binLoc = lat: {{BinGoal.binLat}} ,long: {{BinGoal.binLong}} };
+        //Second point in your haversine calculation
+        var point2 = { lat: latitude, lng: longitude}
+        var haversine_m = haversine(point1, point2); //Results in meters (default)
+        return haversine_m
+    }
+    init();
+  </script>
 
 </html>

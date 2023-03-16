@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from home.models import Transaction
 from account.models import Statistic
 from bins.models import BinData
+from products.models import Product
 import geopy.distance
 
 # function for the home page backend
@@ -24,6 +25,11 @@ def home_view(request):
 
     if request.method == 'POST':
         return redirect('barcode_lookup')   # Redirect to the scanner page
+
+    if Product.objects.count() == 0:
+        defualt_product = Product.objects.create(barcode='1',name='None',weight=0,material='None',recycle='None')
+    if BinData.objects.count() == 0:
+        pass
 
     data = Transaction.objects.all().order_by('-time')[:5]
     data_dict = {
