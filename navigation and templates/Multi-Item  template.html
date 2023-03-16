@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>TemplateDesigns</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/Material%20Icons.css">
+    <link rel="stylesheet" href="assets/css/simple-line-icons.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body" style="text-align: center;">
+                        <h4 class="card-title">Title</h4>
+                        <h6 class="text-muted card-subtitle mb-2">Subtitle</h6>
+                        <p class="card-text">Nullam id dolor id nibh ultricies vehicula ut id elit. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" id="pokedex">
+         
+        </div>
+
+    </div>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+</body>
+
+
+<script>
+    
+
+    const pokemonArray = [
+        {
+            name: 'Bulbasaur',
+            type: 'Grass/Poison',
+            description: 'A strange seed was planted on its back at birth. The plant sprouts and grows with this Pokémon.',
+            img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png'
+        },
+        {
+            name: 'Charmander',
+            type: 'Fire',
+            description: 'Obviously prefers hot places. When it rains, steam is said to spout from the tip of its tail.',
+            img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png'
+        },
+        {
+            name: 'Squirtle',
+            type: 'Water',
+            description: 'After birth, its back swells and hardens into a shell. Powerfully sprays foam from its mouth.',
+            img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/7.png'
+        },
+        {
+            name: 'Pikachu',
+            type: 'Electric',
+            description: 'When several of these Pokémon gather, their electricity could build and cause lightning storms.',
+            img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png'
+        },
+        {
+            name: 'Jigglypuff',
+            type: 'Normal/Fairy',
+            description: 'When its huge eyes light up, it sings a mysteriously soothing melody that lulls its enemies to sleep.',
+            img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/39.png'
+        },
+        {
+            name: 'Meowth',
+            type: 'Normal',
+            description: 'Adores circular objects. Wanders the streets on a nightly basis to look for dropped loose change.',
+            img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/52.png'
+        },
+        {
+            name: 'Psyduck',
+            type: 'Water',
+            description: 'While lulling its enemies with its vacant look, this wily Pokémon will use psychokinetic powers.',
+            img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/54.png'
+        },
+        {
+            name: 'Geodude',
+            type: 'Rock/Ground',
+            description: 'Found in fields and mountains. Mistaking them for boulders, people often step or trip on them.',
+            img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/74.png'
+        },
+        {
+            name: 'Magikarp',
+            type: 'Water',
+            description: 'In the distant past, it was somewhat stronger than the horribly weak descendants that exist today.',
+            img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/129.png'
+        },
+        {
+            name: 'Eevee',
+            type: 'Normal',
+            description: 'Its genetic code is irregular. It may mutate if it is exposed to radiation from element Stones.',
+            img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/133.png'
+        },
+        {
+            name: 'Snorlax',
+            type: 'Normal',
+            description: 'Very lazy. Just eats and sleeps. As its rotund bulk builds, it',
+            img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/143.png'
+        },
+        {
+            name: 'Eevee',
+            type: 'Normal',
+            description: 'Its genetic code is irregular. It may mutate if it is exposed to radiation from element Stones.',
+            img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/133.png'
+        },
+        {
+            name: 'Snorlax',
+            type: 'Normal',
+            description: 'Very lazy. Just eats and sleeps. As its rotund bulk builds, it becomes steadily more slothful.',
+            img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/143.png'
+        },
+        {
+            name: 'Mewtwo',
+            type: 'Psychic',
+            description: 'It was created by a scientist after years of horrific gene splicing and DNA engineering experiments.',
+            img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/150.png'
+        },
+        {
+            name: 'Chikorita',
+            type: 'Grass',
+            description: 'A sweet aroma gently wafts from the leaf on its head. It is docile and loves to soak up the sun’s rays.',
+            img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/152.png'
+        }
+    ];
+
+
+    const pokedexDiv = document.getElementById('pokedex');
+
+    let i = 0;
+    while (i < pokemonArray.length) {
+        const cardDiv = document.createElement('div');
+        cardDiv.classList.add('card');
+        cardDiv.classList.add('col-md-4');
+
+        const cardBodyDiv = document.createElement('div');
+        cardBodyDiv.classList.add('card-body');
+        cardBodyDiv.style.textAlign = 'center';
+
+        const image = document.createElement('img');
+        image.src = pokemonArray[i].img;
+        cardBodyDiv.appendChild(image);
+
+        const titleH4 = document.createElement('h4');
+        titleH4.classList.add('card-title');
+        titleH4.innerText = pokemonArray[i].name;
+
+        const subtitleH6 = document.createElement('h6');
+        subtitleH6.classList.add('text-muted', 'card-subtitle', 'mb-2');
+        subtitleH6.innerText = pokemonArray[i].type;
+
+        const button = document.createElement('button');
+        button.className = 'btn btn-primary';
+        button.type = 'submit';
+        var name = pokemonArray[i].name;
+        button.onclick = function() { submit(name) };
+        button.textContent = 'Buy me';
+
+        cardBodyDiv.appendChild(image);
+        cardBodyDiv.appendChild(titleH4);
+        cardBodyDiv.appendChild(subtitleH6);
+        cardBodyDiv.appendChild(button);
+        cardDiv.appendChild(cardBodyDiv);
+        pokedexDiv.appendChild(cardDiv);
+        i++;
+    }
+
+
+    function submit(id) {
+        const form = document.createElement('form');
+        form.method = 'post';
+        form.action = '123.html';
+
+        const hiddenField = document.createElement('input');
+        hiddenField.type = 'hidden';
+        hiddenField.name = 'item_id';
+        hiddenField.value = id;
+
+        form.appendChild(hiddenField);
+    
+        document.body.appendChild(form);
+        form.submit();
+    }
+</script>
+</html>
