@@ -1,0 +1,165 @@
+<!-- title pane -->
+<div class="row" style="width: 100%; margin: 0;">
+    <div class="col-md-12" style="padding: 0; margin: 0;">
+        <div class="card">
+            <div class="card-body" style="text-align: center;">
+                <h4 class="card-title">Title</h4>
+                <h6 class="text-muted card-subtitle mb-2">Subtitle</h6>
+                <p class="card-text">Nullam id dolor id nibh ultricies vehicula ut id elit. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- contains all the items -->
+<div class="row" id="container" style="width: 100%; margin: 0;">
+
+</div>
+<script src="assets/bootstrap/js/bootstrap.min.js"></script>
+</body>
+
+
+<script>
+
+    // Array of items that are show (for purpose of template only)
+    const itemArray = [
+    {
+        item_id: '1243',
+        name: 'frosties cup',
+        cost: 22,
+        description: 'A cup full of frosties seaspning',
+        img: 'https://www.example.com/frosties-cup.jpg'
+    },
+    {
+        item_id: '1244',
+        name: 'frosties bowl',
+        cost: 12,
+        description: 'A bowl full of frosties seaspning',
+        img: 'https://www.example.com/frosties-bowl.jpg'
+    },
+    {
+        item_id: '1245',
+        name: 'frosties spoon',
+        cost: 2,
+        description: 'A spoon full of frosties seaspning',
+        img: 'https://www.example.com/frosties-spoon.jpg'
+    },
+    {
+        item_id: '1246',
+        name: 'frosties t-shirt',
+        cost: 32,
+        description: 'A t-shirt with frosties seaspning',
+        img: 'https://www.example.com/frosties-t-shirt.jpg'
+    },
+    {
+        item_id: '1247',
+        name: 'frosties hat',
+        cost: 15,
+        description: 'A hat with frosties seaspning',
+        img: 'https://www.example.com/frosties-hat.jpg'
+    },
+    {
+        item_id: '1248',
+        name: 'frosties socks',
+        cost: 5,
+        description: 'Socks with frosties seaspning',
+        img: 'https://www.example.com/frosties-socks.jpg'
+    },
+    {
+        item_id: '1249',
+        name: 'frosties shoes',
+        cost: 45,
+        description: 'Shoes with frosties seaspning',
+        img: 'https://www.example.com/frosties-shoes.jpg'
+    },
+    {
+        item_id: '1250',
+        name: 'frosties jacket',
+        cost: 75,
+        description: 'A jacket with frosties seaspning',
+        img: 'https://www.example.com/frosties-jacket.jpg'
+    },
+    {
+        item_id: '1251',
+        name: 'frosties pants',
+        cost: 55,
+        description: 'Pants with frosties seaspning',
+        img: 'https://www.example.com/frosties-pants.jpg'
+    },
+    {
+        item_id: '1252',
+        name: 'frosties shorts',
+        cost: 25,
+        description: 'Shorts with frosties seaspning',
+        img: 'https://www.example.com/frosties-shorts.jpg'
+    }
+];
+
+    // div that the items are put inside of
+    const container = document.getElementById('container');
+
+    // Iterates through the array and adds each item from the array
+    let i = 0;
+    while (i < itemArray.length) {
+        // Creates all the html objects required for each item in the array
+        const cardDiv = document.createElement('div');
+        cardDiv.classList.add('card');
+        cardDiv.classList.add('col-md-4');
+
+        const cardBodyDiv = document.createElement('div');
+        cardBodyDiv.classList.add('card-body');
+        cardBodyDiv.style.textAlign = 'center';
+
+        // image
+        const image = document.createElement('img');
+        image.src = itemArray[i].img;
+        cardBodyDiv.appendChild(image);
+
+        // title
+        const titleH4 = document.createElement('h4');
+        titleH4.classList.add('card-title');
+        titleH4.innerText = itemArray[i].name;
+
+        // sub-title
+        const subtitleH6 = document.createElement('h6');
+        subtitleH6.classList.add('text-muted', 'card-subtitle', 'mb-2');
+        subtitleH6.innerText = itemArray[i].description;
+
+        // button
+        const button = document.createElement('button');
+        button.className = 'btn btn-primary';
+        button.type = 'submit';
+        button.onclick = function() { submit(itemArray[i].item_id) };
+        button.textContent = 'Buy me';
+
+        // appends to the html
+        cardBodyDiv.appendChild(image);
+        cardBodyDiv.appendChild(titleH4);
+        cardBodyDiv.appendChild(subtitleH6);
+        cardBodyDiv.appendChild(button);
+        cardDiv.appendChild(cardBodyDiv);
+        container.appendChild(cardDiv);
+        i++;
+    }
+
+    // submits the form with the attatched variable from the button pressed on an array item
+    function submit(id) {
+        // Creates form
+        const form = document.createElement('form');
+        form.method = 'post';
+        form.action = '123.html';
+
+        // Creates hidden t field for submission
+        const hiddenField = document.createElement('input');
+        hiddenField.type = 'hidden';
+        hiddenField.name = 'item_id';
+        hiddenField.value = id;
+
+        // Appends field
+        form.appendChild(hiddenField);
+
+        // Adds form to the body
+        document.body.appendChild(form);
+        form.submit();
+    }
+</script>

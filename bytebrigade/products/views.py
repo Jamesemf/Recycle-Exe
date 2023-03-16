@@ -15,26 +15,25 @@ def product_dex(request):
     if not request.user.is_authenticated:
         return redirect('login')
 
-    product_count = {
-        'product'
-    }
-
+    # Data is all transactions from the current user
     data = Transaction.objects.filter(Q(user=request.user))
 
+
+    # Create a dictionary of unique items that appear in transaction and keep a count
     items = {}
     for obj in data:
-        key = obj.product.name
+        key = obj.product
         if key not in items.keys():
             items[key] = 1
         else:
             items[key] +=1
 
-
     print(items)
+    product_count = {
+        'product': items
+    }
 
-
-    return HttpResponse("Hello world?")
-
+    return render(request, 'products/pokedex.html', product_count)  #  Render pokedex page
 
 def create_product_view(request):
     """

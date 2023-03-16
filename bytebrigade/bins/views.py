@@ -18,8 +18,7 @@ def bin_map_view(request):
         return redirect('login')
 
     if request.method == 'POST':
-        # return redirect(bin_nav)
-        return redirect('recycle_confirm')
+        return redirect('bin_nav')
 
     if request.session['newHome'] != -1:
         data_dict = {
@@ -48,9 +47,11 @@ def bin_nav_view(request):
         return redirect('login')
     if request.method == 'POST':
         return redirect('recycle_confirm')
-
-    data_dict = {'BinGoal': BinData.objects.get(binId=request.session['newHome']),}
-    return render(request, 'bin_nav.html', data_dict)
+    if request.session['newHome'] != -1:
+        data_dict = {'BinGoal': BinData.objects.get(binId=request.session['newHome']),}
+        return render(request, 'bin_nav.html', data_dict)
+    else:
+        return redirect('bin_map')
 
 
 # Potentially might want to remove this as could make recycle confirm the bin arrived view instead
@@ -85,18 +86,4 @@ def binDistance(request, binGoal):
     distance = geopy.distance.geodesic(coords_1, coords_2).m
     return distance
 
-# Could use this instead on the webpage and constantly refresh it
-# Once the js has a distance of less than 1m then we submit a post request which will lead to bin arrived view
-# var haversine = require("haversine-distance");
-#
-# //First point in your haversine calculation
-# var point1 = { lat: 6.1754, lng: 106.8272 }
-#
-# //Second point in your haversine calculation
-# var point2 = { lat: 6.1352, lng: 106.8133 }
-#
-# var haversine_m = haversine(point1, point2); //Results in meters (default)
-# var haversine_km = haversine_m /1000; //Results in kilometers
-#
-# console.log("distance (in meters): " + haversine_m + "m");
-# console.log("distance (in kilometers): " + haversine_km + "km");
+

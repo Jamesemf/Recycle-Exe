@@ -11,9 +11,10 @@ http://bytebrigade.net/instruction/
 
 This application makes use of the following python modules:
 
-- Django
-- Pillow
-- geopy
+- Django : python -m pip install Django
+- Pillow : python pip install pillow
+- geopy : python pip install geopy
+- qrcode : python pip install qrcode
 
 ## Usage
 
