@@ -114,7 +114,7 @@
         left: 50%;
         transform: translate(-50%, -50%);
         transition: transform 0.1s ease-out;
-        background: url(../../statics/figures/Arrow.png)
+        background: url({% url 'figure/arrow.png' %})
             center no-repeat;
         background-size: contain;
     }
@@ -150,7 +150,6 @@
                     </div>
                     <div style="text-align: center;">
                         <h6 class="text-muted mb-2" id="distance"></h6>
-                        <h6 class="text-muted mb-2">Direction</h6>
                     </div>
                     <div>
                         <form id = "formId" method="POST">
@@ -174,7 +173,9 @@
       navigator.userAgent.match(/(iPod|iPhone|iPad)/) &&
       navigator.userAgent.match(/AppleWebKit/);
 
-    // Function run when the page opens
+    /** Function run when the page opens
+     *
+     */
     function init() {
 
 
@@ -187,7 +188,9 @@
       }
     }
 
-    // starts compass if it is IOS
+    /** starts compass if it is IOS
+     *
+     */
     function startCompass() {
       if (isIOS) {
         // Requests permission
@@ -202,10 +205,14 @@
       }
     }
 
-    // Starts compass if not IOS
+    /** Starts compass if not IOS
+     *
+     * @param e
+     */
     function handler(e) {
-      compass = e.webkitCompassHeading || Math.abs(e.alpha - 360);
-      compassCircle.style.transform = `translate(-50%, -50%) rotate(${-compass}deg)`;
+        console.log("HANDLER");
+        compass = e.webkitCompassHeading || Math.abs(e.alpha - 360);
+        compassCircle.style.transform = `translate(-50%, -50%) rotate(${-compass}deg)`;
 
       // ±15 degree
       if (
@@ -233,7 +240,12 @@
       binDistance(latitude,longitude)
     }
 
-    // Calculates the actual degree to point to
+    /**
+     * Calculates the actual degree to point to
+     * @param latitude
+     * @param longitude
+     * @returns {number}
+     */
     function calcDegreeToPoint(latitude, longitude) {
       {# Chaneg this to be the bin location#}
       const point = {
@@ -256,6 +268,14 @@
     }
 
     // Calculates bearing from startLat to endLat
+    /**
+     *
+     * @param startLat
+     * @param startLng
+     * @param destLat
+     * @param destLng
+     * @returns {number}
+     */
     function bearing(startLat, startLng, destLat, destLng){
       startLat = toRadians(startLat);
       startLng = toRadians(startLng);
@@ -270,11 +290,21 @@
       return (brng + 360) % 360;
     }
 
+    /**
+     *
+     * @param deg
+     * @returns {number}
+     */
     function deg2rad(deg) {
         return deg * (Math.PI / 180);
     }
 
     // Calculates distance between startLat and endLat
+    /**
+     *
+     * @param latitude
+     * @param longitude
+     */
     function binDistance(latitude,longitude){
         var lat1 = latitude;
         var lon1 = longitude;
