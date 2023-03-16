@@ -13,6 +13,10 @@
                     <h6 class="text-muted card-subtitle mb-2">Subtitle</h6>
                     <p class="card-text">Nullam id dolor id nibh ultricies vehicula ut id elit. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus.</p>
                 </div>
+                <form action="" method="post" id="pokeBarcode">
+                    {% csrf_token %}
+                    <input type="hidden" name="barcode" id="barcode" value=0>
+                </form>
             </div>
         </div>
     </div>
@@ -34,6 +38,7 @@
         {% for key, value in product.items %}
         {
             name: '{{ key.name }}', //Retrieving the product from the dictionary passed in from the backend
+            barcode:'{{ key.barcode}}',
             type: '{{ value }}',    //Retrieving the number of this item that have been recycled by the user
             description: 'A beautiful item of pollution',
             img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png'
@@ -76,8 +81,9 @@
         const button = document.createElement('button');
         button.className = 'btn btn-primary';
         button.type = 'submit';
-        var name = pokemonArray[i].name;
-        button.onclick = function() { submit(name) };
+        var barcode = pokemonArray[i].barcode;
+        {#sessionStorage.setItem("barcode_pokedex",barcode);#}
+        button.onclick = function() { submit(barcode) };
         button.textContent = 'More Info';
 
         // appends to the html
@@ -88,6 +94,28 @@
         cardDiv.appendChild(cardBodyDiv);
         pokedexDiv.appendChild(cardDiv);
         i++;
+    }
+
+    // submits the form with the attatched variable from the button pressed on an array item
+    function submit(id) {
+        // Creates form
+        {#const form = document.createElement('form');#}
+        {#form.method = 'POST';#}
+        {##}
+        {#// Creates hidden t field for submission#}
+        {#const hiddenField = document.createElement('input');#}
+        {#hiddenField.type = 'hidden';#}
+        {#hiddenField.name = 'item_id';#}
+        {#hiddenField.value = id;#}
+        {##}
+        {#// Appends field#}
+        {#form.appendChild(hiddenField);#}
+        {##}
+        {#// Adds form to the body#}
+        {#document.body.appendChild(form);#}
+
+        document.getElementById("barcode").value = id;
+        document.getElementById("pokeBarcode").submit();
     }
 
     /**

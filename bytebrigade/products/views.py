@@ -14,6 +14,9 @@ def product_dex(request):
     """
     if not request.user.is_authenticated:
         return redirect('login')
+    if request.method == 'POST':
+        request.session['pokedex_barcode'] = request.POST.get('barcode')
+        return redirect('product_info')
 
     # Data is all transactions from the current user
     data = Transaction.objects.filter(Q(user=request.user))
@@ -80,38 +83,82 @@ def prompt_recycle_product_view(request):
     """
     if not request.user.is_authenticated:
         return redirect('login')
-    product = Product.objects.get(barcode=request.session['barcode'])
-    if request.method == 'POST':
-        binType = "General"
-        match (product.material, product.recycle):
-            case ("Paper", "True"):
-                binType = 'Paper'
-            case ("Plastic", "True"):
-                binType = 'Plastic'
-            case ("Cans", "True"):
-                binType = 'Cans'
-            case ("Glass", "True"):
-                binType = 'Glass'
-            case ("Plastic", "False"):
-                binType = 'General'
-            case ("Cans", "False"):
-                binType = 'General'
-            case ("Non-Recyclable", "False"):
-                binType = 'General'
-            case ("Glass", "False"):
-                binType = 'General'
-        shortestDistance, close_bin, bin_object = withinRange(request, binType)
-        request.session['newHome'] = bin_object.binId  # Directly correlates to a bin
-        print(request.session['newHome'])
-        return redirect("bin_map")
-    data = {"name": product.name,
-            "barcode": request.session['barcode'],
-            "weight": product.weight,
-            "material": product.material,
-            "recycle": product.recycle,
-            "present_button": 1,
-            }
+    if request.session['barcode'] != -1:
+        product = Product.objects.get(barcode=request.session['barcode'])
+        if request.method == 'POST':
+            binType = "General"
+            match (product.material, product.recycle):
+                case ("Paper", "True"):
+                    binType = 'Paper'
+                case ("Plastic", "True"):
+                    binType = 'Plastic'
+                case ("Cans", "True"):
+                    binType = 'Cans'
+                case ("Glass", "True"):
+                    binType = 'Glass'
+                case ("Plastic", "False"):
+                    binType = 'General'
+                case ("Cans", "False"):
+                    binType = 'General'
+                case ("Non-Recyclable", "False"):
+                    binType = 'General'
+                case ("Glass", "False"):
+                    binType = 'General'
+            shortestDistance, close_bin, bin_object = withinRange(request, binType)
+            request.session['newHome'] = bin_object.binId  # Directly correlates to a bin
+            print(request.session['newHome'])
+            return redirect("bin_map")
+        else:
+            data = {"name": product.name,
+                    "barcode": request.session['barcode'],
+                    "weight": product.weight,
+                    "material": product.material,
+                    "recycle": product.recycle,
+                    "present_button": 1,
+                    }
+    if request.session['pokedex_barcode'] != -1:
+        product = Product.objects.get(barcode=request.session['pokedex_barcode'])
+        data = {"name": product.name,
+                "barcode": request.session['pokedex_barcode'],
+                "weight": product.weight,
+                "material": product.material,
+                "recycle": product.recycle,
+                "present_button": 0,
+                }
     return render(request, 'products/info_product.html', data)
+
+    # product = Product.objects.get(barcode=request.session['barcode'])
+    # if request.method == 'POST':
+    #     binType = "General"
+    #     match (product.material, product.recycle):
+    #         case ("Paper", "True"):
+    #             binType = 'Paper'
+    #         case ("Plastic", "True"):
+    #             binType = 'Plastic'
+    #         case ("Cans", "True"):
+    #             binType = 'Cans'
+    #         case ("Glass", "True"):
+    #             binType = 'Glass'
+    #         case ("Plastic", "False"):
+    #             binType = 'General'
+    #         case ("Cans", "False"):
+    #             binType = 'General'
+    #         case ("Non-Recyclable", "False"):
+    #             binType = 'General'
+    #         case ("Glass", "False"):
+    #             binType = 'General'
+    #     shortestDistance, close_bin, bin_object = withinRange(request, binType)
+    #     request.session['newHome'] = bin_object.binId  # Directly correlates to a bin
+    #     print(request.session['newHome'])
+    #     return redirect("bin_map")
+    # data = {"name": product.name,
+    #         "barcode": request.session['barcode'],
+    #         "weight": product.weight,
+    #         "material": product.material,
+    #         "recycle": product.recycle,
+    #         "present_button": 1,
+    #         }
+    # return render(request, 'products/info_product.html', data)
 
 
 def database_lookup(request):

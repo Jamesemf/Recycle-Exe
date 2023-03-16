@@ -169,13 +169,18 @@
       return Math.round(psi);
     }
 
-    // Converts from degrees to radians.
+    /**
+     * Function converts from degree to radians
+     *
+     * @param degrees
+     * @returns {number}
+     *
+     * */
     function toRadians(degrees) {
       return degrees * Math.PI / 180;
     }
-
-    // Converts from radians to degrees.
     /**
+     *  Function converts from radians to degrees
      *
      * @param radians
      * @returns {number}
@@ -184,8 +189,9 @@
       return radians * 180 / Math.PI;
     }
 
-    // Calculates bearing from startLat to endLat
+
     /**
+     * Calculates the bearing from one starting position to another position
      *
      * @param startLat
      * @param startLng
@@ -208,6 +214,7 @@
     }
 
     /**
+     *
      *
      * @param deg
      * @returns {number}
