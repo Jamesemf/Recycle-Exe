@@ -25,13 +25,17 @@
 
 {% block script %}
 <script>
-    // Array of items that are show (for purpose of template only)
+
+    /**
+     * Creates product cards with the name of the product and the count of times recycled
+     * that is displayed within this html page.
+     * */
     const pokemonArray = [
         {% for key, value in product.items %}
         {
-            name: '{{ key.name }}',
-            type: '{{ value }}',
-            description: 'A strange seed was planted on its back at birth. The plant sprouts and grows with this Pokémon.',
+            name: '{{ key.name }}', //Retrieving the product from the dictionary passed in from the backend
+            type: '{{ value }}',    //Retrieving the number of this item that have been recycled by the user
+            description: 'A beautiful item of pollution',
             img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png'
         },
         {% endfor %}
@@ -86,28 +90,15 @@
         i++;
     }
 
-    // submits the form with the attatched variable from the button pressed on an array item
-    function submit(id) {
-        // Creates form
-        const form = document.createElement('form');
-        form.method = 'post';
-        form.action = '123.html';
-
-        // Creates hidden t field for submission
-        const hiddenField = document.createElement('input');
-        hiddenField.type = 'hidden';
-        hiddenField.name = 'item_id';
-        hiddenField.value = id;
-
-        // Appends field
-        form.appendChild(hiddenField);
-
-        // Adds form to the body
-        document.body.appendChild(form);
-        form.submit();
-    }
-
-    //Remove any special characters from the string
+    /**
+     * This function removes any unwanted special characters from the title of the products we are trying to
+     * display.
+     *
+     * @param html
+     *
+     * @return txt.value
+     *
+     */
     function decodeHtml(html) {
         var txt = document.createElement("textarea");
         txt.innerHTML = html;

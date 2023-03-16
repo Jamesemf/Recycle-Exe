@@ -35,8 +35,13 @@
             <input type="hidden" name="barcode" id="barcode" value=0>
         </form>
     </div>
+{% endblock %}
+
+{% block script %}
+
     <script src="{% static 'BCscanner/html5-qrcode.min.js' %}"></script>
     <script>
+
         function docReady(fn) {
             // see if DOM is already available
             if (document.readyState === "complete"
@@ -75,8 +80,7 @@
             );
             html5QrcodeScanner.render(onScanSuccess);
         });
-    </script>
-    <script>
+
         let auto_refresh = setInterval(function() { submitform(); }, 3000);
 
         function submitform(){

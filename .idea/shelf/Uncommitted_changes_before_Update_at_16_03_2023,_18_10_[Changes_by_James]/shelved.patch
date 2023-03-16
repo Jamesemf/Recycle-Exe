@@ -1,0 +1,808 @@
+Index: bytebrigade/products/templates/products/pokedex.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>{% extends 'navbar.html' %}\n\n{% block title %} {% endblock %}\n\n{% block content %}\n<body>\n    <!-- title pane -->\n    <div class=\"row\" style=\"width: 100%; margin: 0;\">\n        <div class=\"col-md-12\" style=\"padding: 0; margin: 0;\">\n            <div class=\"card\">\n                <div class=\"card-body\" style=\"text-align: center;\">\n                    <h4 class=\"card-title\">Title</h4>\n                    <h6 class=\"text-muted card-subtitle mb-2\">Subtitle</h6>\n                    <p class=\"card-text\">Nullam id dolor id nibh ultricies vehicula ut id elit. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus.</p>\n                </div>\n            </div>\n        </div>\n    </div>\n\n    <!-- contains all the items -->\n    <div class=\"row\" id=\"pokedex\" style=\"width: 100%; margin: 0;\">\n    </div>\n</body>\n{% endblock %}\n\n{% block script %}\n<script>\n    // Array of items that are show (for purpose of template only)\n    const pokemonArray = [\n        {% for key, value in product.items %}\n        {\n            name: '{{ key.name }}',\n            type: '{{ value }}',\n            description: 'A strange seed was planted on its back at birth. The plant sprouts and grows with this Pokémon.',\n            img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png'\n        },\n        {% endfor %}\n    ];\n\n    // div that the items are put inside of\n    const pokedexDiv = document.getElementById('pokedex');\n\n    // Iterates through the array and adds each item from the array\n    let i = 0;\n    while (i < pokemonArray.length) {\n        // Creates all the html objects required for each item in the array\n        const cardDiv = document.createElement('div');\n        cardDiv.classList.add('card');\n        cardDiv.classList.add('col-md-4');\n\n        const cardBodyDiv = document.createElement('div');\n        cardBodyDiv.classList.add('card-body');\n        cardBodyDiv.style.textAlign = 'center';\n\n        // image\n        const image = document.createElement('img');\n        image.src = pokemonArray[i].img;\n        cardBodyDiv.appendChild(image);\n\n        // title\n        const titleH4 = document.createElement('h4');\n        titleH4.classList.add('card-title');\n        console.log(pokemonArray[i].name);\n        titleH4.innerText = decodeHtml(pokemonArray[i].name);\n\n        // sub-title\n        const subtitleH6 = document.createElement('h6');\n        subtitleH6.classList.add('text-muted', 'card-subtitle', 'mb-2');\n        subtitleH6.textContent = 'Recycled: ' + pokemonArray[i].type;\n\n        // button\n        const button = document.createElement('button');\n        button.className = 'btn btn-primary';\n        button.type = 'submit';\n        var name = pokemonArray[i].name;\n        button.onclick = function() { submit(name) };\n        button.textContent = 'More Info';\n\n        // appends to the html\n        cardBodyDiv.appendChild(image);\n        cardBodyDiv.appendChild(titleH4);\n        cardBodyDiv.appendChild(subtitleH6);\n        cardBodyDiv.appendChild(button);\n        cardDiv.appendChild(cardBodyDiv);\n        pokedexDiv.appendChild(cardDiv);\n        i++;\n    }\n\n    // submits the form with the attatched variable from the button pressed on an array item\n    function submit(id) {\n        // Creates form\n        const form = document.createElement('form');\n        form.method = 'post';\n        form.action = '123.html';\n\n        // Creates hidden t field for submission\n        const hiddenField = document.createElement('input');\n        hiddenField.type = 'hidden';\n        hiddenField.name = 'item_id';\n        hiddenField.value = id;\n\n        // Appends field\n        form.appendChild(hiddenField);\n\n        // Adds form to the body\n        document.body.appendChild(form);\n        form.submit();\n    }\n\n    //Remove any special characters from the string\n    function decodeHtml(html) {\n        var txt = document.createElement(\"textarea\");\n        txt.innerHTML = html;\n        return txt.value;\n    }\n\n</script>\n{% endblock %}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/bytebrigade/products/templates/products/pokedex.html b/bytebrigade/products/templates/products/pokedex.html
+--- a/bytebrigade/products/templates/products/pokedex.html	(revision a3954e4161812b2da53abe12242f763486701e9f)
++++ b/bytebrigade/products/templates/products/pokedex.html	(date 1678988204697)
+@@ -25,13 +25,17 @@
+ 
+ {% block script %}
+ <script>
+-    // Array of items that are show (for purpose of template only)
++
++    /**
++     * Creates product cards with the name of the product and the count of times recycled
++     * that is displayed within this html page.
++     * */
+     const pokemonArray = [
+         {% for key, value in product.items %}
+         {
+-            name: '{{ key.name }}',
+-            type: '{{ value }}',
+-            description: 'A strange seed was planted on its back at birth. The plant sprouts and grows with this Pokémon.',
++            name: '{{ key.name }}', //Retrieving the product from the dictionary passed in from the backend
++            type: '{{ value }}',    //Retrieving the number of this item that have been recycled by the user
++            description: 'A beautiful item of pollution',
+             img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png'
+         },
+         {% endfor %}
+@@ -86,28 +90,15 @@
+         i++;
+     }
+ 
+-    // submits the form with the attatched variable from the button pressed on an array item
+-    function submit(id) {
+-        // Creates form
+-        const form = document.createElement('form');
+-        form.method = 'post';
+-        form.action = '123.html';
+-
+-        // Creates hidden t field for submission
+-        const hiddenField = document.createElement('input');
+-        hiddenField.type = 'hidden';
+-        hiddenField.name = 'item_id';
+-        hiddenField.value = id;
+-
+-        // Appends field
+-        form.appendChild(hiddenField);
+-
+-        // Adds form to the body
+-        document.body.appendChild(form);
+-        form.submit();
+-    }
+-
+-    //Remove any special characters from the string
++    /**
++     * This function removes any unwanted special characters from the title of the products we are trying to
++     * display.
++     *
++     * @param html
++     *
++     * @return txt.value
++     *
++     */
+     function decodeHtml(html) {
+         var txt = document.createElement("textarea");
+         txt.innerHTML = html;
+Index: bytebrigade/products/tests.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from django.test import TestCase\n\n# Create your tests here.\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/bytebrigade/products/tests.py b/bytebrigade/products/tests.py
+--- a/bytebrigade/products/tests.py	(revision a3954e4161812b2da53abe12242f763486701e9f)
++++ b/bytebrigade/products/tests.py	(date 1678988401484)
+@@ -1,3 +1,5 @@
+ from django.test import TestCase
+ 
+ # Create your tests here.
++
++def test
+\ No newline at end of file
+Index: bytebrigade/bins/templates/bin_map.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>{% extends 'navbar.html' %}\n{% load static %}\n\n{% block title %} Scan Now! {% endblock %}\n\n{% block header%}\n<table id=\"BinTable\" style=\"display: none;\">\n    {% if presentButton %}\n        <tr>\n            <td>{{bin.binName}}</td>\n            <td>{{bin.binLat}}</td>\n            <td>{{bin.binLong}}</td>\n            <td>{{bin.bin_general}}</td>\n            <td>{{bin.bin_recycle}}</td>\n            <td>{{bin.bin_paper}}</td>\n            <td>{{bin.bin_cans}}</td>\n            <td>{{bin.bin_glass}}</td>\n            <td>{{bin.bin_plastic}}</td>\n            <td>{{bin.bin_non_rec}}</td>\n        </tr>\n    {% endif %}\n\n    {% if not presentButton %}\n        {% for bin in Bins %}\n            <tr>\n                <td>{{bin.binName}}</td>\n                <td>{{bin.binLat}}</td>\n                <td>{{bin.binLong}}</td>\n                <td>{{bin.bin_general}}</td>\n                <td>{{bin.bin_recycle}}</td>\n                <td>{{bin.bin_paper}}</td>\n                <td>{{bin.bin_cans}}</td>\n                <td>{{bin.bin_glass}}</td>\n                <td>{{bin.bin_plastic}}</td>\n                <td>{{bin.bin_non_rec}}</td>\n            </tr>\n        {% endfor %}\n    {% endif %}\n</table>\n\n<script src=\"https://polyfill.io/v3/polyfill.min.js?features=default\"></script>\n<script>\n    let map, infoWindow;\n    var mapMarkers = [];\n    var dataMarkers = [];\n    // Initialize and add the map\n    function initMap() {\n        // The location of Exeter Forum\n        const exeter = { lat: 50.735861151838016, lng: -3.5339879052883316 };\n        // The map, centered at Exeter Forum\n        const map = new google.maps.Map(document.getElementById(\"map\"), {\n            zoom: 17,\n            center: exeter,\n            mapTypeId: 'satellite'\n        });\n\n        var table = document.getElementById(\"BinTable\");\n        var data = [];\n        for (var i = 0, row; row = table.rows[i]; i++) {\n            var item = [];\n            var available = [];\n            for (var j = 0, col; col = row.cells[j]; j++) {\n                if (j == 0) {\n                    item.push(col.innerText);\n                } else if (j == 1 || j == 2) {\n                    item.push(Number(col.innerText));\n                } else {\n                    if (col.innerText == \"True\") {\n                        switch (j) {\n                            case 3:\n                                available.push(\"general\");\n                                break;\n                            case 4:\n                                available.push(\"recycle\");\n                                break;\n                            case 5:\n                                available.push(\"paper\");\n                                break;\n                            case 6:\n                                available.push(\"cans\");\n                                break;\n                            case 7:\n                                available.push(\"glass\");\n                                break;\n                            case 8:\n                                available.push(\"plastic\");\n                                break;\n                            case 9:\n                                available.push(\"non-recycle\");\n                                break;\n                        }\n                    }\n                }\n            }\n            item.push(available);\n            data.push(item);\n        }\n\n        console.log(data);\n        // Marker creation\n        dataMarkers = data;\n        for (let i = 0; i < dataMarkers.length; i++) {\n            const marker = new google.maps.Marker({\n                position: { lat: dataMarkers[i][1], lng: dataMarkers[i][2] },\n                map: map,\n                category: dataMarkers[i][3],\n                title: dataMarkers[i][0]\n            });\n            mapMarkers.push(marker)\n            marker.addListener(\"click\", () => {\n                infoWindow.close();\n                infoWindow.setContent(marker.getTitle());\n                infoWindow.open(marker.getMap(), marker);\n            });\n        }\n        const locationButton = document.createElement(\"button\");\n        infoWindow = new google.maps.InfoWindow();\n        locationButton.textContent = \"Pan to Current Location\";\n        locationButton.classList.add(\"custom-map-control-button\");\n        map.controls[google.maps.ControlPosition.TOP_CENTER].push(locationButton);\n        locationButton.addEventListener(\"click\", () => {\n            // Try HTML5 geolocation.\n            if (navigator.geolocation) {\n                navigator.geolocation.getCurrentPosition(\n                    (position) => {\n                        const pos = {\n                            lat: position.coords.latitude,\n                            lng: position.coords.longitude,\n                        };\n\n                        infoWindow.setPosition(pos);\n                        infoWindow.setContent(\"Location found.\");\n                        infoWindow.open(map);\n                        map.setCenter(pos);\n                    },\n                    () => {\n                        handleLocationError(true, infoWindow, map.getCenter());\n                    }\n                );\n            } else {\n                // Browser doesn't support Geolocation\n                handleLocationError(false, infoWindow, map.getCenter());\n            }\n        });\n    }\n\n    function handleLocationError(browserHasGeolocation, infoWindow, pos) {\n        infoWindow.setPosition(pos);\n        infoWindow.setContent(\n            browserHasGeolocation\n                ? \"Error: The Geolocation service failed.\"\n                : \"Error: Your browser doesn't support geolocation.\"\n        );\n        infoWindow.open(map);\n    }\n\n\n    function filterMarkers(category) {\n        for (i = 0; i < mapMarkers.length; i++) {\n            marker = mapMarkers[i];\n\n            // If is same category or category not picked\n            if ((typeof marker.category == 'object' && marker.category.indexOf(category) >= 0) || category.length == 0) {\n                marker.setVisible(true);\n            }\n            // Categories don't match\n            else {\n                marker.setVisible(false);\n            }\n        }\n    }\n\n\n    window.initMap = initMap;\n</script>\n\n\n{% endblock %}\n\n{% block content %}\n\n<style>\n    #map {\n        height: 400px;\n        width: 100%;\n    }\n</style>\n\n<body>\n\n    <div class=\"container\">\n        <div class=\"row\">\n            <div class=\"col-md-12\">\n                <div class=\"card\">\n                    <div class=\"card-body d-flex\"><img>\n                        <p style=\"text-align: left;\">Paragraph</p>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n\n    <div class=\"container\">\n        <div class=\"row\">\n            <div class=\"col-md-12\">\n                <div class=\"card\">\n                    <div class=\"card-body\">\n\n                        <!--The div element for the map -->\n                        <div id=\"map\"></div>\n                        <select id=\"type\" onchange=filterMarkers(this.value)>\n\n                            <option value=\"\">Please select category</option>\n                            <option value=\"general\">General</option>\n                            <option value=\"recycle\">Recycle</option>\n                            <option value=\"paper\">Paper</option>\n                            <option value=\"cans\">Cans</option>\n                            <option value=\"glass\">Glass</option>\n                            <option value=\"plastic\">Plastic</option>\n                            <option value=\"non-recycle\">Non-Recycle</option>\n                        </select>\n                        <script\n                            src=\"https://maps.googleapis.com/maps/api/js?key=AIzaSyCeauTIEx5Oz2I6sV3M7zdyqS1kZ074l3A&callback=initMap\"\n                            defer></script>\n\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n    {% if  presentButton == 1 %}\n    <div class=\"container\">\n        <div class=\"card\">\n            <div class=\"card-body d-lg-flex justify-content-lg-center\">\n                <form method=\"POST\">\n                    <button class=\"btn btn-primary\" type=\"submit\">Would you like to start you adventure</button>\n                    {% csrf_token %}\n                </form>\n            </div>\n        </div>\n    </div>\n    {% endif %}\n    <script src=\"{% static \"assets/bootstrap/js/bootstrap.min.js\" %}\"></script>\n\n</body>\n\n{% endblock %}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/bytebrigade/bins/templates/bin_map.html b/bytebrigade/bins/templates/bin_map.html
+--- a/bytebrigade/bins/templates/bin_map.html	(revision a3954e4161812b2da53abe12242f763486701e9f)
++++ b/bytebrigade/bins/templates/bin_map.html	(date 1678986596639)
+@@ -38,210 +38,230 @@
+     {% endif %}
+ </table>
+ 
+-<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+-<script>
+-    let map, infoWindow;
+-    var mapMarkers = [];
+-    var dataMarkers = [];
+-    // Initialize and add the map
+-    function initMap() {
+-        // The location of Exeter Forum
+-        const exeter = { lat: 50.735861151838016, lng: -3.5339879052883316 };
+-        // The map, centered at Exeter Forum
+-        const map = new google.maps.Map(document.getElementById("map"), {
+-            zoom: 17,
+-            center: exeter,
+-            mapTypeId: 'satellite'
+-        });
++{% endblock %}
++
++{% block content %}
++
++<style>
++    #map {
++        height: 400px;
++        width: 100%;
++    }
++</style>
++
++    <div class="container">
++        <div class="row">
++            <div class="col-md-12">
++                <div class="card">
++                    <div class="card-body d-flex"><img>
++                        <p style="text-align: left;">Paragraph</p>
++                    </div>
++                </div>
++            </div>
++        </div>
++    </div>
++
++    <div class="container">
++        <div class="row">
++            <div class="col-md-12">
++                <div class="card">
++                    <div class="card-body">
++
++                        <!--The div element for the map -->
++                        <div id="map"></div>
++                        <select id="type" onchange=filterMarkers(this.value)>
++
++                            <option value="">Please select category</option>
++                            <option value="general">General</option>
++                            <option value="recycle">Recycle</option>
++                            <option value="paper">Paper</option>
++                            <option value="cans">Cans</option>
++                            <option value="glass">Glass</option>
++                            <option value="plastic">Plastic</option>
++                            <option value="non-recycle">Non-Recycle</option>
++                        </select>
++                        <script
++                            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCeauTIEx5Oz2I6sV3M7zdyqS1kZ074l3A&callback=initMap"
++                            defer></script>
++
++                    </div>
++                </div>
++            </div>
++        </div>
++    </div>
++    {% if  presentButton == 1 %}
++    <div class="container">
++        <div class="card">
++            <div class="card-body d-lg-flex justify-content-lg-center">
++                <form method="POST">
++                    <button class="btn btn-primary" type="submit">Would you like to start you adventure</button>
++                    {% csrf_token %}
++                </form>
++            </div>
++        </div>
++    </div>
++    {% endif %}
++{% endblock %}
++
++{% block script %}
++    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
++    <script src="{% static "assets/bootstrap/js/bootstrap.min.js" %}"></script>
++
++    <script>
++        let map, infoWindow;
++        var mapMarkers = [];
++        var dataMarkers = [];
++        /**
++          *
++          * This function initialises the google maps API object. It then iterates over a hidden table
++          * within the html containing information on each bin object retrieved from the back end. Each item in the
++          * table is then added to the map as a marker with an approproate name.
++          *
++          * The function also attempts to find your current position if avaiable and translate / scale the map so
++          * that your position can be seen.
++          *
++          */
++        function initMap() {
++            // The location of Exeter Forum
++            const exeter = { lat: 50.735861151838016, lng: -3.5339879052883316 };
++            // The map, centered at Exeter Forum
++            const map = new google.maps.Map(document.getElementById("map"), {
++                zoom: 17,
++                center: exeter,
++                mapTypeId: 'satellite'
++            });
+ 
+-        var table = document.getElementById("BinTable");
+-        var data = [];
+-        for (var i = 0, row; row = table.rows[i]; i++) {
+-            var item = [];
+-            var available = [];
+-            for (var j = 0, col; col = row.cells[j]; j++) {
+-                if (j == 0) {
+-                    item.push(col.innerText);
+-                } else if (j == 1 || j == 2) {
+-                    item.push(Number(col.innerText));
+-                } else {
+-                    if (col.innerText == "True") {
+-                        switch (j) {
+-                            case 3:
+-                                available.push("general");
+-                                break;
+-                            case 4:
+-                                available.push("recycle");
+-                                break;
+-                            case 5:
+-                                available.push("paper");
+-                                break;
+-                            case 6:
+-                                available.push("cans");
+-                                break;
+-                            case 7:
+-                                available.push("glass");
+-                                break;
+-                            case 8:
+-                                available.push("plastic");
+-                                break;
+-                            case 9:
+-                                available.push("non-recycle");
+-                                break;
+-                        }
+-                    }
+-                }
+-            }
+-            item.push(available);
+-            data.push(item);
+-        }
++            //Retrieving information from the table and adding to an array
++            var table = document.getElementById("BinTable");
++            var data = [];
++            for (var i = 0, row; row = table.rows[i]; i++) {
++                var item = [];
++                var available = [];
++                for (var j = 0, col; col = row.cells[j]; j++) {
++                    if (j == 0) {
++                        item.push(col.innerText);
++                    } else if (j == 1 || j == 2) {
++                        item.push(Number(col.innerText));
++                    } else {
++                        if (col.innerText == "True") {
++                            switch (j) {
++                                case 3:
++                                    available.push("general");
++                                    break;
++                                case 4:
++                                    available.push("recycle");
++                                    break;
++                                case 5:
++                                    available.push("paper");
++                                    break;
++                                case 6:
++                                    available.push("cans");
++                                    break;
++                                case 7:
++                                    available.push("glass");
++                                    break;
++                                case 8:
++                                    available.push("plastic");
++                                    break;
++                                case 9:
++                                    available.push("non-recycle");
++                                    break;
++                            }
++                        }
++                    }
++                }
++                item.push(available);
++                data.push(item);
++            }
+ 
+-        console.log(data);
+-        // Marker creation
+-        dataMarkers = data;
+-        for (let i = 0; i < dataMarkers.length; i++) {
+-            const marker = new google.maps.Marker({
+-                position: { lat: dataMarkers[i][1], lng: dataMarkers[i][2] },
+-                map: map,
+-                category: dataMarkers[i][3],
+-                title: dataMarkers[i][0]
+-            });
+-            mapMarkers.push(marker)
+-            marker.addListener("click", () => {
+-                infoWindow.close();
+-                infoWindow.setContent(marker.getTitle());
+-                infoWindow.open(marker.getMap(), marker);
+-            });
+-        }
+-        const locationButton = document.createElement("button");
+-        infoWindow = new google.maps.InfoWindow();
+-        locationButton.textContent = "Pan to Current Location";
+-        locationButton.classList.add("custom-map-control-button");
+-        map.controls[google.maps.ControlPosition.TOP_CENTER].push(locationButton);
+-        locationButton.addEventListener("click", () => {
+-            // Try HTML5 geolocation.
+-            if (navigator.geolocation) {
+-                navigator.geolocation.getCurrentPosition(
+-                    (position) => {
+-                        const pos = {
+-                            lat: position.coords.latitude,
+-                            lng: position.coords.longitude,
+-                        };
++            // Creating markers on the map
++            dataMarkers = data;
++            for (let i = 0; i < dataMarkers.length; i++) {
++                const marker = new google.maps.Marker({
++                    position: { lat: dataMarkers[i][1], lng: dataMarkers[i][2] },
++                    map: map,
++                    category: dataMarkers[i][3],
++                    title: dataMarkers[i][0]
++                });
++                mapMarkers.push(marker)
++                marker.addListener("click", () => {
++                    infoWindow.close();
++                    infoWindow.setContent(marker.getTitle());
++                    infoWindow.open(marker.getMap(), marker);
++                });
++            }
++            const locationButton = document.createElement("button");
++            infoWindow = new google.maps.InfoWindow();
++            locationButton.textContent = "Pan to Current Location";
++            locationButton.classList.add("custom-map-control-button");
++            map.controls[google.maps.ControlPosition.TOP_CENTER].push(locationButton);
++            locationButton.addEventListener("click", () => {
++
++                // Try HTML5 geolocation.
++                if (navigator.geolocation) {
++                    navigator.geolocation.getCurrentPosition(
++                        (position) => {
++                            const pos = {
++                                lat: position.coords.latitude,
++                                lng: position.coords.longitude,
++                            };
+ 
+-                        infoWindow.setPosition(pos);
+-                        infoWindow.setContent("Location found.");
+-                        infoWindow.open(map);
+-                        map.setCenter(pos);
+-                    },
+-                    () => {
+-                        handleLocationError(true, infoWindow, map.getCenter());
+-                    }
+-                );
+-            } else {
+-                // Browser doesn't support Geolocation
+-                handleLocationError(false, infoWindow, map.getCenter());
+-            }
+-        });
+-    }
++                            infoWindow.setPosition(pos);
++                            infoWindow.setContent("Location found.");
++                            infoWindow.open(map);
++                            map.setCenter(pos);
++                        },
++                        () => {
++                            handleLocationError(true, infoWindow, map.getCenter());
++                        }
++                    );
++                } else {
++                    // Browser doesn't support Geolocation
++                    handleLocationError(false, infoWindow, map.getCenter());
++                }
++            });
++        }
+ 
+-    function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+-        infoWindow.setPosition(pos);
+-        infoWindow.setContent(
+-            browserHasGeolocation
+-                ? "Error: The Geolocation service failed."
+-                : "Error: Your browser doesn't support geolocation."
+-        );
+-        infoWindow.open(map);
+-    }
++
++        /**
++         * This function handles any errors that occur when a browser does not support geolocation
++         * services
++         *
++         *
++         * */
++        function handleLocationError(browserHasGeolocation, infoWindow, pos) {
++            infoWindow.setPosition(pos);
++            infoWindow.setContent(
++                browserHasGeolocation
++                    ? "Error: The Geolocation service failed."
++                    : "Error: Your browser doesn't support geolocation."
++            );
++            infoWindow.open(map);
++        }
+ 
+-
+-    function filterMarkers(category) {
+-        for (i = 0; i < mapMarkers.length; i++) {
+-            marker = mapMarkers[i];
++        /**
++         *
++         * This function filters the map markers based on a category selected on the html page. If a bin does not
++         * contain the same category then its marker is hidden from the user
++         *
++         */
++        function filterMarkers(category) {
++            for (i = 0; i < mapMarkers.length; i++) {
++                marker = mapMarkers[i];
+ 
+-            // If is same category or category not picked
+-            if ((typeof marker.category == 'object' && marker.category.indexOf(category) >= 0) || category.length == 0) {
+-                marker.setVisible(true);
+-            }
+-            // Categories don't match
+-            else {
+-                marker.setVisible(false);
+-            }
+-        }
+-    }
++                // If is same category or category not picked
++                if ((typeof marker.category == 'object' && marker.category.indexOf(category) >= 0) || category.length == 0) {
++                    marker.setVisible(true);
++                }
++                // Categories don't match
++                else {
++                    marker.setVisible(false);
++                }
++            }
++        }
+ 
+-
+-    window.initMap = initMap;
+-</script>
++        window.initMap = initMap;
++    </script>
+ 
+-
+ {% endblock %}
+ 
+-{% block content %}
+-
+-<style>
+-    #map {
+-        height: 400px;
+-        width: 100%;
+-    }
+-</style>
+-
+-<body>
+-
+-    <div class="container">
+-        <div class="row">
+-            <div class="col-md-12">
+-                <div class="card">
+-                    <div class="card-body d-flex"><img>
+-                        <p style="text-align: left;">Paragraph</p>
+-                    </div>
+-                </div>
+-            </div>
+-        </div>
+-    </div>
+-
+-    <div class="container">
+-        <div class="row">
+-            <div class="col-md-12">
+-                <div class="card">
+-                    <div class="card-body">
+-
+-                        <!--The div element for the map -->
+-                        <div id="map"></div>
+-                        <select id="type" onchange=filterMarkers(this.value)>
+-
+-                            <option value="">Please select category</option>
+-                            <option value="general">General</option>
+-                            <option value="recycle">Recycle</option>
+-                            <option value="paper">Paper</option>
+-                            <option value="cans">Cans</option>
+-                            <option value="glass">Glass</option>
+-                            <option value="plastic">Plastic</option>
+-                            <option value="non-recycle">Non-Recycle</option>
+-                        </select>
+-                        <script
+-                            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCeauTIEx5Oz2I6sV3M7zdyqS1kZ074l3A&callback=initMap"
+-                            defer></script>
+-
+-                    </div>
+-                </div>
+-            </div>
+-        </div>
+-    </div>
+-    {% if  presentButton == 1 %}
+-    <div class="container">
+-        <div class="card">
+-            <div class="card-body d-lg-flex justify-content-lg-center">
+-                <form method="POST">
+-                    <button class="btn btn-primary" type="submit">Would you like to start you adventure</button>
+-                    {% csrf_token %}
+-                </form>
+-            </div>
+-        </div>
+-    </div>
+-    {% endif %}
+-    <script src="{% static "assets/bootstrap/js/bootstrap.min.js" %}"></script>
+-
+-</body>
+-
+-{% endblock %}
+\ No newline at end of file
+Index: bytebrigade/home/templates/home/index.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>{% extends 'navbar.html' %}\n{% load static %}\n\n{% block title %} Home - Welcome! {% endblock %}\n\n{% block content %}\n    <style>\n    /* The Modal (background) */\n    .modal {\n    display: none; /* Hidden by default */\n    position: fixed; /* Stay in place */\n    z-index: 1; /* Sit on top */\n    padding-top: 100px; /* Location of the box */\n    left: 0;\n    top: 0;\n    width: 100%; /* Full width */\n    height: 100%; /* Full height */\n    overflow: auto; /* Enable scroll if needed */\n    background-color: rgb(0,0,0); /* Fallback color */\n    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */\n    }\n    /*Text color*/\n    .modal p{\n        color: black;\n    }\n    /* Modal Content */\n    .modal-content {\n    background-color: var(--bs-secondary);\n    margin: auto;\n    padding: 20px;\n    border: 1px solid #888;\n    width: 80%;\n    }\n</style>\n\n    <div class=\"fs-6\" style=\"margin-right: 28px;margin-top: 14px;margin-bottom: 22px;color: var(--bs-secondary);margin-left: 28px;\">\n        <h1 style=\"background: var(--secondary);font-size: 30px;padding-bottom: 5px;color: var(--bs-black);\">Daily Feed</h1>\n        <div style=\"background: #e1edbd; height: 70%; overflow:auto;\">\n        <table class = \"table table-striped\">\n                <thead style=\"background: #82b068; padding: 10px\">\n                    <tr>\n                        <th style=\"width: 200px\">Time</th>\n                        <th style=\"width: 200px\">Recycled</th>\n                        <th style=\"width: 200px\">Likes</th>\n                    </tr>\n                </thead>\n                <tbody style=\"color: black;\">\n                    {% for item in Transaction %}\n                    <tr style = \"border-bottom: #82b068 solid 2px;\">\n                        <td>{{item.time}}</td>\n                        <td>{{item.user}} just recycled {{item.product.name}} at Bin {{item.bin.binName}}</td>\n                        <td>{{item.likes}}</td>\n                    </tr>\n                    {% endfor %}\n                </tbody>\n            </table>\n        </div>\n            <form id = \"formId\" method=\"POST\">\n                {% csrf_token %}\n                <input type=\"hidden\" name=\"location_lat\" id=\"lat\" value=0>\n                <input type=\"hidden\" name=\"location_long\" id=\"long\" value=0>\n                <button class=\"btn btn-secondary d-block w-100\" type=\"submit\">Scan Item</button>\n            </form>\n            <!-- If popup is set -->\n            {% if popup %}\n                <!-- If error is set -->\n                {% if error %}\n                    <!-- display info on nearest bin -->\n                <div id=\"infoModel\" class=\"modal\">\n                    <div class=\"modal-content\" style=\"color:red\">\n                        <p>Your closest bin is {{ Bin.binName }}, {{ Distance }}m from your location. Follow the map to find the nearest bin</p>\n                    </div>\n                </div>\n                {% endif %}\n\n                <!-- If successful scan -->\n                {% if newPoints %}\n                    <!-- display info on successful scan -->\n                    <div id=\"infoModel\" class=\"modal\">\n                        <div class=\"modal-content\" style=\"color:green\">\n                            <p>Thank you for recycling {{ product }} you gained {{ points }} points</p>\n                            <p>{{ newhome }}</p>\n\n                        </div>\n                    </div>\n                {% endif %}\n\n                <script>\n                    var modal = document.getElementById(\"infoModel\");\n                    modal.style.display = \"block\";\n                    window.onclick = function(event) {\n                        if (event.target == modal) {\n                            modal.style.display = \"none\";\n                            }\n                        }\n                </script>\n            {% endif %}\n\n    </div>\n    <script>\n        currentLocationInsert();\n\n        function currentLocationInsert() {\n            function getLocation() {\n                if (navigator.geolocation) {\n                    navigator.geolocation.getCurrentPosition(binDistCalc);\n                } else {\n                    x.innerHTML = \"Geolocation is not supported by this browser.\";\n                }\n            }\n\n            function binDistCalc(position) {\n                var lat = position.coords.latitude;\n                var long = position.coords.longitude;\n                document.getElementById(\"lat\").value = lat;\n                document.getElementById(\"long\").value = long;\n            }\n            getLocation();\n        }\n    </script>\n{% endblock %}\n\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/bytebrigade/home/templates/home/index.html b/bytebrigade/home/templates/home/index.html
+--- a/bytebrigade/home/templates/home/index.html	(revision a3954e4161812b2da53abe12242f763486701e9f)
++++ b/bytebrigade/home/templates/home/index.html	(date 1678987375696)
+@@ -3,8 +3,8 @@
+ 
+ {% block title %} Home - Welcome! {% endblock %}
+ 
+-{% block content %}
+-    <style>
++{% block header %}
++     <style>
+     /* The Modal (background) */
+     .modal {
+     display: none; /* Hidden by default */
+@@ -32,7 +32,9 @@
+     width: 80%;
+     }
+ </style>
++{% endblock %}
+ 
++{% block content %}
+     <div class="fs-6" style="margin-right: 28px;margin-top: 14px;margin-bottom: 22px;color: var(--bs-secondary);margin-left: 28px;">
+         <h1 style="background: var(--secondary);font-size: 30px;padding-bottom: 5px;color: var(--bs-black);">Daily Feed</h1>
+         <div style="background: #e1edbd; height: 70%; overflow:auto;">
+@@ -80,36 +82,33 @@
+                         <div class="modal-content" style="color:green">
+                             <p>Thank you for recycling {{ product }} you gained {{ points }} points</p>
+                             <p>{{ newhome }}</p>
+-
+                         </div>
+                     </div>
+                 {% endif %}
+-
+-                <script>
+-                    var modal = document.getElementById("infoModel");
+-                    modal.style.display = "block";
+-                    window.onclick = function(event) {
+-                        if (event.target == modal) {
+-                            modal.style.display = "none";
+-                            }
+-                        }
+-                </script>
+             {% endif %}
+-
+     </div>
++
++{% endblock %}
++
++{% block script %}
+     <script>
+         currentLocationInsert();
+ 
++        /**
++         * This function retrieves you current location using geolocation and sets
++         * the hidden fields within the form your long and lat when loading the page
++         *
++         * */
+         function currentLocationInsert() {
+             function getLocation() {
+                 if (navigator.geolocation) {
+-                    navigator.geolocation.getCurrentPosition(binDistCalc);
++                    navigator.geolocation.getCurrentPosition(location);
+                 } else {
+                     x.innerHTML = "Geolocation is not supported by this browser.";
+                 }
+             }
+ 
+-            function binDistCalc(position) {
++            function location(position) {
+                 var lat = position.coords.latitude;
+                 var long = position.coords.longitude;
+                 document.getElementById("lat").value = lat;
+@@ -117,6 +116,17 @@
+             }
+             getLocation();
+         }
++
++        /**
++         * Displays a pop-up with information regarding the distance to your nearest bin
++         * */
++        var modal = document.getElementById("infoModel");
++        modal.style.display = "block";
++        window.onclick = function(event) {
++            if (event.target == modal) {
++                modal.style.display = "none";
++            }
++        }
+     </script>
+ {% endblock %}
+ 
+Index: bytebrigade/shop/views.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from django.shortcuts import render, redirect\nfrom django.core.mail import EmailMultiAlternatives\nimport qrcode\nimport qrcode.image.svg\nfrom io import BytesIO\nfrom .models import ShopItems\n\n\n# Create your views here.\ndef shop_view(request):\n    \"\"\"\n    This function will handle the shop page view. A user will be presented the shop page to which they can select\n    which item they would like to buy. This will then be returned to the user by email after a successful purchase.\n    \"\"\"\n    if not request.user.is_authenticated:\n        return redirect('login')\n    if request.method == 'POST':\n        item_id = request.POST.get(\"item_id\")\n        item = ShopItems.objects.get(item_id=item_id)\n        item_purchased(request.user, item)\n    return render(request, 'Shop/shop.html')\n\ndef item_purchased(user, item):\n    \"\"\"\n    This procedure handles the purchase of a given item. First we must check that the user can afford this item and then\n    if they can we then purchase the product and then email them a QR code\n    \"\"\"\n    user_stats = Statistic.objects.get(user=user)\n    if(user_stats.points>=item.cost):\n        user_stats.points-=item.cost\n        user_stats.save()\n        img = qrcode.make(item.name, image_factory=factory, box_size=20)\n        subject, from_email, to = 'hello', 'from@example.com', user.email\n        text_content = 'This is an important message.'\n        html_content = '<img>'+img+'</img>'\n        msg = EmailMultiAlternatives(subject, text_content, from_email, [to])\n        msg.attach_alternative(html_content, \"text/html\")\n        msg.send()\n    else:\n        # They cannot afford the product\n        return redirect('shop_view')
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/bytebrigade/shop/views.py b/bytebrigade/shop/views.py
+--- a/bytebrigade/shop/views.py	(revision d07fb99b95387d9276b3b795053bd2835ed9ba0d)
++++ b/bytebrigade/shop/views.py	(date 1678988838721)
+@@ -2,7 +2,6 @@
+ from django.core.mail import EmailMultiAlternatives
+ import qrcode
+ import qrcode.image.svg
+-from io import BytesIO
+ from .models import ShopItems
+ 
+ 
+Index: bytebrigade/home/templates/home/Leaderboard.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>{% extends 'navbar.html' %}\n{% load static %}\n\n{% block title %} Leaderboard {% endblock %}\n\n{% block content %}\n    <div class=\"fs-6\" style=\"margin-right: 28px;margin-top: 14px;margin-bottom: 22px;color: var(--bs-secondary);margin-left: 28px;\">\n        <h1 style=\"background: var(--secondary);font-size: 30px;padding-bottom: 5px;color: var(--bs-black);\">Leaderboard</h1>\n        <div style=\"background: #e1edbd;\">\n        <table class = \"table table-striped\" id = \"leaderboard\">\n                <thead style=\"background: #82b068; padding: 10px\">\n                    <tr>\n                        <th style=\"width: 200px\">Rank</th>\n                        <th style=\"width: 200px\">Username</th>\n                        <th style=\"width: 200px\">Points</th>\n                    </tr>\n                </thead>\n                <tbody style=\"color: black;\">\n                    {% for item in Statistics %}\n                        <tr class=\"text-center\" style = \"border-bottom: #82b068 solid 2px;\">\n                            <td>{{forloop.counter}}</td>\n                            <td>{{item.user}}</td>\n                            <td>{{item.points}}</td>\n                        </tr>\n                    {% endfor %}\n                </tbody>\n            </table>\n        </div>\n        <div><input type=\"search\" id = \"myInput\" onkeyup=\"search()\" style=\"background: #82b068;border-style: solid;border-color: var(--bs-success);margin-top: 10px\" placeholder=\"Search for a user\"></div>\n    </div>\n\n<script>\nfunction search() {\n  // Declare variables\n  var input, filter, table, tr, td, i, txtValue;\n  input = document.getElementById(\"myInput\");\n  filter = input.value.toUpperCase();\n  table = document.getElementById(\"leaderboard\");\n  tr = table.getElementsByTagName(\"tr\");\n\n  // Loop through all table rows, and hide those who don't match the search query\n  for (i = 0; i < tr.length; i++) {\n    td = tr[i].getElementsByTagName(\"td\")[1];\n    if (td) {\n      txtValue = td.textContent || td.innerText;\n      if (txtValue.toUpperCase().indexOf(filter) > -1) {\n        tr[i].style.display = \"\";\n      } else {\n        tr[i].style.display = \"none\";\n      }\n    }\n  }\n}\n</script>\n\n{% endblock %}\n\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/bytebrigade/home/templates/home/Leaderboard.html b/bytebrigade/home/templates/home/Leaderboard.html
+--- a/bytebrigade/home/templates/home/Leaderboard.html	(revision a3954e4161812b2da53abe12242f763486701e9f)
++++ b/bytebrigade/home/templates/home/Leaderboard.html	(date 1678986596624)
+@@ -29,28 +29,35 @@
+         <div><input type="search" id = "myInput" onkeyup="search()" style="background: #82b068;border-style: solid;border-color: var(--bs-success);margin-top: 10px" placeholder="Search for a user"></div>
+     </div>
+ 
++{% endblock %}
++
++{% block script %}
+ <script>
+-function search() {
+-  // Declare variables
+-  var input, filter, table, tr, td, i, txtValue;
+-  input = document.getElementById("myInput");
+-  filter = input.value.toUpperCase();
+-  table = document.getElementById("leaderboard");
+-  tr = table.getElementsByTagName("tr");
++    /**
++     * This function is used to search the leaderboard for a particular user. It loops through the table
++     * and hides any users that do not have a matching expression entered into the search box field
++     * */
++    function search() {
++      // Declare variables
++      var input, filter, table, tr, td, i, txtValue;
++      input = document.getElementById("myInput");
++      filter = input.value.toUpperCase();
++      table = document.getElementById("leaderboard");
++      tr = table.getElementsByTagName("tr");
+ 
+-  // Loop through all table rows, and hide those who don't match the search query
+-  for (i = 0; i < tr.length; i++) {
+-    td = tr[i].getElementsByTagName("td")[1];
+-    if (td) {
+-      txtValue = td.textContent || td.innerText;
+-      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+-        tr[i].style.display = "";
+-      } else {
+-        tr[i].style.display = "none";
+-      }
+-    }
+-  }
+-}
++      // Loop through all table rows, and hide those who don't match the search query
++      for (i = 0; i < tr.length; i++) {
++        td = tr[i].getElementsByTagName("td")[1];
++        if (td) {
++          txtValue = td.textContent || td.innerText;
++          if (txtValue.toUpperCase().indexOf(filter) > -1) {
++            tr[i].style.display = "";
++          } else {
++            tr[i].style.display = "none";
++          }
++        }
++      }
++    }
+ </script>
+ 
+ {% endblock %}
+Index: bytebrigade/barcodereader/templates/BCscanner/Scanner_page.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>{% extends 'navbar.html' %}\n{% load static %}\n\n{% block title %} Scan Now! {% endblock %}\n\n{% block content %}\n    <style>\n        #qr-reader button {\n            /* styling for camera button */\n            /* background-color: black; */\n\n        }\n        #qr-reader {\n            border: none !important;\n        }\n    </style>\n\n\n    <div class=\"fs-6\" style=\"margin-right: 28px;margin-top: 14px;margin-bottom: 22px;color: var(--bs-secondary);padding-left: 0px;margin-left: 28px;\">\n            <h2 style=\"background: #e1edbd;font-size: 30px;padding-bottom: 5px;color: var(--bs-black);\">Scan your item !</h2>\n    </div>\n    <div style=\"display: flex; margin: 0 auto;\">\n        <div style=\"width: 100%; padding-left: 10vw; padding-right: 10vw;\">\n            <div style=\"width: 100%;\">\n                <div style=\"width: 100%; margin: 0 auto; border-style: none;\">\n                    <div id=\"qr-reader\" style=\"width: 100%; position: relative; padding: 0px;\"><div style=\"text-align: left; margin: 0px;\"><div style=\"position: absolute; top: 10px; right: 10px; z-index: 2; display: none; padding: 5pt; font-size: 10pt; background: rgba(0, 0, 0, 0.69); text-align: center; font-weight: 400; color: white;\">Powered by <a href=\"https://scanapp.org/\" target=\"new\" style=\"color: white;\">Scanner</a>\n                    <a href=\"https://github.com/mebjas/html5-qrcode/issues\" target=\"new\" style=\"color: white;\">Report issues</a></div><img alt=\"Info icon\" src=\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NjAgNDYwIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA0NjAgNDYwIiB4bWw6c3BhY2U9InByZXNlcnZlIj48cGF0aCBkPSJNMjMwIDBDMTAyLjk3NSAwIDAgMTAyLjk3NSAwIDIzMHMxMDIuOTc1IDIzMCAyMzAgMjMwIDIzMC0xMDIuOTc0IDIzMC0yMzBTMzU3LjAyNSAwIDIzMCAwem0zOC4zMzMgMzc3LjM2YzAgOC42NzYtNy4wMzQgMTUuNzEtMTUuNzEgMTUuNzFoLTQzLjEwMWMtOC42NzYgMC0xNS43MS03LjAzNC0xNS43MS0xNS43MVYyMDIuNDc3YzAtOC42NzYgNy4wMzMtMTUuNzEgMTUuNzEtMTUuNzFoNDMuMTAxYzguNjc2IDAgMTUuNzEgNy4wMzMgMTUuNzEgMTUuNzFWMzc3LjM2ek0yMzAgMTU3Yy0yMS41MzkgMC0zOS0xNy40NjEtMzktMzlzMTcuNDYxLTM5IDM5LTM5IDM5IDE3LjQ2MSAzOSAzOS0xNy40NjEgMzktMzkgMzl6Ii8+PC9zdmc+\" style=\"position: absolute; top: 4px; right: 4px; opacity: 0.6; cursor: pointer; z-index: 2; width: 16px; height: 16px;\"><div id=\"qr-reader__header_message\" style=\"display: none; text-align: center; font-size: 14px; padding: 2px 10px; margin: 4px; background: rgba(0, 0, 0, 0); color: rgb(17, 17, 17);\">Requesting camera permissions...</div></div><div id=\"qr-reader__scan_region\" style=\"width: 100%; min-height: 100px; text-align: center; position: relative;\"><video muted=\"true\" playsinline=\"\" style=\"width: 1578px; display: block;\"></video><canvas id=\"qr-canvas\" width=\"250\" height=\"250\" style=\"width: 250px; height: 250px; display: none;\"></canvas><div id=\"qr-shaded-region\" style=\"position: absolute; inset: 0px;\"><div style=\"position: absolute; background-color: rgb(255, 255, 255); width: 40px; height: 5px; top: -5px; left: 0px;\"></div><div style=\"position: absolute; background-color: rgb(255, 255, 255); width: 40px; height: 5px; top: -5px; right: 0px;\"></div><div style=\"position: absolute; background-color: rgb(255, 255, 255); width: 40px; height: 5px; bottom: -5px; left: 0px;\"></div><div style=\"position: absolute; background-color: rgb(255, 255, 255); width: 40px; height: 5px; bottom: -5px; right: 0px;\"></div><div style=\"position: absolute; background-color: rgb(255, 255, 255); width: 5px; height: 45px; top: -5px; left: -5px;\"></div><div style=\"position: absolute; background-color: rgb(255, 255, 255); width: 5px; height: 45px; bottom: -5px; left: -5px;\"></div><div style=\"position: absolute; background-color: rgb(255, 255, 255); width: 5px; height: 45px; top: -5px; right: -5px;\"></div><div style=\"position: absolute; background-color: rgb(255, 255, 255); width: 5px; height: 45px; bottom: -5px; right: -5px;\"></div></div><div style=\"display: none; position: absolute; top: 0px; z-index: 1; background: yellow; text-align: center; width: 100%;\">Scanner paused</div></div><div id=\"qr-reader__dashboard\" style=\"width: 100%;\"><div id=\"qr-reader__dashboard_section\" style=\"width: 100%; padding: 10px 0px; text-align: left;\"><div><div id=\"qr-reader__dashboard_section_csr\" style=\"display: block; text-align: center;\"><div style=\"display: none; padding: 5px 10px; text-align: center;\"><input id=\"html5-qrcode-input-range-zoom\" class=\"html5-qrcode-element\" type=\"range\" min=\"1\" max=\"5\" step=\"0.1\" style=\"display: inline-block; width: 50%; height: 5px; background: rgb(211, 211, 211); outline: none; opacity: 0.7;\"><span style=\"margin-right: 10px;\">1x zoom</span></div><span style=\"margin-right: 10px; display: none;\"><select id=\"html5-qrcode-select-camera\" class=\"html5-qrcode-element\" disabled=\"\"><option value=\"f1628d8272fe5895ba6e563c873285bdda3d4f8fa673a08f762550f6bf234849\">HD Camera (05c8:03f1)</option></select></span><span><button id=\"html5-qrcode-button-camera-start\" class=\"html5-qrcode-element\" type=\"button\" style=\"opacity: 1; display: none;\">Start Scanning</button><button id=\"html5-qrcode-button-camera-stop\" class=\"html5-qrcode-element\" type=\"button\" style=\"display: inline-block;\">Stop Scanning</button></span></div><div style=\"text-align: center; margin: auto auto 10px; width: 80%; max-width: 600px; padding: 10px; display: none;\"><label for=\"html5-qrcode-private-filescan-input\" style=\"display: inline-block;\"><button id=\"html5-qrcode-button-file-selection\" class=\"html5-qrcode-element\" type=\"button\">Choose Image - No image choosen</button><input id=\"html5-qrcode-private-filescan-input\" class=\"html5-qrcode-element\" type=\"file\" accept=\"image/*\" style=\"display: none;\"></label><div style=\"font-weight: 400;\">Or drop an image to scan</div></div></div><div style=\"text-align: center;\"><a id=\"html5-qrcode-anchor-scan-type-change\" class=\"html5-qrcode-element\" style=\"text-decoration: underline; display: none;\">Scan an Image File</a></div></div></div></div>\n                    <div id=\"qr-reader-results\"></div>\n                </div>\n            </div>\n        </div>\n    </div>\n        <form id = \"formId\" method=\"POST\">\n            {% csrf_token %}\n            <input type=\"hidden\" name=\"barcode\" id=\"barcode\" value=0>\n        </form>\n    </div>\n    <script src=\"{% static 'BCscanner/html5-qrcode.min.js' %}\"></script>\n    <script>\n        function docReady(fn) {\n            // see if DOM is already available\n            if (document.readyState === \"complete\"\n                || document.readyState === \"interactive\") {\n                // call on next available tick\n                setTimeout(fn, 1);\n            } else {\n                document.addEventListener(\"DOMContentLoaded\", fn);\n            }\n        }\n\n        docReady(function () {\n            var resultContainer = document.getElementById('qr-reader-results');\n            var lastResult, countResults = 0;\n            function onScanSuccess(decodedText, decodedResult) {\n                if (decodedText !== lastResult) {\n                    ++countResults;\n                    lastResult = decodedText;\n                    // Handle on success condition with the decoded message.\n                    document.getElementById('barcode').value = lastResult;\n                    Html5QrcodeScannerState.PAUSED = 1\n                }\n            }\n\n            var html5QrcodeScanner = new Html5QrcodeScanner(\n                \"qr-reader\", {\n                    fps: 10,\n                    qrbox: 250,\n                    rememberLastUsedCamera: true,\n                    formatsToSupport: [\n                        Html5QrcodeSupportedFormats.EAN_13,\n                        Html5QrcodeSupportedFormats.EAN_8,\n                    ],\n                    aspectRatio: 1.7777778\n                }\n            );\n            html5QrcodeScanner.render(onScanSuccess);\n        });\n    </script>\n    <script>\n        let auto_refresh = setInterval(function() { submitform(); }, 3000);\n\n        function submitform(){\n            if (document.getElementById(\"barcode\").value != 0){\n                console.log(document.getElementById(\"barcode\").value);\n                document.getElementById(\"formId\").submit();\n            }\n        }\n    </script>\n\n{% endblock %}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/bytebrigade/barcodereader/templates/BCscanner/Scanner_page.html b/bytebrigade/barcodereader/templates/BCscanner/Scanner_page.html
+--- a/bytebrigade/barcodereader/templates/BCscanner/Scanner_page.html	(revision a3954e4161812b2da53abe12242f763486701e9f)
++++ b/bytebrigade/barcodereader/templates/BCscanner/Scanner_page.html	(date 1678986442117)
+@@ -35,8 +35,13 @@
+             <input type="hidden" name="barcode" id="barcode" value=0>
+         </form>
+     </div>
++{% endblock %}
++
++{% block script %}
++
+     <script src="{% static 'BCscanner/html5-qrcode.min.js' %}"></script>
+     <script>
++
+         function docReady(fn) {
+             // see if DOM is already available
+             if (document.readyState === "complete"
+@@ -75,8 +80,7 @@
+             );
+             html5QrcodeScanner.render(onScanSuccess);
+         });
+-    </script>
+-    <script>
++
+         let auto_refresh = setInterval(function() { submitform(); }, 3000);
+ 
+         function submitform(){
+Index: bytebrigade/products/templates/products/info_product.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>{% extends 'navbar.html' %}\n\n{% block title %} Product Information {% endblock %}\n\n{% block content %}\n    <div class=\"container\">\n        <div class=\"row\">\n            <div class=\"col-md-12 offset-md-0\">\n                <div class=\"card\">\n                    <div class=\"card-body\">\n                        <picture class=\"d-sm-flex d-md-flex justify-content-sm-center justify-content-md-center\">\n                            <img class=\"d-sm-flex d-md-flex justify-content-md-start\" width=\"100\" height=\"80\"></picture>\n                        <div></div>\n                        <h6 class=\"text-center text-muted card-subtitle mb-2\">Product name: {{ name }}</h6>\n                        <h6 class=\"text-center text-muted card-subtitle mb-2\">Barcode: {{ barcode }}</h6>\n                    </div>\n                </div>\n            </div>\n        </div>\n        <div class=\"row\">\n            <div class=\"col-md-6\">\n                <div class=\"card\">\n                    <div class=\"card-body\">\n                        <h4 class=\"card-title\">Components</h4>\n                        <ul>\n                            <li>Weight: {{ weight }}</li>\n                            <li>Material: {{ material }}</li>\n                            <li>Recyclable: {{ recycle }}</li>\n                        </ul>\n                    </div>\n                </div>\n            </div>\n            <div class=\"col-md-6\">\n                <div class=\"card\">\n                    <div class=\"card-body\">\n                        <h4 class=\"card-title\">Product History</h4>\n                        <h6 class=\"text-muted card-subtitle mb-2\">Subtitle</h6>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n    {% if present_button == 1 %}\n    <div class=\"container\">\n        <div class=\"row\">\n            <div class=\"col-md-12 d-flex d-md-flex justify-content-center justify-content-md-center\">\n                <form action=\"\" method=\"post\">\n                    {% csrf_token %}\n                    <input type=\"hidden\" name=\"location_lat\" id=\"lat\" value=0>\n                    <input type=\"hidden\" name=\"location_long\" id=\"long\" value=0>\n                    <button class=\"btn btn-primary\" type='submit'>Would you like to Recycle</button>\n                </form>\n            </div>\n        </div>\n    </div>\n    {% endif %}\n{% endblock %}\n<script>\n        currentLocationInsert();\n\n        function currentLocationInsert() {\n            function getLocation() {\n                if (navigator.geolocation) {\n                    navigator.geolocation.getCurrentPosition(binDistCalc);\n                } else {\n                    x.innerHTML = \"Geolocation is not supported by this browser.\";\n                }\n            }\n\n            function binDistCalc(position) {\n                var lat = position.coords.latitude;\n                var long = position.coords.longitude;\n                document.getElementById(\"lat\").value = lat;\n                document.getElementById(\"long\").value = long;\n            }\n            getLocation();\n        }\n</script>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/bytebrigade/products/templates/products/info_product.html b/bytebrigade/products/templates/products/info_product.html
+--- a/bytebrigade/products/templates/products/info_product.html	(revision a3954e4161812b2da53abe12242f763486701e9f)
++++ b/bytebrigade/products/templates/products/info_product.html	(date 1678987375699)
+@@ -54,25 +54,4 @@
+         </div>
+     </div>
+     {% endif %}
+-{% endblock %}
+-<script>
+-        currentLocationInsert();
+-
+-        function currentLocationInsert() {
+-            function getLocation() {
+-                if (navigator.geolocation) {
+-                    navigator.geolocation.getCurrentPosition(binDistCalc);
+-                } else {
+-                    x.innerHTML = "Geolocation is not supported by this browser.";
+-                }
+-            }
+-
+-            function binDistCalc(position) {
+-                var lat = position.coords.latitude;
+-                var long = position.coords.longitude;
+-                document.getElementById("lat").value = lat;
+-                document.getElementById("long").value = long;
+-            }
+-            getLocation();
+-        }
+-</script>
+\ No newline at end of file
++{% endblock %}
+\ No newline at end of file
+Index: bytebrigade/account/templates/account/Profile_page.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>{% extends 'navbar.html' %}\n{% load static %}\n\n{% block title %} Profile {% endblock %}\n\n{% block header %}\n<link rel=\"stylesheet\" href=\"{% static 'assets/fonts/material-icons.min.css' %}\">\n<link rel=\"stylesheet\" href=\"{% static 'assets/fonts/simple-line-icons.min.css' %}\">\n{% endblock %}\n\n{% block content %}\n<style>\n    .main-content {\n        background-color: var(--secondary) transparent;\n    }\n</style>\n<div class=\"profile-stat\" style=\"display: inline-block\">\n    <div class=\"fs-6\"\n        style=\"margin-right: 28px;margin-top: 14px;margin-bottom: 22px;color: var(--bs-secondary);padding-left: 0px;margin-left: 28px;\">\n        <h1\n            style=\";font-size: 30px;padding-bottom: 5px;color: var(--bs-black);--bs-body-color: var(--bs-primary);\">\n            <strong>Profile</strong></h1>\n    </div>\n    <div class=\"col-md-8 col-xl-6 text-center mx-auto\">\n        <h2><strong>{{ user.get_username }}&nbsp;</strong></h2>\n        <p></p>\n    </div>\n</div>\n<div class=\"text-center d-flex flex-column justify-content-center align-items-center py-3\">\n    <div class=\"bs-icon-xl bs-icon-circle bs-icon-primary d-flex flex-shrink-0 justify-content-center align-items-center d-inline-block mb-2 bs-icon\"\n        style=\"background: #719a5e;width: 100px;height: 100px;\">\n        <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"1em\" height=\"1em\" viewBox=\"0 0 24 24\" stroke-width=\"2\"\n            stroke=\"currentColor\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"\n            class=\"icon icon-tabler icon-tabler-currency-pound\" style=\"font-size: 60px;\">\n            <path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\"></path>\n            <path d=\"M17 18.5a6 6 0 0 1 -5 0a6 6 0 0 0 -5 .5a3 3 0 0 0 2 -2.5v-7.5a4 4 0 0 1 7.45 -2m-2.55 6h-7\"></path>\n        </svg>\n    </div>\n    <div class=\"px-3 profile-stat\">\n        <h2 class=\"fw-bold mb-0\">{{ Profile.points }}</h2>\n        <p class=\"mb-0\">Points</p>\n    </div>\n</div>\n<div class=\"container py-4 py-xl-5\">\n    <div class=\"row gy-4 row-cols-2 row-cols-md-4\">\n        <div class=\"col\">\n            <div class=\"text-center d-flex flex-column justify-content-center align-items-center py-3\">\n                <div class=\"bs-icon-xl bs-icon-circle bs-icon-primary d-flex flex-shrink-0 justify-content-center align-items-center d-inline-block mb-2 bs-icon\"\n                    style=\"background: #719a5e;\">\n                    <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"1em\" height=\"1em\" viewBox=\"0 0 24 24\"\n                        stroke-width=\"2\" stroke=\"currentColor\" fill=\"none\" stroke-linecap=\"round\"\n                        stroke-linejoin=\"round\" class=\"icon icon-tabler icon-tabler-chart-bubble\">\n                        <path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\"></path>\n                        <circle cx=\"6\" cy=\"16\" r=\"3\"></circle>\n                        <circle cx=\"16\" cy=\"19\" r=\"2\"></circle>\n                        <circle cx=\"14.5\" cy=\"7.5\" r=\"4.5\"></circle>\n                    </svg>\n                </div>\n                <div class=\"px-3 profile-stat\">\n                    <h2 class=\"fw-bold mb-0\">{{ Profile.carbon }}</h2>\n                    <p class=\"mb-0\">Carbon FootPrint</p>\n                </div>\n            </div>\n        </div>\n        <div class=\"col\">\n            <div class=\"text-center d-flex flex-column justify-content-center align-items-center py-3\">\n                <div class=\"bs-icon-xl bs-icon-circle bs-icon-primary d-flex flex-shrink-0 justify-content-center align-items-center d-inline-block mb-2 bs-icon\"\n                    style=\"background: #719a5e;\">\n                    <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"1em\" height=\"1em\" fill=\"currentColor\"\n                        viewBox=\"0 0 16 16\" class=\"bi bi-recycle\">\n                        <path\n                            d=\"M9.302 1.256a1.5 1.5 0 0 0-2.604 0l-1.704 2.98a.5.5 0 0 0 .869.497l1.703-2.981a.5.5 0 0 1 .868 0l2.54 4.444-1.256-.337a.5.5 0 1 0-.26.966l2.415.647a.5.5 0 0 0 .613-.353l.647-2.415a.5.5 0 1 0-.966-.259l-.333 1.242-2.532-4.431zM2.973 7.773l-1.255.337a.5.5 0 1 1-.26-.966l2.416-.647a.5.5 0 0 1 .612.353l.647 2.415a.5.5 0 0 1-.966.259l-.333-1.242-2.545 4.454a.5.5 0 0 0 .434.748H5a.5.5 0 0 1 0 1H1.723A1.5 1.5 0 0 1 .421 12.24l2.552-4.467zm10.89 1.463a.5.5 0 1 0-.868.496l1.716 3.004a.5.5 0 0 1-.434.748h-5.57l.647-.646a.5.5 0 1 0-.708-.707l-1.5 1.5a.498.498 0 0 0 0 .707l1.5 1.5a.5.5 0 1 0 .708-.707l-.647-.647h5.57a1.5 1.5 0 0 0 1.302-2.244l-1.716-3.004z\">\n                        </path>\n                    </svg>\n                </div>\n                <div class=\"px-3 profile-stat\">\n                    <h2 class=\"fw-bold mb-0\">{{ Profile.curweek }}</h2>\n                    <p class=\"mb-0\">Week Kg</p>\n                </div>\n            </div>\n        </div>\n        <div class=\"col\">\n            <div class=\"text-center d-flex flex-column justify-content-center align-items-center py-3\">\n                <div class=\"bs-icon-xl bs-icon-circle bs-icon-primary d-flex flex-shrink-0 justify-content-center align-items-center d-inline-block mb-2 bs-icon\"\n                    style=\"background: #719a5e;\">\n                    <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"1em\" height=\"1em\" fill=\"currentColor\"\n                        viewBox=\"0 0 16 16\" class=\"bi bi-recycle\">\n                        <path\n                            d=\"M9.302 1.256a1.5 1.5 0 0 0-2.604 0l-1.704 2.98a.5.5 0 0 0 .869.497l1.703-2.981a.5.5 0 0 1 .868 0l2.54 4.444-1.256-.337a.5.5 0 1 0-.26.966l2.415.647a.5.5 0 0 0 .613-.353l.647-2.415a.5.5 0 1 0-.966-.259l-.333 1.242-2.532-4.431zM2.973 7.773l-1.255.337a.5.5 0 1 1-.26-.966l2.416-.647a.5.5 0 0 1 .612.353l.647 2.415a.5.5 0 0 1-.966.259l-.333-1.242-2.545 4.454a.5.5 0 0 0 .434.748H5a.5.5 0 0 1 0 1H1.723A1.5 1.5 0 0 1 .421 12.24l2.552-4.467zm10.89 1.463a.5.5 0 1 0-.868.496l1.716 3.004a.5.5 0 0 1-.434.748h-5.57l.647-.646a.5.5 0 1 0-.708-.707l-1.5 1.5a.498.498 0 0 0 0 .707l1.5 1.5a.5.5 0 1 0 .708-.707l-.647-.647h5.57a1.5 1.5 0 0 0 1.302-2.244l-1.716-3.004z\">\n                        </path>\n                    </svg>\n                </div>\n                <div class=\"px-3 profile-stat\">\n                    <h2 class=\"fw-bold mb-0\">{{ Profile.curmonth }}</h2>\n                    <p class=\"mb-0\">Month Kg</p>\n                </div>\n            </div>\n        </div>\n        <div class=\"col\">\n            <div class=\"text-center d-flex flex-column justify-content-center align-items-center py-3\">\n                <div class=\"bs-icon-xl bs-icon-circle bs-icon-primary d-flex flex-shrink-0 justify-content-center align-items-center d-inline-block mb-2 bs-icon\"\n                    style=\"background: #719a5e;\">\n                    <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"1em\" height=\"1em\" fill=\"currentColor\"\n                        viewBox=\"0 0 16 16\" class=\"bi bi-recycle\">\n                        <path\n                            d=\"M9.302 1.256a1.5 1.5 0 0 0-2.604 0l-1.704 2.98a.5.5 0 0 0 .869.497l1.703-2.981a.5.5 0 0 1 .868 0l2.54 4.444-1.256-.337a.5.5 0 1 0-.26.966l2.415.647a.5.5 0 0 0 .613-.353l.647-2.415a.5.5 0 1 0-.966-.259l-.333 1.242-2.532-4.431zM2.973 7.773l-1.255.337a.5.5 0 1 1-.26-.966l2.416-.647a.5.5 0 0 1 .612.353l.647 2.415a.5.5 0 0 1-.966.259l-.333-1.242-2.545 4.454a.5.5 0 0 0 .434.748H5a.5.5 0 0 1 0 1H1.723A1.5 1.5 0 0 1 .421 12.24l2.552-4.467zm10.89 1.463a.5.5 0 1 0-.868.496l1.716 3.004a.5.5 0 0 1-.434.748h-5.57l.647-.646a.5.5 0 1 0-.708-.707l-1.5 1.5a.498.498 0 0 0 0 .707l1.5 1.5a.5.5 0 1 0 .708-.707l-.647-.647h5.57a1.5 1.5 0 0 0 1.302-2.244l-1.716-3.004z\">\n                        </path>\n                    </svg>\n                </div>\n                <div class=\"px-3 profile-stat\">\n                    <h2 class=\"fw-bold mb-0\">{{ Profile.curyear }}</h2>\n                    <p class=\"mb-0\">Year Kg</p>\n                </div>\n            </div>\n        </div>\n    </div>\n</div>\n<div class=\"container py-4 py-xl-5\">\n    <div class=\"row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-3\">\n        <div class=\"col\">\n            <div class=\"card\">\n                <div class=\"card-body p-4\">\n                    <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"1em\" height=\"1em\" fill=\"currentColor\"\n                        viewBox=\"0 0 16 16\" class=\"bi bi-broadcast-pin\"\n                        style=\"font-size: 46px;background: #719a5e;border-color: var(--bs-light);color: var(--bs-light);border-radius: 8px;\">\n                        <path\n                            d=\"M3.05 3.05a7 7 0 0 0 0 9.9.5.5 0 0 1-.707.707 8 8 0 0 1 0-11.314.5.5 0 0 1 .707.707zm2.122 2.122a4 4 0 0 0 0 5.656.5.5 0 1 1-.708.708 5 5 0 0 1 0-7.072.5.5 0 0 1 .708.708zm5.656-.708a.5.5 0 0 1 .708 0 5 5 0 0 1 0 7.072.5.5 0 1 1-.708-.708 4 4 0 0 0 0-5.656.5.5 0 0 1 0-.708zm2.122-2.12a.5.5 0 0 1 .707 0 8 8 0 0 1 0 11.313.5.5 0 0 1-.707-.707 7 7 0 0 0 0-9.9.5.5 0 0 1 0-.707zM6 8a2 2 0 1 1 2.5 1.937V15.5a.5.5 0 0 1-1 0V9.937A2 2 0 0 1 6 8z\">\n                        </path>\n                    </svg>\n                    <h4 class=\"card-title\">Your last recycle</h4>\n                    {% if lastTrans != 0 %}\n                        <p>At {{ lastTrans.time }} you recycled {{ lastTrans.product.name }} at bin : {{ lastTrans.bin.binName}}</p>\n                    {% endif %}\n                    {% if lastTrans == 0 %}\n                        <p>No recent recycle</p>\n                    {% endif %}\n                </div>\n            </div>\n        </div>\n        <div class=\"col\">\n            <div class=\"card\">\n                <div class=\"card-body p-4\" style=\"margin-bottom: -1px;padding-bottom: 24px;\">\n                    <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"1em\" height=\"1em\" viewBox=\"0 0 24 24\" fill=\"none\"\n                        style=\"font-size: 44px;color: var(--bs-light);background: #719a5e;border-radius: 8px;\">\n                        <path fill-rule=\"evenodd\" clip-rule=\"evenodd\"\n                            d=\"M12.0122 5.57169L10.9252 4.48469C8.77734 2.33681 5.29493 2.33681 3.14705 4.48469C0.999162 6.63258 0.999162 10.115 3.14705 12.2629L11.9859 21.1017L11.9877 21.0999L12.014 21.1262L20.8528 12.2874C23.0007 10.1395 23.0007 6.65711 20.8528 4.50923C18.705 2.36134 15.2226 2.36134 13.0747 4.50923L12.0122 5.57169ZM11.9877 18.2715L16.9239 13.3352L18.3747 11.9342L18.3762 11.9356L19.4386 10.8732C20.8055 9.50635 20.8055 7.29028 19.4386 5.92344C18.0718 4.55661 15.8557 4.55661 14.4889 5.92344L12.0133 8.39904L12.006 8.3918L12.005 8.39287L9.51101 5.89891C8.14417 4.53207 5.92809 4.53207 4.56126 5.89891C3.19442 7.26574 3.19442 9.48182 4.56126 10.8487L7.10068 13.3881L7.10248 13.3863L11.9877 18.2715Z\"\n                            fill=\"currentColor\"></path>\n                    </svg>\n                    <h4 class=\"card-title\">What you love recycling</h4><img>\n                </div>\n            </div>\n        </div>\n        <div class=\"col\">\n            <div class=\"card\">\n                <div class=\"card-body\"><i class=\"material-icons\"\n                        style=\"font-size: 56px;color: var(--bs-primary);background: #719a5e;border-radius: 8px;\">account_circle</i>\n                    <h4 class=\"card-title\">Account Settings</h4>\n                    <h6 class=\"text-muted card-subtitle mb-2\"></h6>\n                    <p class=\"card-text\"></p><a class=\"card-link\" href=\"{% url 'password' %}\">Manage Password</a><a\n                        class=\"card-link\" href=\"#\">Profile Image</a>\n                </div>\n            </div>\n        </div>\n        <div class=\"col\">\n            <div class=\"card\">\n                <div class=\"card-header\"><i class=\"icon-target\"\n                        style=\"font-size: 44px;background: #719a5e;border-radius: 8px;color: var(--bs-light);border-color: var(--bs-light);\"></i>\n                    <div>\n                        <ul class=\"nav nav-tabs\" role=\"tablist\">\n                            <li class=\"nav-item\" role=\"presentation\"><a class=\"nav-link\" role=\"tab\" data-bs-toggle=\"tab\"\n                                    href=\"#tab-1\">Tab 1</a>\n                            </li>\n                            <li class=\"nav-item\" role=\"presentation\"><a class=\"nav-link active\" role=\"tab\"\n                                    data-bs-toggle=\"tab\" href=\"#tab-2\">Tab 2</a>\n                            </li>\n                            <li class=\"nav-item\" role=\"presentation\"><a class=\"nav-link\" role=\"tab\" data-bs-toggle=\"tab\"\n                                    href=\"#tab-3\">Tab 3</a>\n                            </li>\n                        </ul>\n                        <div class=\"tab-content\">\n                            {% if UserGoal1 %}\n                            <div class=\"tab-pane\" role=\"tabpanel\" id=\"tab-1\">\n                                <p>{{ UserGoal1.goal.name }} {{ UserGoal1.goalType }} items</p>\n                                <p><em>{{ UserGoal1.goal.description }} {{ UserGoal1.goalType }} in order to gain 100 points and have the greatest impact on the environment</em></p>\n                                <div class=\"progress\">\n                                    <div class=\"progress-bar\" aria-valuenow=\"{{ UserGoal1.value }}\" aria-valuemin=\"0\"\n                                        aria-valuemax=\"100\" style=\"width: {{ UserGoal1.value }}%;\">\n                                        {{ UserGoal1.value }}%\n                                    </div>\n                                </div>\n                            </div>\n                            {% endif %}\n                            {% if UserGoal2 %}\n                            <div class=\"tab-pane active\" role=\"tabpanel\" id=\"tab-2\">\n                                <p>{{ UserGoal2.goal.name }} {{ UserGoal2.goalType }} items</p>\n                                <p><em>{{ UserGoal2.goal.description }} {{ UserGoal2.goalType }} in order to gain 100 points and have the greatest impact on the environment</em></p>\n                                <div class=\"progress\">\n                                    <div class=\"progress-bar\" aria-valuenow=\"{{ UserGoal2.value }}\" aria-valuemin=\"0\"\n                                        aria-valuemax=\"100\" style=\"width: {{ UserGoal2.value }}%;\">\n                                        {{ UserGoal2.value }}%\n                                    </div>\n                                </div>\n                            </div>\n                            {% endif %}\n                            {% if UserGoal2 %}\n                            <div class=\"tab-pane\" role=\"tabpanel\" id=\"tab-3\">\n                                <p>{{ UserGoal3.goal.name }} {{ UserGoal3.goalType }} items</p>\n                                <p><em>{{ UserGoal3.goal.description }} {{ UserGoal3.goalType }} in order to gain 100 points and have the greatest impact on the environment</em></p>\n                                <div class=\"progress\">\n                                    <div class=\"progress-bar\" aria-valuenow=\"{{ UserGoal3.value }}\" aria-valuemin=\"0\"\n                                        aria-valuemax=\"100\" style=\"width: {{ UserGoal3.value }}%;\">\n                                        {{ UserGoal3.value }}%\n                                    </div>\n                                </div>\n                            </div>\n                            {% endif %}\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n\n        <div class=\"col-lg-12\">\n            <div class=\"card\">\n                <div class=\"card-body\" style=\"text-align: center;\">\n                    <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"1em\" height=\"1em\" viewBox=\"0 0 24 24\" fill=\"none\"\n                        style=\"font-size: 55px;color: var(--bs-light);background: #719a5e;border-radius: 8px;\">\n                        <path\n                            d=\"M3 4C3 3.44772 3.44772 3 4 3H12C12.5523 3 13 3.44772 13 4C13 4.55228 12.5523 5 12 5H4C3.44772 5 3 4.55228 3 4Z\"\n                            fill=\"currentColor\" fill-opacity=\"0.5\"></path>\n                        <path\n                            d=\"M3 12C3 11.4477 3.44772 11 4 11H12C12.5523 11 13 11.4477 13 12C13 12.5523 12.5523 13 12 13H4C3.44772 13 3 12.5523 3 12Z\"\n                            fill=\"currentColor\" fill-opacity=\"0.5\"></path>\n                        <path\n                            d=\"M3 16C3 15.4477 3.44772 15 4 15H12C12.5523 15 13 15.4477 13 16C13 16.5523 12.5523 17 12 17H4C3.44772 17 3 16.5523 3 16Z\"\n                            fill=\"currentColor\" fill-opacity=\"0.5\"></path>\n                        <path\n                            d=\"M3 20C3 19.4477 3.44772 19 4 19H12C12.5523 19 13 19.4477 13 20C13 20.5523 12.5523 21 12 21H4C3.44772 21 3 20.5523 3 20Z\"\n                            fill=\"currentColor\" fill-opacity=\"0.5\"></path>\n                        <path fill-rule=\"evenodd\" clip-rule=\"evenodd\"\n                            d=\"M15.1707 9C15.5825 10.1652 16.6938 11 18 11C19.6569 11 21 9.65685 21 8C21 6.34315 19.6569 5 18 5C16.6938 5 15.5825 5.83481 15.1707 7H4C3.44772 7 3 7.44772 3 8C3 8.55228 3.44772 9 4 9H15.1707ZM19 8C19 8.55228 18.5523 9 18 9C17.4477 9 17 8.55228 17 8C17 7.44772 17.4477 7 18 7C18.5523 7 19 7.44772 19 8Z\"\n                            fill=\"currentColor\"></path>\n                    </svg>\n                    <h4 class=\"card-title\" style=\"padding-left: 0px;margin-bottom: 34px;margin-top: 27px;\">Add a goal!\n                    </h4>\n                    Adding a goal in the same slot will overwrite the old one.\n                    <p></p>\n                    <div>\n                        <form action=\"addUserGoal/\" method=\"post\">\n                            {% csrf_token %}\n                            Goal Number:<br>\n                            <input name=\"goalNum\">\n                            <br><br>\n                            Goal Number:<br>\n                            <select name=\"goal-options\" id=\"goal-options\">\n                                {% for item in Goals %}\n                                <option value=\"{{item.goalID}}\">\n                                    {{ item.name }}\n                                </option>\n                                {% endfor %}\n                            </select>\n                            Goal Type:<br>\n                            <select name=\"goal-type\" id=\"goal-type\">\n                                <option value=\"Recycling\">\n                                    Recycling\n                                </option>\n                                <option value=\"Plastic\">\n                                    Plastic\n                                </option>\n                                <option value=\"Paper\">\n                                    Paper\n                                </option>\n                                <option value=\"Cans\">\n                                    Cans\n                                </option>\n                                <option value=\"Glass\">\n                                    Glass\n                                </option>\n                            </select>\n                            <br><br>\n                            <input type=\"submit\" value=\"Submit\">\n                        </form>\n                    </div>\n                </div>\n            </div>\n        </div>\n\n        <div class=\"col-lg-12\">\n            <div class=\"card\">\n                <div class=\"card-body\" style=\"text-align: center;\">\n                    <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"1em\" height=\"1em\" viewBox=\"0 0 24 24\" fill=\"none\"\n                        style=\"font-size: 55px;color: var(--bs-light);background: #719a5e;border-radius: 8px;\">\n                        <path\n                            d=\"M3 4C3 3.44772 3.44772 3 4 3H12C12.5523 3 13 3.44772 13 4C13 4.55228 12.5523 5 12 5H4C3.44772 5 3 4.55228 3 4Z\"\n                            fill=\"currentColor\" fill-opacity=\"0.5\"></path>\n                        <path\n                            d=\"M3 12C3 11.4477 3.44772 11 4 11H12C12.5523 11 13 11.4477 13 12C13 12.5523 12.5523 13 12 13H4C3.44772 13 3 12.5523 3 12Z\"\n                            fill=\"currentColor\" fill-opacity=\"0.5\"></path>\n                        <path\n                            d=\"M3 16C3 15.4477 3.44772 15 4 15H12C12.5523 15 13 15.4477 13 16C13 16.5523 12.5523 17 12 17H4C3.44772 17 3 16.5523 3 16Z\"\n                            fill=\"currentColor\" fill-opacity=\"0.5\"></path>\n                        <path\n                            d=\"M3 20C3 19.4477 3.44772 19 4 19H12C12.5523 19 13 19.4477 13 20C13 20.5523 12.5523 21 12 21H4C3.44772 21 3 20.5523 3 20Z\"\n                            fill=\"currentColor\" fill-opacity=\"0.5\"></path>\n                        <path fill-rule=\"evenodd\" clip-rule=\"evenodd\"\n                            d=\"M15.1707 9C15.5825 10.1652 16.6938 11 18 11C19.6569 11 21 9.65685 21 8C21 6.34315 19.6569 5 18 5C16.6938 5 15.5825 5.83481 15.1707 7H4C3.44772 7 3 7.44772 3 8C3 8.55228 3.44772 9 4 9H15.1707ZM19 8C19 8.55228 18.5523 9 18 9C17.4477 9 17 8.55228 17 8C17 7.44772 17.4477 7 18 7C18.5523 7 19 7.44772 19 8Z\"\n                            fill=\"currentColor\"></path>\n                    </svg>\n                    <h4 class=\"card-title\" style=\"padding-left: 0px;margin-bottom: 34px;margin-top: 27px;\">Where are\n                        you compared to others?</h4>\n\n\n                    <div class=\"row\">\n                        <div class=\"col\">\n                            <div class=\"table-responsive\">\n                                <table class=\"table\">\n                                    <caption style=\"caption-side: top; text-align: center;\">\n                                        Week\n                                    </caption>\n                                    <thead>\n                                        <tr>\n                                            <th>User</th>\n                                            <th>Kg</th>\n                                        </tr>\n                                    </thead>\n                                    <tbody>\n                                        <tr>\n                                            <td>{{ maxWeek.user }}</td>\n                                            <td>{{ maxWeek.curweek }}</td>\n                                        </tr>\n                                        <tr>\n                                            <td>{{ Profile.user }}</td>\n                                            <td>{{ Profile.curweek }}</td>\n                                        </tr>\n                                    </tbody>\n                                </table>\n                            </div>\n                        </div>\n                        <div class=\"col\">\n                            <div class=\"table-responsive\">\n                                <table class=\"table\">\n                                    <caption style=\"caption-side: top; text-align: center;\">\n                                        Month\n                                    </caption>\n                                    <thead>\n                                        <tr>\n                                            <th>User</th>\n                                            <th>Kg</th>\n                                        </tr>\n                                    </thead>\n                                    <tbody>\n                                        <tr>\n                                            <td>{{ maxMonth.user }}</td>\n                                            <td>{{ maxMonth.curmonth }}</td>\n                                        </tr>\n                                        <tr>\n                                            <td>{{ Profile.user }}</td>\n                                            <td>{{ Profile.curmonth }}</td>\n                                        </tr>\n                                    </tbody>\n                                </table>\n                            </div>\n                        </div>\n                        <div class=\"col\">\n                            <div class=\"table-responsive\">\n                                <table class=\"table\">\n                                    <caption style=\"caption-side: top; text-align: center;\">\n                                        Year\n                                    </caption>\n                                    <thead>\n                                        <tr>\n                                            <th>User</th>\n                                            <th>Kg</th>\n                                        </tr>\n                                    </thead>\n                                    <tbody>\n                                        <tr>\n                                            <td>{{ maxYear.user }}</td>\n                                            <td>{{ maxYear.curyear }}</td>\n                                        </tr>\n                                        <tr>\n                                            <td>{{ Profile.user }}</td>\n                                            <td>{{ Profile.curyear }}</td>\n                                        </tr>\n                                    </tbody>\n                                </table>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n</div>\n{% endblock %}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/bytebrigade/account/templates/account/Profile_page.html b/bytebrigade/account/templates/account/Profile_page.html
+--- a/bytebrigade/account/templates/account/Profile_page.html	(revision a3954e4161812b2da53abe12242f763486701e9f)
++++ b/bytebrigade/account/templates/account/Profile_page.html	(date 1678988270953)
+@@ -6,14 +6,14 @@
+ {% block header %}
+ <link rel="stylesheet" href="{% static 'assets/fonts/material-icons.min.css' %}">
+ <link rel="stylesheet" href="{% static 'assets/fonts/simple-line-icons.min.css' %}">
+-{% endblock %}
+-
+-{% block content %}
+ <style>
+     .main-content {
+         background-color: var(--secondary) transparent;
+     }
+ </style>
++{% endblock %}
++
++{% block content %}
+ <div class="profile-stat" style="display: inline-block">
+     <div class="fs-6"
+         style="margin-right: 28px;margin-top: 14px;margin-bottom: 22px;color: var(--bs-secondary);padding-left: 0px;margin-left: 28px;">

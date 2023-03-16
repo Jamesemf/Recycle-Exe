@@ -1,15 +1,10 @@
 {% extends 'navbar.html' %}
+{% load static %}
 
 {% block title %} Bin Navigation {% endblock %}
 
 {% block style %}
 <style>
-    body {
-        /*display: flex;
-        flex-direction: column;
-        /*height: 100vh;*/
-    }
-
     .compass {
         position: relative;
         width: 70vw;
@@ -56,28 +51,29 @@
 
 {% block content %}
     <div class="card main-content">
-                <div class="card-body">
-                    <div style="text-align: center;">
-                        <h6 class="text-muted mb-2">Finding</h6>
-                        <h4>{{ BinGoal.binName }}</h4>
-                    </div>
-                    <div style="text-align: center;">
-                        <div class="compass">
-                            <div class="compass-circle"></div>
-                            <div class="my-point"></div>
-                        </div>
-                        <button class="start-btn" style="visibility: hidden;">Start compass</button>
-                    </div>
-                    <div style="text-align: center;">
-                        <h6 class="text-muted mb-2" id="distance"></h6>
-                    </div>
-                    <div>
-                        <form id = "formId" method="POST">
-                            {% csrf_token %}
-                            <input type="hidden" name="distance" id="distance" value=0>
-                        </form>
-                    </div>
+        <div class="card-body">
+            <div style="text-align: center;">
+                <h6 class="text-muted mb-2">Finding</h6>
+                <h4>{{ BinGoal.binName }}</h4>
+            </div>
+            <div style="text-align: center;">
+                <h6 class="text-muted mb-2" id="distance"></h6>
+            </div>
+            <div style="text-align: center;">
+                <div class="compass">
+                    <img id="compass" src="{% static 'figures/arrow.png' %}">
+                    <div class="compass-circle"></div>
+                    <div class="my-point"></div>
                 </div>
+                <button class="start-btn" style="visibility: hidden;">Start compass</button>
+            </div>
+            <div>
+                <form id = "formId" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="distance" id="distance" value=0>
+                </form>
+            </div>
+        </div>
     </div>
 {% endblock %}
 
@@ -85,6 +81,7 @@
 <script>
     // Gets the html elements with the relevant classes
     const compassCircle = document.querySelector(".compass-circle");
+    const compassImg = document.getElementById(compass);
     const myPoint = document.querySelector(".my-point");
     const startBtn = document.querySelector(".start-btn");
 
@@ -95,6 +92,7 @@
 
     /** Function run when the page opens
      *
+     *  Runs the handler function if the devise isn't ios
      */
     function init() {
         startBtn.addEventListener("click", startCompass);

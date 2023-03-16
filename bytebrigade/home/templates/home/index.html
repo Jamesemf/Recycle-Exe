@@ -3,8 +3,8 @@
 
 {% block title %} Home - Welcome! {% endblock %}
 
-{% block content %}
-    <style>
+{% block header %}
+     <style>
     /* The Modal (background) */
     .modal {
     display: none; /* Hidden by default */
@@ -32,7 +32,9 @@
     width: 80%;
     }
 </style>
+{% endblock %}
 
+{% block content %}
     <div class="fs-6" style="margin-right: 28px;margin-top: 14px;margin-bottom: 22px;color: var(--bs-secondary);margin-left: 28px;">
         <h1 style="background: var(--secondary);font-size: 30px;padding-bottom: 5px;color: var(--bs-black);">Daily Feed</h1>
         <div style="background: #e1edbd; height: 70%; overflow:auto;">
@@ -80,42 +82,50 @@
                         <div class="modal-content" style="color:green">
                             <p>Thank you for recycling {{ product }} you gained {{ points }} points</p>
                             <p>{{ newhome }}</p>
-
                         </div>
                     </div>
                 {% endif %}
-
-                <script>
-                    var modal = document.getElementById("infoModel");
-                    modal.style.display = "block";
-                    window.onclick = function(event) {
-                        if (event.target == modal) {
-                            modal.style.display = "none";
-                            }
-                        }
-                </script>
             {% endif %}
-
     </div>
+
+{% endblock %}
+
+{% block script %}
     <script>
         currentLocationInsert();
 
+        /**
+         * This function retrieves you current location using geolocation and sets
+         * the hidden fields within the form your long and lat when loading the page
+         *
+         * */
         function currentLocationInsert() {
             function getLocation() {
                 if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(binDistCalc);
+                    navigator.geolocation.getCurrentPosition(location);
                 } else {
                     x.innerHTML = "Geolocation is not supported by this browser.";
                 }
             }
 
-            function binDistCalc(position) {
+            function location(position) {
                 var lat = position.coords.latitude;
                 var long = position.coords.longitude;
                 document.getElementById("lat").value = lat;
                 document.getElementById("long").value = long;
             }
             getLocation();
+        }
+
+        /**
+         * Displays a pop-up with information regarding the distance to your nearest bin
+         * */
+        var modal = document.getElementById("infoModel");
+        modal.style.display = "block";
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
         }
     </script>
 {% endblock %}

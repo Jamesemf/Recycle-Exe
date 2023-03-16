@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect
 from django.core.mail import EmailMultiAlternatives
 import qrcode
 import qrcode.image.svg
-from io import BytesIO
 from .models import ShopItems
 from account.models import Statistic
 
