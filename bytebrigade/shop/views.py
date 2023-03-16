@@ -5,6 +5,7 @@ import qrcode.image.svg
 from io import BytesIO
 from .models import ShopItems
 
+
 # Create your views here.
 def shop_view(request):
     """
