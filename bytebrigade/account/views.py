@@ -89,7 +89,7 @@ def addUserGoal(request):
     """
     x = request.POST['goalNum']
     y = request.POST['goal-options']
-    z = request.POST['goal-type'] # this is plastic and all the others
+    z = request.POST['goal-type'] # This comment may no longer be needed -> # this is plastic and all the others
     goalNumType = Goal.objects.get(pk=y)
     current_user = request.user
     # Checking if the user has already got a goal for this specific value
