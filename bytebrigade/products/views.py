@@ -2,16 +2,51 @@ from django.shortcuts import render, redirect
 from .models import Product
 from account.views import addstats
 from home.views import withinRange
+from home.models import Transaction
+from django.db.models import Q, Count
+from django.http import HttpResponse
+
+def product_dex(request):
+    """
+    Web backend for '../product/dex/' (name 'product_dex')
+    
+    This function creates a information page on the number of every product that a user has binned
+    """
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    product_count = {
+        'product'
+    }
+
+    data = Transaction.objects.filter(Q(user=request.user))
+
+    items = {}
+    for obj in data:
+        key = obj.product.name
+        if key not in items.keys():
+            items[key] = 1
+        else:
+            items[key] +=1
+
+
+    print(items)
+
+
+    return HttpResponse("Hello world?")
 
 
 def create_product_view(request):
-    # we need to send the user to a page that contains a form
-    # Ask the user for the weight and material of the product
-    # Then add the product to the database
-    # request.session['new_product'] = False
+    """
+    This view handles the product creation page. When the user scans a product if the product is not in the database
+    we then ask the user to fill out a form about this product. If the request is a get request we load the page containing
+    the product form. When a post request occurs we collect the product information and add it to the database.
+
+    The page will automatically contain the barcode which the user has scanned.
+    """
     if not request.user.is_authenticated:
         return redirect('login')
-    if request.method == 'POST':
+    if request.method == 'POST': # Add the product to the database
         form = request.POST
         new_product = Product.objects.create(
             barcode=form.get("barcode"),
@@ -28,10 +63,10 @@ def create_product_view(request):
         request.session['new_product'] = True
 
         return redirect('product_info')
-    elif request.session['barcode'] != -1:
+    elif request.session['barcode'] != -1: # Collect the barcode that the user has provided
         if not Product.objects.filter(barcode=request.session['barcode']).exists():
             barcode = {'barcode': request.session['barcode']}
-            return render(request, 'products/new_product_page.html', barcode)
+            return render(request, 'products/new_product_page.html', barcode) # Present the barcdoe in the page
         else:
             return redirect('index')
     return redirect('index')
@@ -39,6 +74,11 @@ def create_product_view(request):
 
 
 def prompt_recycle_product_view(request):
+    """
+    This view handles the viewing of a product that the user has just scanned or previously scanned
+    If they have just scanned the product then they will be prompted with a button to recycle the product.
+    Below we calculate what bin the product should go into, and then use this data to load the map of bins.
+    """
     if not request.user.is_authenticated:
         return redirect('login')
     product = Product.objects.get(barcode=request.session['barcode'])
@@ -76,6 +116,9 @@ def prompt_recycle_product_view(request):
 
 
 def database_lookup(request):
+    """
+    This function is used to check if a product exists in the database already.
+    """
     print(request.POST)
     barcode_camera = request.POST.get("barcode")
     print("Value is ", barcode_camera)
