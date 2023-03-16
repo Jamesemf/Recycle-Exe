@@ -16,5 +16,5 @@ class ShopItems(models.Model):
     """
     item_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=30)
-    cost = models.IntegerField(max_length=30)
+    cost = models.IntegerField()
     description = models.CharField(max_length=200)

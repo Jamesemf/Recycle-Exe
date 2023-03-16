@@ -1,3 +1,9 @@
+{% extends 'navbar.html' %}
+
+{% block title %} {% endblock %}
+
+{% block content %}
+
 <!-- title pane -->
 <div class="row" style="width: 100%; margin: 0;">
     <div class="col-md-12" style="padding: 0; margin: 0;">
@@ -18,6 +24,9 @@
 <script src="assets/bootstrap/js/bootstrap.min.js"></script>
 </body>
 
+{% endblock %}
+
+{% block script %}
 
 <script>
 
@@ -163,3 +172,4 @@
         form.submit();
     }
 </script>
+{% endblock %}

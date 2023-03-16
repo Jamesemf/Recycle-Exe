@@ -4,6 +4,7 @@ import qrcode
 import qrcode.image.svg
 from io import BytesIO
 from .models import ShopItems
+from account.models import Statistic
 
 
 # Create your views here.
@@ -18,7 +19,7 @@ def shop_view(request):
         item_id = request.POST.get("item_id")
         item = ShopItems.objects.get(item_id=item_id)
         item_purchased(request.user, item)
-    return render(request, 'Shop/shop.html')
+    return render(request, 'shop.html')
 
 def item_purchased(user, item):
     """
