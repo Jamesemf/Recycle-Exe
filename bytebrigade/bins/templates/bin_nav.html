@@ -114,7 +114,7 @@
         left: 50%;
         transform: translate(-50%, -50%);
         transition: transform 0.1s ease-out;
-        background: url(assets/img/Arrow.png)
+        background: url(../../statics/figures/Arrow.png)
             center no-repeat;
         background-size: contain;
     }
@@ -139,17 +139,14 @@
                 <div class="card-body">
                     <div style="text-align: center;">
                         <h6 class="text-muted mb-2">Finding</h6>
-                        <h4>Bin Name</h4>
+                        <h4>{{ BinGoal.binName }}</h4>
                     </div>
                     <div style="text-align: center;">
-
-                            <div class="compass">
-                                <!-- <div class="arrow"></div> -->
-                                <div class="compass-circle"></div>
-                                <div class="my-point"></div>
-                              </div>
-                              <button class="start-btn" style="visibility: hidden;">Start compass</button>
-
+                        <div class="compass">
+                            <div class="compass-circle"></div>
+                            <div class="my-point"></div>
+                        </div>
+                        <button class="start-btn" style="visibility: hidden;">Start compass</button>
                     </div>
                     <div style="text-align: center;">
                         <h6 class="text-muted mb-2" id="distance"></h6>
@@ -167,7 +164,7 @@
 
 {% block script %}
 <script>
-    // Get's the html elements with the relevent classes
+    // Gets the html elements with the relevant classes
     const compassCircle = document.querySelector(".compass-circle");
     const myPoint = document.querySelector(".my-point");
     const startBtn = document.querySelector(".start-btn");
@@ -179,8 +176,11 @@
 
     // Function run when the page opens
     function init() {
-      startBtn.addEventListener("click", startCompass);
-      navigator.geolocation.getCurrentPosition(locationHandler);
+
+
+        console.log("INIT");
+        startBtn.addEventListener("click", startCompass);
+        navigator.geolocation.getCurrentPosition(locationHandler);
 
       if (!isIOS) {
         window.addEventListener("deviceorientationabsolute", handler, true);
@@ -204,7 +204,6 @@
 
     // Starts compass if not IOS
     function handler(e) {
-
       compass = e.webkitCompassHeading || Math.abs(e.alpha - 360);
       compassCircle.style.transform = `translate(-50%, -50%) rotate(${-compass}deg)`;
 
@@ -221,7 +220,7 @@
       }
     }
 
-    //
+    // Automatically refreshes the degree to point to at a set interval
     let pointDegree;
     let auto_refresh = setInterval(function() { navigator.geolocation.getCurrentPosition(locationHandler); }, 3000);
     function locationHandler(position) {
@@ -234,6 +233,7 @@
       binDistance(latitude,longitude)
     }
 
+    // Calculates the actual degree to point to
     function calcDegreeToPoint(latitude, longitude) {
       {# Chaneg this to be the bin location#}
       const point = {
@@ -248,7 +248,7 @@
     // Converts from degrees to radians.
     function toRadians(degrees) {
       return degrees * Math.PI / 180;
-    };
+    }
 
     // Converts from radians to degrees.
     function toDegrees(radians) {
@@ -270,34 +270,31 @@
       return (brng + 360) % 360;
     }
 
+    function deg2rad(deg) {
+        return deg * (Math.PI / 180);
+    }
+
     // Calculates distance between startLat and endLat
     function binDistance(latitude,longitude){
-        var lat1 = latitude
-        var lon1 = longitude
-        var lat2= {{BinGoal.binLat}}
-        var lon2= {{BinGoal.binLong}}
-        if ((lat1 == lat2) && (lon1 == lon2)) {
-            document.getElementById('distance').innerHTML = "Distance to bin: 0m";
-            document.getElementById("formId").submit();
-        }
-        else {
-            var radlat1 = Math.PI * lat1/180;
-            var radlat2 = Math.PI * lat2/180;
-            var theta = lon1-lon2;
-            var radtheta = Math.PI * theta/180;
-            var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
-            if (dist > 1) {
-                dist = 1;
-            }
-            dist = Math.acos(dist);
-            dist = dist * 180/Math.PI;
-            dist = dist * 60 * 1.1515;
-        }
-        document.getElementById('distance').innerHTML = "Distance to bin: "+dist+"m";
-        if (dist<=3) {
+        var lat1 = latitude;
+        var lon1 = longitude;
+        var lat2= {{BinGoal.binLat}};
+        var lon2= {{BinGoal.binLong}};
+        var R = 6371; // Radius of the earth in km
+        var dLat = deg2rad(lat2 - lat1);  // deg2rad below
+        var dLon = deg2rad(lon2 - lon1);
+        var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        var d = 1000 * R * c; // Distance in m
+        d = d.toFixed(2);
+        document.getElementById('distance').innerHTML = "Distance to bin: "+d+"m";
+        if (d<=3) {
             document.getElementById("formId").submit();
         }
     }
     init();
 </script>
+
 {% endblock %}

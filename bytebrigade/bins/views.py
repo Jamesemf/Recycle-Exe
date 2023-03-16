@@ -22,7 +22,7 @@ def bin_map_view(request):
 
     if request.session['newHome'] != -1:
         data_dict = {
-            'Bins': BinData.objects.get(binId=request.session['newHome']),
+            'bin': BinData.objects.get(binId=request.session['newHome']),
             'presentButton': 1,
         }
     else:
@@ -48,7 +48,7 @@ def bin_nav_view(request):
     if request.method == 'POST':
         return redirect('recycle_confirm')
     if request.session['newHome'] != -1:
-        data_dict = {'BinGoal': BinData.objects.get(binId=request.session['newHome']),}
+        data_dict = {'BinGoal': BinData.objects.get(binId=request.session['newHome'])}
         return render(request, 'bin_nav.html', data_dict)
     else:
         return redirect('bin_map')
