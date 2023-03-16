@@ -82,7 +82,6 @@
         button.className = 'btn btn-primary';
         button.type = 'submit';
         var barcode = pokemonArray[i].barcode;
-        {#sessionStorage.setItem("barcode_pokedex",barcode);#}
         button.onclick = function() { submit(barcode) };
         button.textContent = 'More Info';
 
