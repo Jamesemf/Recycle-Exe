@@ -1,11 +1,13 @@
+from django.core.mail import EmailMessage
 from django.shortcuts import render, redirect
-from django.core.mail import EmailMultiAlternatives
 import qrcode
 import qrcode.image.svg
+from io import BytesIO
 from .models import ShopItems
 from account.models import Statistic
 
-
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
 # Create your views here.
 def shop_view(request):
     """
@@ -15,10 +17,14 @@ def shop_view(request):
     if not request.user.is_authenticated:
         return redirect('login')
     if request.method == 'POST':
-        item_id = request.POST.get("item_id")
+        print("hi")
+        item_id = request.POST.get("shop_item")
         item = ShopItems.objects.get(item_id=item_id)
         item_purchased(request.user, item)
-    return render(request, 'shop.html')
+
+    data = ShopItems.objects.all()
+    data_dict = {'shop_items': data}
+    return render(request, 'shop.html', data_dict)
 
 def item_purchased(user, item):
     """
@@ -26,16 +32,32 @@ def item_purchased(user, item):
     if they can we then purchase the product and then email them a QR code
     """
     user_stats = Statistic.objects.get(user=user)
+    print("hi")
     if(user_stats.points>=item.cost):
-        user_stats.points-=item.cost
+        user_stats.points -= item.cost
         user_stats.save()
-        img = qrcode.make(item.name, image_factory=factory, box_size=20)
-        subject, from_email, to = 'hello', 'from@example.com', user.email
-        text_content = 'This is an important message.'
-        html_content = '<img>'+img+'</img>'
-        msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
-        msg.attach_alternative(html_content, "text/html")
-        msg.send()
+
+        qr = qrcode.QRCode(version=1, box_size=10, border=5)
+        qr.add_data(item.name)
+        qr.make(fit=True)
+
+        img = qr.make_image(fill_color='black', back_color='white')
+        buffer = BytesIO()
+        img.save(buffer, format='PNG')
+        qr_image_data = buffer.getvalue()
+
+        email = EmailMultiAlternatives(
+            subject='Shop Purchase',
+            body='Attached is your purchase QRcode. Please show this to a member of staff',
+            from_email='bytebrigade@outlook.com',
+            to=[user.email],
+        )
+        # Attach the QR code image as an inline attachment
+        email.attach('qrcode.png', qr_image_data, 'image/png')
+        email.send()
     else:
         # They cannot afford the product
         return redirect('shop_view')
+
+
+

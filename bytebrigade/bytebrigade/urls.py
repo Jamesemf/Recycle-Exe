@@ -23,5 +23,6 @@ urlpatterns = [
     path('scanner/', include('barcodereader.urls')),
     path('product/', include('products.urls')),
     path('bin/', include('bins.urls')),
-    path('shop/', include('shop.urls'))
+    path('shop/', include('shop.urls')),
+    path('gamekeeper/', include('gamekeeper.urls'))
 ]
