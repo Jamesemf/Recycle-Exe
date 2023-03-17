@@ -54,7 +54,8 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body d-flex"><img>
-                    <p style="text-align: left;">Paragraph</p>
+                    <p style="text-align: left;">Welcome to the map page, below is a map of our campus with all bins dotted out. If you press one
+                    of the bins it will show you some information on it</p>
                 </div>
             </div>
         </div>
@@ -123,10 +124,10 @@
       */
     function initMap() {
         // The location of Exeter Forum
-        const exeter = { lat: 50.735861151838016, lng: -3.5339879052883316 };
+        const exeter = { lat: 50.73547164859779, lng: -3.531442908528164 };
         // The map, centered at Exeter Forum
         const map = new google.maps.Map(document.getElementById("map"), {
-            zoom: 17,
+            zoom: 14,
             center: exeter,
             mapTypeId: 'satellite'
         });
@@ -186,7 +187,12 @@
             mapMarkers.push(marker)
             marker.addListener("click", () => {
                 infoWindow.close();
-                infoWindow.setContent(marker.getTitle());
+                const markerCategories = marker.category;
+                categoryText = "";
+                for(let i = 0; i < markerCategories.length; i++){
+                    categoryText = categoryText + " " + markerCategories[i] + "<img src={% static 'figures/arrow.png' %}>"
+                }
+                infoWindow.setContent("<p>" + marker.getTitle() + "<br />" + categoryText+ "</p>" );
                 infoWindow.open(marker.getMap(), marker);
             });
         }
