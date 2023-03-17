@@ -26,9 +26,9 @@ def home_view(request):
     if request.method == 'POST':
         return redirect('barcode_lookup')   # Redirect to the scanner page
 
-    if Product.objects.count() == 0:
-        default_product = Product(barcode='1',name='None',weight=0,material='None',recycle='None')
-        default_product.save()
+    # if Product.objects.count() == 0:
+    #     default_product = Product(barcode='1',name='None',weight=0,material='None',recycle='None')
+    #     default_product.save()
     if BinData.objects.count() == 0:
         # maze_file = open("bins.txt", "r")
         # rows = maze_file.readlines()
@@ -50,7 +50,7 @@ def home_view(request):
         print("hi")
         for item in bins:
             print(item)
-            bin_ob = BinData(binId=item[0], binName=item[1], binLat=item[2], binLong=item[3], binPhoto=item[4], bin_general=item[5], bin_recycle=item[6], bin_paper=item[7], bin_cans=item[8], bin_glass=item[9], bin_plastic=item[10], bin_non_rec=item[11])
+            bin_ob = BinData(binId=item[0], binName=item[1], binLat=item[2], binLong=item[3], binPhoto='figures/bins/default.jpg', bin_general=item[4], bin_recycle=item[5], bin_paper=item[6], bin_cans=item[7], bin_glass=item[8], bin_plastic=item[9], bin_non_rec=item[10])
             print(bin_ob)
             bin_ob.save()
 

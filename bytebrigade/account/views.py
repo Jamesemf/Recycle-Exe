@@ -5,6 +5,7 @@ from .models import Statistic, Goal, UserGoal
 from home.models import Transaction
 from django.urls import reverse
 from django.db.models import Q
+from products.models import Product
 
 
 
@@ -20,6 +21,9 @@ def register(request):
     """
     if request.user.is_authenticated:
         return redirect('index')
+    if Product.objects.count() == 0:
+        default_product = Product(barcode='1',name='None',weight=0,material='None',recycle='None')
+        default_product.save()
     if request.method == 'POST':
         user_form = RegistrationForm(request.POST)
         if user_form.is_valid():
