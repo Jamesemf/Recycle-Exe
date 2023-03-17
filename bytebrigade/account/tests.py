@@ -46,8 +46,21 @@ class TestNotLoggedIn(TestCase):
         self.assertEqual(response.redirect_chain, [('/account/password/change/done/', 301),
                                                    ('/account/login/?next=/account/password/change/done/', 302)])
 
+    def test_registration_post_match(self):
+        # Test that registration page returns 200 if passwords match
+        response = self.client.post('/account/registration/', {'name': 'testName', 'email': 'testEmail@email.com',
+                                                               'password': 'testPass', 'password_confirm': 'testPass'},
+                                    )
+        self.assertEqual(response.status_code, 200)
 
-# Test account page grants access if user is logged in
+    def test_registration_post_not_match(self):
+        # Test that registration page returns 200 if passwords do not match
+        response = self.client.post('/account/registration/', {'name': 'testName', 'email': 'testEmail@email.com',
+                                                               'password': 'testPass',
+                                                               'password_confirm': 'testPassNotMatch'},
+                                    )
+        self.assertEqual(response.status_code, 200)
+
 
 class TestLoggedIn(TestCase):
 
@@ -71,10 +84,9 @@ class TestLoggedIn(TestCase):
         response = self.client.get('/account/password/change')
         self.assertEqual(response.status_code, 200)
 
-    def test_post_account_registration(self):
-        response = self.client.post('/account/registration/', {'name': 'testName', 'email': 'testEmail@email.com',
-                                                               'password': 'testPass', 'password_confirm': 'testPass'},
-                                    follow=True)
+    def test_account_registration_logged(self):
+        #
+        response = self.client.get('/account/registration/', follow=True)
         self.assertEqual(response.redirect_chain, [('/', 302)])
 
     def test_post_account_addUserGoal(self):
