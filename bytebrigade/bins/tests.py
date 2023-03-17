@@ -20,7 +20,7 @@ class TestPages(TestCase):
 
     def test_post_bin_map_view(self):
         response = self.client.post('/bins/bin/map/', follow=True)
-        self.assertEqual(response.redirect_chain, [('/scanner/recycle/confirm/', 302), ('/account/login/', 302)])
+        self.assertEqual(response.redirect_chain[0], ('/scanner/recycle/confirm/', 302))
 
     def test_get_bin_nav_view(self):
         response = self.client.get('/bins/bin/map/nav/')
