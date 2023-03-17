@@ -36,16 +36,16 @@
 
     // Array of items that are show (for purpose of template only)
     const itemArray = [
-        {% for key in shop_items.items %}
+        {% for item in shop_items %}
             {
-                name: '{{ key.name }}', //Retrieving the product from the dictionary passed in from the backend
-                cost:'{{ key.cost }}',
-                description: '{{ key.description }}',    //Retrieving the number of this item that have been recycled by the user
-                img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png'
-            },
+                name: '{{ item.name }}', //Retrieving the product from the dictionary passed in from the backend
+                cost:'{{ item.cost }}',
+                description: '{{ item.description }}',    //Retrieving the number of this item that have been recycled by the user
+                img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png',
+                item_id: '{{ item.item_id }}',
+            }
         {% endfor %}
     ];
-    console.log(itemArray);
     // div that the items are put inside of
     const container = document.getElementById('container');
 
@@ -80,7 +80,8 @@
         const button = document.createElement('button');
         button.className = 'btn btn-primary';
         button.type = 'submit';
-        button.onclick = function() { submit(itemArray[i].item_id) };
+        var item_id = itemArray[i].item_id
+        button.onclick = function(){ submit(item_id) };
         button.textContent = 'Buy me';
 
         // appends to the html

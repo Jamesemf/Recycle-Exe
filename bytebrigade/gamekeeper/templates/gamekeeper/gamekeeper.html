@@ -15,6 +15,15 @@
             <li class="nav-item" role="presentation"><a class="nav-link" role="tab" data-bs-toggle="tab"
                     href="#tab-3">Add Shop Item</a>
             </li>
+            <li class="nav-item" role="presentation"><a class="nav-link" role="tab" data-bs-toggle="tab"
+                    href="#tab-4">Delete Bin</a>
+            </li>
+            <li class="nav-item" role="presentation"><a class="nav-link" role="tab" data-bs-toggle="tab"
+                    href="#tab-5">Delete Goal</a>
+            </li>
+            <li class="nav-item" role="presentation"><a class="nav-link" role="tab" data-bs-toggle="tab"
+                    href="#tab-6">Delete Shop Item</a>
+            </li>
         </ul>
         <div class="tab-content">
             <div class="tab-pane active" role="tabpanel" id="tab-1">
@@ -106,7 +115,7 @@
                 <div class="col">
                     <div class="card">
                         <div class="card-body p-4">
-                            <form method="POST" action="addShopItem" id="newGoal" class="new-form">
+                            <form method="POST" action="addShopItem" id="newShopItem" class="new-form">
                                 {% csrf_token %}
                                 <div class="form-group" id="new">
                                     <label for="name">Shop Item Name</label>
@@ -120,6 +129,63 @@
                                     <label for="description">Shop Item Description</label>
                                     <input type="text" class="form-control" name="description" id="description" required>
                                 </div>                               
+                                <button type="submit" class="btn btn-primary" id="submit">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" role="tabpanel" id="tab-4">
+                <div class="col">
+                    <div class="card">
+                        <div class="card-body p-4">
+                            <form method="POST" action="deleteBin" id="deleteBin" class="new-form">
+                                {% csrf_token %}
+                                <select name="bin">
+                                {% for item in Bins %}
+                                    <option value="{{item.binId}}">
+                                        {{ item.binName }}
+                                    </option>
+                                {% endfor %}
+                                </select>
+                                <button type="submit" class="btn btn-primary" id="submit">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" role="tabpanel" id="tab-5">
+                <div class="col">
+                    <div class="card">
+                        <div class="card-body p-4">
+                            <form method="POST" action="deleteGoal" id="deleteGoal" class="new-form">
+                                {% csrf_token %}
+                                <select name="goal">
+                                {% for item in Goals %}
+                                    <option value="{{item.goalID}}">
+                                        {{ item.name }}
+                                    </option>
+                                {% endfor %}
+                                </select>
+                                <button type="submit" class="btn btn-primary" id="submit">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" role="tabpanel" id="tab-6">
+                <div class="col">
+                    <div class="card">
+                        <div class="card-body p-4">
+                            <form method="POST" action="deleteShopItem" id="deleteShopItem" class="new-form">
+                                {% csrf_token %}
+                                <select name="shopItem">
+                                {% for item in ShopItems %}
+                                    <option value="{{item.item_id}}">
+                                        {{ item.name }}
+                                    </option>
+                                {% endfor %}
+                                </select>
                                 <button type="submit" class="btn btn-primary" id="submit">Submit</button>
                             </form>
                         </div>

@@ -7,8 +7,13 @@ def gamekeeperPage(request):
 
     if not request.user.is_authenticated:
         return redirect('login')
-
-    return render(request, 'gamekeeper/gamekeeper.html')
+    if request.user.is_superuser:
+        goalData = Goal.objects.all()
+        shopData = ShopItems.objects.all()
+        binData = BinData.objects.all()
+        data_dict = { 'Goals' : goalData, 'ShopItems' : shopData, 'Bins' : binData}
+        return render(request, 'gamekeeper/gamekeeper.html', data_dict)
+    return redirect('index')
 
 
 def addBin(request):
@@ -46,4 +51,22 @@ def addShopItem(request):
     cost = request.POST.get('cost')
     newShopItem = ShopItems(name=name, cost=cost, description=description)
     newShopItem.save()
+    return redirect('gamekeeperPage')
+
+
+def deleteBin(request):
+    id = request.POST.get('bin')
+    BinData.objects.filter(binId=id).delete()
+    return redirect('gamekeeperPage')
+
+
+def deleteGoal(request):
+    id = request.POST.get('goal')
+    Goal.objects.filter(goalID=id).delete()
+    return redirect('gamekeeperPage')
+
+
+def deleteShopItem(request):
+    id = request.POST.get('shopItem')
+    ShopItems.objects.filter(item_id=id).delete()
     return redirect('gamekeeperPage')

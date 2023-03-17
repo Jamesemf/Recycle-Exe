@@ -37,7 +37,6 @@ def recycle_confirm_view(request):
         print(e)
         return redirect("index")
     try:
-        print("a")
         barcode_product = request.session['barcode']
         bin_id = request.session['newHome']
         print(barcode_product)
@@ -61,12 +60,21 @@ def recycle_confirm_view(request):
             # Call a function that will take in the calculate the points for the user
             # If the product is new add points, this is handle in the create product part
             weight = product_data.weight
+            
+
             points = round(weight * 122)
             addstats(request.user, product_data, points, weight)  # need to include the product
             update_goal_stat(request.user, product_data)
     except Exception as e:
         print(e)
-    return redirect("index")
+
+    data = Transaction.objects.all().order_by('-time')[:5]
+    data_dict = {
+        'Transaction': data,
+        'Points': points,
+        'PeakTime': value
+    }
+    return render(request, 'home/index.html', data_dict)
 
 
 def database_lookup(request):
