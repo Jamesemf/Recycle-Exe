@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.test import TestCase, Client
 
 
@@ -25,7 +26,8 @@ class TestLoggedIn(TestCase):
 
     def setUp(self):
         self.client = Client()
-        self.client.login(username='cameron', password='PopTest')
+        self.user = User.objects.create_user(username='testUser', password='PassTest')
+        self.client.login(username='testUser', password='PassTest')
 
     def test_home_logged(self):
         response = self.client.get('', follow=True)
