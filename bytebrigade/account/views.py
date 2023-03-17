@@ -5,6 +5,7 @@ from .models import Statistic, Goal, UserGoal
 from home.models import Transaction
 from django.urls import reverse
 from django.db.models import Q
+from products.models import Product
 
 
 
@@ -20,6 +21,9 @@ def register(request):
     """
     if request.user.is_authenticated:
         return redirect('index')
+    if Product.objects.count() == 0:
+        default_product = Product(barcode='1',name='None',weight=0,material='None',recycle='None')
+        default_product.save()
     if request.method == 'POST':
         user_form = RegistrationForm(request.POST)
         if user_form.is_valid():
@@ -89,7 +93,7 @@ def addUserGoal(request):
     """
     x = request.POST['goalNum']
     y = request.POST['goal-options']
-    z = request.POST['goal-type'] # this is plastic and all the others
+    z = request.POST['goal-type'] # This comment may no longer be needed -> # this is plastic and all the others
     goalNumType = Goal.objects.get(pk=y)
     current_user = request.user
     # Checking if the user has already got a goal for this specific value

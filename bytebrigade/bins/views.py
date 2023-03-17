@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import BinData
-
+import geopy
 
 def bin_map_view(request):
     """

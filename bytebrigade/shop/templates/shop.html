@@ -13,6 +13,10 @@
                 <h6 class="text-muted card-subtitle mb-2">Subtitle</h6>
                 <p class="card-text">Nullam id dolor id nibh ultricies vehicula ut id elit. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus.</p>
             </div>
+            <form action="" method="post" id="shop_item_form">
+                {% csrf_token %}
+                <input type="hidden" name="shop_item" id="shop_item" value=0>
+            </form>
         </div>
     </div>
 </div>
@@ -21,8 +25,8 @@
 <div class="row" id="container" style="width: 100%; margin: 0;">
 
 </div>
-<script src="assets/bootstrap/js/bootstrap.min.js"></script>
-</body>
+
+
 
 {% endblock %}
 
@@ -32,78 +36,16 @@
 
     // Array of items that are show (for purpose of template only)
     const itemArray = [
-    {
-        item_id: '1243',
-        name: 'frosties cup',
-        cost: 22,
-        description: 'A cup full of frosties seaspning',
-        img: 'https://www.example.com/frosties-cup.jpg'
-    },
-    {
-        item_id: '1244',
-        name: 'frosties bowl',
-        cost: 12,
-        description: 'A bowl full of frosties seaspning',
-        img: 'https://www.example.com/frosties-bowl.jpg'
-    },
-    {
-        item_id: '1245',
-        name: 'frosties spoon',
-        cost: 2,
-        description: 'A spoon full of frosties seaspning',
-        img: 'https://www.example.com/frosties-spoon.jpg'
-    },
-    {
-        item_id: '1246',
-        name: 'frosties t-shirt',
-        cost: 32,
-        description: 'A t-shirt with frosties seaspning',
-        img: 'https://www.example.com/frosties-t-shirt.jpg'
-    },
-    {
-        item_id: '1247',
-        name: 'frosties hat',
-        cost: 15,
-        description: 'A hat with frosties seaspning',
-        img: 'https://www.example.com/frosties-hat.jpg'
-    },
-    {
-        item_id: '1248',
-        name: 'frosties socks',
-        cost: 5,
-        description: 'Socks with frosties seaspning',
-        img: 'https://www.example.com/frosties-socks.jpg'
-    },
-    {
-        item_id: '1249',
-        name: 'frosties shoes',
-        cost: 45,
-        description: 'Shoes with frosties seaspning',
-        img: 'https://www.example.com/frosties-shoes.jpg'
-    },
-    {
-        item_id: '1250',
-        name: 'frosties jacket',
-        cost: 75,
-        description: 'A jacket with frosties seaspning',
-        img: 'https://www.example.com/frosties-jacket.jpg'
-    },
-    {
-        item_id: '1251',
-        name: 'frosties pants',
-        cost: 55,
-        description: 'Pants with frosties seaspning',
-        img: 'https://www.example.com/frosties-pants.jpg'
-    },
-    {
-        item_id: '1252',
-        name: 'frosties shorts',
-        cost: 25,
-        description: 'Shorts with frosties seaspning',
-        img: 'https://www.example.com/frosties-shorts.jpg'
-    }
-];
-
+        {% for item in shop_items %}
+            {
+                name: '{{ item.name }}', //Retrieving the product from the dictionary passed in from the backend
+                cost:'{{ item.cost }}',
+                description: '{{ item.description }}',    //Retrieving the number of this item that have been recycled by the user
+                img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png',
+                item_id: '{{ item.item_id }}',
+            }
+        {% endfor %}
+    ];
     // div that the items are put inside of
     const container = document.getElementById('container');
 
@@ -138,7 +80,8 @@
         const button = document.createElement('button');
         button.className = 'btn btn-primary';
         button.type = 'submit';
-        button.onclick = function() { submit(itemArray[i].item_id) };
+        var item_id = itemArray[i].item_id
+        button.onclick = function(){ submit(item_id) };
         button.textContent = 'Buy me';
 
         // appends to the html
@@ -153,23 +96,8 @@
 
     // submits the form with the attatched variable from the button pressed on an array item
     function submit(id) {
-        // Creates form
-        const form = document.createElement('form');
-        form.method = 'post';
-        form.action = '123.html';
-
-        // Creates hidden t field for submission
-        const hiddenField = document.createElement('input');
-        hiddenField.type = 'hidden';
-        hiddenField.name = 'item_id';
-        hiddenField.value = id;
-
-        // Appends field
-        form.appendChild(hiddenField);
-
-        // Adds form to the body
-        document.body.appendChild(form);
-        form.submit();
+        document.getElementById("shop_item").value = id;
+        document.getElementById("shop_item_form").submit();
     }
 </script>
 {% endblock %}

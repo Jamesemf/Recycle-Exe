@@ -63,8 +63,7 @@
                 <input type="hidden" name="location_long" id="long" value=0>
                 <button class="btn btn-secondary d-block w-100" type="submit">Scan Item</button>
             </form>
-            <!-- If popup is set -->
-            {% if popup %}
+
                 <!-- If error is set -->
                 {% if error %}
                     <!-- display info on nearest bin -->
@@ -76,16 +75,19 @@
                 {% endif %}
 
                 <!-- If successful scan -->
-                {% if newPoints %}
+                {% if points %}
                     <!-- display info on successful scan -->
                     <div id="infoModel" class="modal">
                         <div class="modal-content" style="color:green">
-                            <p>Thank you for recycling {{ product }} you gained {{ points }} points</p>
-                            <p>{{ newhome }}</p>
+                            {% if peakTime %}
+                                <p>Thank you for recycling you gained {{ points }} points !</p>
+                                <p>Points are doubled between this period of the day</p>
+                            {% else %}
+                                <p>Thank you for recycling you gained {{ points }} points</p>
+                            {% endif %}
                         </div>
                     </div>
                 {% endif %}
-            {% endif %}
     </div>
 
 {% endblock %}

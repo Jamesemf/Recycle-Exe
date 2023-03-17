@@ -1,5 +1,6 @@
 from django.db import models
 
+
 # Create your models here.
 
 class ShopItems(models.Model):
@@ -15,6 +16,6 @@ class ShopItems(models.Model):
     Users can spend points on these items. Each item has a QR code associated with it, which we generate ourselvesves.
     """
     item_id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=30)
-    cost = models.IntegerField()
-    description = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, default="ticket")
+    cost = models.IntegerField(default=0)
+    description = models.CharField(max_length=200, default="")
