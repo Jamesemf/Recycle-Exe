@@ -53,7 +53,7 @@ If you would like to exercise any of these rights, please contact us at bytebrig
 
 ## Marketing communications
 
-We may send you marketing communications by email if you have given us your consent to do so. You can withdraw your consent at any time by following the unsubscribe instructions in the communication or by contacting us at privacy@bytebrigade.com.
+We may send you marketing communications by email if you have given us your consent to do so. You can withdraw your consent at any time by following the unsubscribe instructions in the communication or by contacting us at bytebrigade@outlook.com.
 
 ## Retention of your information
 
