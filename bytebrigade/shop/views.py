@@ -15,10 +15,13 @@ def shop_view(request):
     if not request.user.is_authenticated:
         return redirect('login')
     if request.method == 'POST':
-        item_id = request.POST.get("item_id")
+        item_id = request.POST.get("shop_item")
         item = ShopItems.objects.get(item_id=item_id)
         # item_purchased(request.user, item)
-    return render(request, 'shop.html')
+
+    data = ShopItems.objects.all()
+    data_dict = {'shop_items': data}
+    return render(request, 'shop.html', data_dict)
 
 # def item_purchased(user, item):
 #     """

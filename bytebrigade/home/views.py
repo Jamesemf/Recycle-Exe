@@ -27,9 +27,40 @@ def home_view(request):
         return redirect('barcode_lookup')   # Redirect to the scanner page
 
     if Product.objects.count() == 0:
-        defualt_product = Product.objects.create(barcode='1',name='None',weight=0,material='None',recycle='None')
+        default_product = Product(barcode='1',name='None',weight=0,material='None',recycle='None')
+        default_product.save()
     if BinData.objects.count() == 0:
-        pass
+        # maze_file = open("bins.txt", "r")
+        # rows = maze_file.readlines()
+        bins = [['FORUM-MAIN-OUT', 'Forum main entrance Outside', 50.735666895923100001, -3.533641953682420000, True, True, True, True, True, True, False,False],
+                ['IN-1-SWIOT-1', 'Innovation 1 SWIOT 1', 50.737929365592700001, -3.530370602541640000, False, False, False, True, False, True, True,False],
+                ['INTO-OUT', 'INTO Outside carpark', 50.7359469093508000018, -3.534357688043370000, True, False, False, True, False, True, True,False],
+                ['LAF-MAB', 'Lafrowda MA MB Bin shed', 50.734501000805200001, -3.527055005716390000, True, True, True, True, True, True, False,False],
+                ['ROWE', 'Rowe House Bin shed', 50.734291038584400001, -3.528512745930170000, True, True, True, True, True, True, False,False],
+                ['XFI-LEC', 'XFI Building Lecture', 50.735844192079400001, -3.529726038441900000, True, False, False, True, False, True, False,False]]
+        # for bin in rows:
+        #     if bin:
+        #         # Split the string by commas
+        #         bin_data = bin.split(',')
+        #         # Convert the boolean strings to actual booleans
+        #         for i in range(4, len(bin)):
+        #             bin_data[i] = bool(bin_data[i])
+        #         # Append the location attributes to the list of locations
+        #         bins.append(bin_data)
+        for bin in bins:
+            bin_ob = BinData(binId=bin[0],
+                          binName=bin[1],
+                          binLat=bin[2],
+                          binLong=bin[3],
+                          binPhoto=bin[4],
+                          bin_general=bin[5],
+                          bin_recycle=bin[6],
+                          bin_paper=bin[7],
+                          bin_cans=bin[8],
+                          bin_glass=bin[9],
+                          bin_plastic=bin[10],
+                          bin_non_rec=bin[11])
+            bin_ob.save()
 
     data = Transaction.objects.all().order_by('-time')[:5]
     data_dict = {
