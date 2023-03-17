@@ -1,0 +1,103 @@
+{% extends 'navbar.html' %}
+
+{% block title %} {% endblock %}
+
+{% block content %}
+
+<!-- title pane -->
+<div class="row" style="width: 100%; margin: 0;">
+    <div class="col-md-12" style="padding: 0; margin: 0;">
+        <div class="card">
+            <div class="card-body" style="text-align: center;">
+                <h4 class="card-title">Title</h4>
+                <h6 class="text-muted card-subtitle mb-2">Subtitle</h6>
+                <p class="card-text">Nullam id dolor id nibh ultricies vehicula ut id elit. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus.</p>
+            </div>
+            <form action="" method="post" id="shop_item_form">
+                {% csrf_token %}
+                <input type="hidden" name="shop_item" id="shop_item" value=0>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- contains all the items -->
+<div class="row" id="container" style="width: 100%; margin: 0;">
+
+</div>
+
+
+
+{% endblock %}
+
+{% block script %}
+
+<script>
+
+    // Array of items that are show (for purpose of template only)
+    const itemArray = [
+        {% for item in shop_items %}
+            {
+                name: '{{ item.name }}', //Retrieving the product from the dictionary passed in from the backend
+                cost:'{{ item.cost }}',
+                description: '{{ item.description }}',    //Retrieving the number of this item that have been recycled by the user
+                img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png',
+                item_id: '{{ item.item_id }}',
+            }
+        {% endfor %}
+    ];
+    // div that the items are put inside of
+    const container = document.getElementById('container');
+
+    // Iterates through the array and adds each item from the array
+    let i = 0;
+    while (i < itemArray.length) {
+        // Creates all the html objects required for each item in the array
+        const cardDiv = document.createElement('div');
+        cardDiv.classList.add('card');
+        cardDiv.classList.add('col-md-4');
+
+        const cardBodyDiv = document.createElement('div');
+        cardBodyDiv.classList.add('card-body');
+        cardBodyDiv.style.textAlign = 'center';
+
+        // image
+        const image = document.createElement('img');
+        image.src = itemArray[i].img;
+        cardBodyDiv.appendChild(image);
+
+        // title
+        const titleH4 = document.createElement('h4');
+        titleH4.classList.add('card-title');
+        titleH4.innerText = itemArray[i].name;
+
+        // sub-title
+        const subtitleH6 = document.createElement('h6');
+        subtitleH6.classList.add('text-muted', 'card-subtitle', 'mb-2');
+        subtitleH6.innerText = itemArray[i].description;
+
+        // button
+        const button = document.createElement('button');
+        button.className = 'btn btn-primary';
+        button.type = 'submit';
+        var item_id = itemArray[i].item_id
+        button.onclick = function(){ submit(item_id) };
+        button.textContent = 'Buy me';
+
+        // appends to the html
+        cardBodyDiv.appendChild(image);
+        cardBodyDiv.appendChild(titleH4);
+        cardBodyDiv.appendChild(subtitleH6);
+        cardBodyDiv.appendChild(button);
+        cardDiv.appendChild(cardBodyDiv);
+        container.appendChild(cardDiv);
+        i++;
+    }
+
+    // submits the form with the attatched variable from the button pressed on an array item
+    function submit(id) {
+        document.getElementById("shop_item").value = id;
+        document.getElementById("shop_item_form").submit();
+    }
+</script>
+{% endblock %}

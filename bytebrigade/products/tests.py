@@ -65,3 +65,4 @@ class TestLoggedIn(TestCase):
         session.save()
         response = self.client.get('/products/')
         self.assertEqual(response.status_code, 200)
+

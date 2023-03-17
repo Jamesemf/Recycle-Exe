@@ -3,15 +3,25 @@ from django.contrib.auth.models import User
 from bins.models import BinData
 from products.models import Product
 import time
-# Create your models here.
-
-
 
 
 class Transaction(models.Model):
+    """
+    *** Transaction model ***
+
+    This model is used to store data on the latest transactions of users.
+
+    Transaction_id: The unique id of the transaction
+    time: The time the transaction occured (takes the current time)
+    bin: The bin object the transaction occured at
+    user: The user object that completed the transaction
+    product: The product object that was recycled
+    likes: A count of the number of likes a transaction recieved
+
+    """
     transaction_id = models.AutoField(primary_key=True)
     time = models.DateTimeField(auto_now_add=True)
-    bin = models.ForeignKey(BinData, on_delete=models.CASCADE)  # need to assign as foreign key to bin application
+    bin = models.ForeignKey(BinData, on_delete=models.CASCADE)  # Need to assign as foreign key to bin application
     user = models.ForeignKey(User, default=-1, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     likes = models.IntegerField(default=0)

@@ -21,6 +21,8 @@ urlpatterns = [
     path('', include('home.urls')),
     path('account/', include('account.urls')),
     path('scanner/', include('barcodereader.urls')),
-    path('products/', include('products.urls')),
-    path('bins/', include('bins.urls'))
+    path('product/', include('products.urls')),
+    path('bin/', include('bins.urls')),
+    path('shop/', include('shop.urls')),
+    path('gamekeeper/', include('gamekeeper.urls'))
 ]

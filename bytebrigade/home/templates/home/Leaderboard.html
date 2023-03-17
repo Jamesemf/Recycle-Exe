@@ -29,28 +29,35 @@
         <div><input type="search" id = "myInput" onkeyup="search()" style="background: #82b068;border-style: solid;border-color: var(--bs-success);margin-top: 10px" placeholder="Search for a user"></div>
     </div>
 
-<script>
-function search() {
-  // Declare variables
-  var input, filter, table, tr, td, i, txtValue;
-  input = document.getElementById("myInput");
-  filter = input.value.toUpperCase();
-  table = document.getElementById("leaderboard");
-  tr = table.getElementsByTagName("tr");
+{% endblock %}
 
-  // Loop through all table rows, and hide those who don't match the search query
-  for (i = 0; i < tr.length; i++) {
-    td = tr[i].getElementsByTagName("td")[1];
-    if (td) {
-      txtValue = td.textContent || td.innerText;
-      if (txtValue.toUpperCase().indexOf(filter) > -1) {
-        tr[i].style.display = "";
-      } else {
-        tr[i].style.display = "none";
+{% block script %}
+<script>
+    /**
+     * This function is used to search the leaderboard for a particular user. It loops through the table
+     * and hides any users that do not have a matching expression entered into the search box field
+     * */
+    function search() {
+      // Declare variables
+      var input, filter, table, tr, td, i, txtValue;
+      input = document.getElementById("myInput");
+      filter = input.value.toUpperCase();
+      table = document.getElementById("leaderboard");
+      tr = table.getElementsByTagName("tr");
+
+      // Loop through all table rows, and hide those who don't match the search query
+      for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td")[1];
+        if (td) {
+          txtValue = td.textContent || td.innerText;
+          if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            tr[i].style.display = "";
+          } else {
+            tr[i].style.display = "none";
+          }
+        }
       }
     }
-  }
-}
 </script>
 
 {% endblock %}

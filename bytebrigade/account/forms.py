@@ -3,6 +3,11 @@ from django.contrib.auth.models import User
 
 
 class RegistrationForm(forms.ModelForm):
+    """
+        Registration Form (for registration page)
+        Inheritance from django default user models (username, email) and added password and password_confirm.
+        Defined validation function for checking whether the two password are the same.
+    """
     password = forms.CharField(label='Password', widget=forms.PasswordInput(
         attrs={'class': 'form-control', 'placeholder': 'Password'}))
     password_confirm = forms.CharField(label='Confirm Password', widget=forms.PasswordInput(
@@ -17,6 +22,9 @@ class RegistrationForm(forms.ModelForm):
         }
 
     def confirm_password(self):
+        """
+            Validation function that ensure the password and the confirmed one are the same.
+        """
         cleandata = self.cleaned_data
         if cleandata['password'] != cleandata['password_confirm']:
             raise forms.ValidationError('Password do not match!')

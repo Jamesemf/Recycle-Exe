@@ -36,6 +36,8 @@ INSTALLED_APPS = [
     'barcodereader',
     'products',
     'bins',
+    'shop',
+    'gamekeeper',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -149,4 +151,10 @@ LOGIN_REDIRECT_URL = 'index'
 
 # Verification Email Backend
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp-mail.outlook.com'
+EMAIL_HOST_USER = 'bytebrigade@outlook.com'
+EMAIL_HOST_PASSWORD = 'Brigadebyte2023'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
