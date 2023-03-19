@@ -25,4 +25,9 @@ Geopy is a Python library for geocoding and reverse geocoding. It provides a sim
 qrcode is a Python library for generating QR codes. It provides a simple interface for creating QR codes from text, URLs, and other data. You can install qrcode using pip:
 **Command:**  pip install qrcode
 
-That's it! You've now installed Django, Pillow, geopy, and qrcode on your system. You can start building this web application using the libraries.
+## Install schedule:
+
+schedule is a Python library for scheduling events in python. It provides a simple interface for creating functional events in python. You can install schedule using pip:
+**Command:**  pip install schedule
+
+That's it! You've now installed Django, Pillow, geopy, qrcode, and schedule on your system. You can start building this web application using the libraries.
