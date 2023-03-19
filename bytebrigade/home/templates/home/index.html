@@ -54,7 +54,7 @@
                         <form method="POST">
                             {% csrf_token %}
                             <input type="hidden" name="trans_id" value="{{ item.transaction_id }}">
-                            <td>{{item.likes}}
+                            <td>{{ item.likes }}
                                 {% if item.transaction_id in likedList %}
                                     Liked :)
                                 {% else %}

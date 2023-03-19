@@ -28,7 +28,7 @@ def home_view(request):
         if (request.user and Transaction.objects.filter(transaction_id=request.POST.get("trans_id"))):
             trans = Transaction.objects.get(transaction_id=request.POST.get("trans_id"))
             print(trans)
-            if(not TransactionLike.objects.filter(transaction=trans)):
+            if(not TransactionLike.objects.filter(user=request.user, transaction=trans)):
                 trans_like = TransactionLike(user=request.user, transaction=trans)
                 trans.likes += 1
                 trans_like.save()
