@@ -19,3 +19,4 @@ class ShopItems(models.Model):
     name = models.CharField(max_length=200, default="ticket")
     cost = models.IntegerField(default=0)
     description = models.CharField(max_length=200, default="")
+    stock = models.IntegerField(default=1)

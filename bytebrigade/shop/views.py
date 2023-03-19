@@ -33,7 +33,11 @@ def item_purchased(user, item):
     """
     user_stats = Statistic.objects.get(user=user)
     print("hi")
+    if(item.stock == 0):
+        return redirect('shop_view')
     if(user_stats.points>=item.cost):
+        item.stock -= 1
+        item.save()
         user_stats.points -= item.cost
         user_stats.save()
 
