@@ -1,7 +1,11 @@
 from django.shortcuts import render, redirect
 from bins.models import BinData
-from account.models import Goal
+from account.models import Goal, Statistic
 from shop.models import ShopItems
+from home.models import Transaction
+from django.db.models import Count, Sum
+from django.contrib.auth.models import User
+
 
 def gamekeeperPage(request):
 
@@ -11,7 +15,36 @@ def gamekeeperPage(request):
         goalData = Goal.objects.all()
         shopData = ShopItems.objects.all()
         binData = BinData.objects.all()
-        data_dict = { 'Goals' : goalData, 'ShopItems' : shopData, 'Bins' : binData}
+        mostRecycled = 0
+        mostUsedBin = 0
+        if Transaction.objects.exists():
+            transactionCount = Transaction.objects.annotate(
+                num_transactions=Count('product'))
+            mostRecycled = transactionCount.first()
+            binCount = Transaction.objects.annotate(
+                num_transactions=Count('bin'))
+            mostUsedBin = binCount.first()
+
+        regularUsers = User.objects.filter(is_superuser=False)
+
+        totalCarbon = Statistic.objects.aggregate(Sum('carbon'))
+
+        averageCarbon = totalCarbon['carbon__sum']/regularUsers.count()
+
+        totalWeight = 0
+        for item in Transaction.objects.all():
+            totalWeight += item.product.weight
+
+        data_dict = {'Goals': goalData,
+                     'ShopItems': shopData,
+                     'Bins': binData,
+                     'mostRecycled': mostRecycled,
+                     'mostUsedBin': mostUsedBin,
+                     'numUsers': regularUsers.count(),
+                     'totalCarbon': totalCarbon['carbon__sum'],
+                     'averageCarbon': averageCarbon,
+                     'totalWeight': totalWeight,
+                     'averageWeight': totalWeight/regularUsers.count()}
         return render(request, 'gamekeeper/gamekeeper.html', data_dict)
     return redirect('index')
 
@@ -50,7 +83,8 @@ def addShopItem(request):
     description = request.POST.get('description')
     cost = request.POST.get('cost')
     stock = request.POST.get('stock')
-    newShopItem = ShopItems(name=name, cost=cost, description=description, stock=stock)
+    newShopItem = ShopItems(name=name, cost=cost,
+                            description=description, stock=stock)
     newShopItem.save()
     return redirect('gamekeeperPage')
 
