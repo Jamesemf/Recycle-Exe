@@ -147,6 +147,12 @@
                             fill="currentColor"></path>
                     </svg>
                     <h4 class="card-title">What you love recycling</h4><img>
+                    {% if loveRecycling != 0 %}
+                        <p>You love recycling:<br>{{ loveRecycling.product.name }}</p>
+                    {% endif %}
+                    {% if loveRecycling == 0 %}
+                        <p>No recent recycle</p>
+                    {% endif %}
                 </div>
             </div>
         </div>

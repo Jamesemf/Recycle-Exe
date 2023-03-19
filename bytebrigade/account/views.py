@@ -7,10 +7,12 @@ from django.urls import reverse
 from django.db.models import Q
 from products.models import Product
 import datetime
-import calendar, schedule
+import calendar
+import schedule
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
-
+from django.db import models
+from django.db.models import Count
 
 def register(request):
     """
@@ -25,7 +27,8 @@ def register(request):
     if request.user.is_authenticated:
         return redirect('index')
     if Product.objects.count() == 0:
-        default_product = Product(barcode='1',name='None',weight=0,material='None',recycle='None')
+        default_product = Product(
+            barcode='1', name='None', weight=0, material='None', recycle='None')
         default_product.save()
     if request.method == 'POST':
         user_form = RegistrationForm(request.POST)
@@ -61,16 +64,23 @@ def account(request):
     schedule.run_pending()
     if request.user.is_authenticated:
         data = Statistic.objects.get(user=request.user)
+        loveRecycling = 0
         lastTransaction = 0
         if Transaction.objects.filter(user=request.user).exists():
-            lastTransaction = Transaction.objects.filter(user=request.user).latest('time')
+            lastTransaction = Transaction.objects.filter(
+                user=request.user).latest('time')
+            transactionCount = Transaction.objects.annotate(num_transactions=Count('product', filter=Q(user=request.user)))
+            loveRecycling = transactionCount.first()
         maxWeek = Statistic.objects.all().order_by('-curweek')[0]
         maxMonth = Statistic.objects.all().order_by('-curmonth')[0]
         maxYear = Statistic.objects.all().order_by('-curyear')[0]
         goalData = Goal.objects.all()
-        userGoal1 = UserGoal.objects.filter(Q(userGoalNum=1) & Q(user=request.user)).first()
-        userGoal2 = UserGoal.objects.filter(Q(userGoalNum=2) & Q(user=request.user)).first()
-        userGoal3 = UserGoal.objects.filter(Q(userGoalNum=3) & Q(user=request.user)).first()
+        userGoal1 = UserGoal.objects.filter(
+            Q(userGoalNum=1) & Q(user=request.user)).first()
+        userGoal2 = UserGoal.objects.filter(
+            Q(userGoalNum=2) & Q(user=request.user)).first()
+        userGoal3 = UserGoal.objects.filter(
+            Q(userGoalNum=3) & Q(user=request.user)).first()
         data_dict = {
             'Profile': data,
             'maxWeek': maxWeek,
@@ -80,7 +90,8 @@ def account(request):
             'UserGoal1': userGoal1,
             'UserGoal2': userGoal2,
             'UserGoal3': userGoal3,
-            'lastTrans': lastTransaction
+            'lastTrans': lastTransaction,
+            'loveRecycling': loveRecycling
         }
         return render(request, 'account/Profile_page.html', data_dict)
     else:
@@ -97,17 +108,21 @@ def addUserGoal(request):
     """
     x = request.POST['goalNum']
     y = request.POST['goal-options']
-    z = request.POST['goal-type'] # This comment may no longer be needed -> # this is plastic and all the others
+    # This comment may no longer be needed -> # this is plastic and all the others
+    z = request.POST['goal-type']
     goalNumType = Goal.objects.get(pk=y)
     current_user = request.user
     # Checking if the user has already got a goal for this specific value
     goalSet = UserGoal.objects.filter(Q(userGoalNum=x) & Q(user=current_user))
     if not goalSet:
-        goal = UserGoal(userGoalNum = x, user = current_user, goal = goalNumType, value = 0, goalType = z)
+        goal = UserGoal(userGoalNum=x, user=current_user,
+                        goal=goalNumType, value=0, goalType=z)
         goal.save()
     else:
-        UserGoal.objects.filter(Q(userGoalNum=x) & Q(user=current_user)).delete()
-        goal = UserGoal(userGoalNum = x, user = current_user, goal = goalNumType, value = 0, goalType = z)
+        UserGoal.objects.filter(
+            Q(userGoalNum=x) & Q(user=current_user)).delete()
+        goal = UserGoal(userGoalNum=x, user=current_user,
+                        goal=goalNumType, value=0, goalType=z)
         goal.save()
     return HttpResponseRedirect(reverse('account'))
 
@@ -173,7 +188,8 @@ def send_carbon_footprint_email(user):
     month_data = user_stats.curmonth
     year_data = user_stats.curyear
     carbon_data = user_stats.carbon
-    html_message = render_to_string('carbon_footprint_email.html', {'User': user, 'Carbon': carbon_data, 'WeekData': week_data, 'MonthData': month_data, 'YearData': year_data})
+    html_message = render_to_string('carbon_footprint_email.html', {
+                                    'User': user, 'Carbon': carbon_data, 'WeekData': week_data, 'MonthData': month_data, 'YearData': year_data})
     send_mail(
         'Your Carbon Footprint Report',
         '',
