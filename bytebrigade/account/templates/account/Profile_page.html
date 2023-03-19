@@ -57,7 +57,7 @@
                     </svg>
                 </div>
                 <div class="px-3 profile-stat">
-                    <h2 class="fw-bold mb-0">{{ Profile.carbon }}</h2>
+                    <h2 class="fw-bold mb-0">{{ Profile.carbon }} kg/CO<sup>2</sup></h2>
                     <p class="mb-0">Carbon FootPrint</p>
                 </div>
             </div>
@@ -74,8 +74,8 @@
                     </svg>
                 </div>
                 <div class="px-3 profile-stat">
-                    <h2 class="fw-bold mb-0">{{ Profile.curweek }}</h2>
-                    <p class="mb-0">Week Kg</p>
+                    <h2 class="fw-bold mb-0">{{ Profile.curweek }} kg</h2>
+                    <p class="mb-0">Week</p>
                 </div>
             </div>
         </div>
@@ -91,8 +91,8 @@
                     </svg>
                 </div>
                 <div class="px-3 profile-stat">
-                    <h2 class="fw-bold mb-0">{{ Profile.curmonth }}</h2>
-                    <p class="mb-0">Month Kg</p>
+                    <h2 class="fw-bold mb-0">{{ Profile.curmonth }} kg</h2>
+                    <p class="mb-0">Month</p>
                 </div>
             </div>
         </div>
@@ -108,8 +108,8 @@
                     </svg>
                 </div>
                 <div class="px-3 profile-stat">
-                    <h2 class="fw-bold mb-0">{{ Profile.curyear }}</h2>
-                    <p class="mb-0">Year Kg</p>
+                    <h2 class="fw-bold mb-0">{{ Profile.curyear }} kg</h2>
+                    <p class="mb-0">Year</p>
                 </div>
             </div>
         </div>
@@ -147,6 +147,12 @@
                             fill="currentColor"></path>
                     </svg>
                     <h4 class="card-title">What you love recycling</h4><img>
+                    {% if loveRecycling != 0 %}
+                        <p>You love recycling:<br>{{ loveRecycling.product.name }}</p>
+                    {% endif %}
+                    {% if loveRecycling == 0 %}
+                        <p>No recent recycle</p>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -156,8 +162,7 @@
                         style="font-size: 56px;color: var(--bs-primary);background: #719a5e;border-radius: 8px;">account_circle</i>
                     <h4 class="card-title">Account Settings</h4>
                     <h6 class="text-muted card-subtitle mb-2"></h6>
-                    <p class="card-text"></p><a class="card-link" href="{% url 'password' %}">Manage Password</a><a
-                        class="card-link" href="#">Profile Image</a>
+                    <p class="card-text"></p><a class="card-link" href="{% url 'password' %}">Manage Password</a>
                 </div>
             </div>
         </div>

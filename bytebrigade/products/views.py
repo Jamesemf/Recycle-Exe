@@ -85,25 +85,8 @@ def prompt_recycle_product_view(request):
         return redirect('login')
     if request.session['barcode'] != -1:
         product = Product.objects.get(barcode=request.session['barcode'])
+        binType = check_bin(product)
         if request.method == 'POST':
-            binType = "General"
-            match (product.material, product.recycle):
-                case ("Paper", "True"):
-                    binType = 'Paper'
-                case ("Plastic", "True"):
-                    binType = 'Plastic'
-                case ("Cans", "True"):
-                    binType = 'Cans'
-                case ("Glass", "True"):
-                    binType = 'Glass'
-                case ("Plastic", "False"):
-                    binType = 'General'
-                case ("Cans", "False"):
-                    binType = 'General'
-                case ("Non-Recyclable", "False"):
-                    binType = 'General'
-                case ("Glass", "False"):
-                    binType = 'General'
             shortestDistance, close_bin, bin_object = withinRange(request, binType)
             request.session['newHome'] = bin_object.binId  # Directly correlates to a bin
             print(request.session['newHome'])
@@ -115,15 +98,20 @@ def prompt_recycle_product_view(request):
                     "material": product.material,
                     "recycle": product.recycle,
                     "present_button": 1,
+                    "binType": binType,
+                    "history": Transaction.objects.filter(user=request.user, product=product),
                     }
     if request.session['pokedex_barcode'] != -1:
         product = Product.objects.get(barcode=request.session['pokedex_barcode'])
+        binType = check_bin(product)
         data = {"name": product.name,
                 "barcode": request.session['pokedex_barcode'],
                 "weight": product.weight,
                 "material": product.material,
                 "recycle": product.recycle,
                 "present_button": 0,
+                "binType": binType,
+                "history": Transaction.objects.filter(user=request.user, product=product),
                 }
     return render(request, 'products/info_product.html', data)
 
@@ -159,6 +147,27 @@ def prompt_recycle_product_view(request):
     #         "present_button": 1,
     #         }
     # return render(request, 'products/info_product.html', data)
+
+def check_bin(product):
+    binType = "General"
+    match (product.material, product.recycle):
+        case ("Paper", "True"):
+            binType = 'Paper'
+        case ("Plastic", "True"):
+            binType = 'Plastic'
+        case ("Cans", "True"):
+            binType = 'Cans'
+        case ("Glass", "True"):
+            binType = 'Glass'
+        case ("Plastic", "False"):
+            binType = 'General'
+        case ("Cans", "False"):
+            binType = 'General'
+        case ("Non-Recyclable", "False"):
+            binType = 'General'
+        case ("Glass", "False"):
+            binType = 'General'
+    return binType
 
 
 def database_lookup(request):

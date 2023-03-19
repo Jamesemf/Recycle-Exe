@@ -26,6 +26,7 @@
                             <li>Weight: {{ weight }}</li>
                             <li>Material: {{ material }}</li>
                             <li>Recyclable: {{ recycle }}</li>
+                            <li>Bin-type: {{ binType }} bin</li>
                         </ul>
                     </div>
                 </div>
@@ -34,7 +35,9 @@
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Product History</h4>
-                        <h6 class="text-muted card-subtitle mb-2">Subtitle</h6>
+                        {% for item in history %}
+                            <li> {{ item.time }} at {{ item.bin.binName }} </li>
+                        {% endfor %}
                     </div>
                 </div>
             </div>

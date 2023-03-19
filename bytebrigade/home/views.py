@@ -4,6 +4,8 @@ from account.models import Statistic
 from bins.models import BinData
 from products.models import Product
 import geopy.distance
+import calendar
+
 
 # function for the home page backend
 def home_view(request):

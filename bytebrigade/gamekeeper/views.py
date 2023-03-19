@@ -49,7 +49,8 @@ def addShopItem(request):
     name = request.POST.get('name')
     description = request.POST.get('description')
     cost = request.POST.get('cost')
-    newShopItem = ShopItems(name=name, cost=cost, description=description)
+    stock = request.POST.get('stock')
+    newShopItem = ShopItems(name=name, cost=cost, description=description, stock=stock)
     newShopItem.save()
     return redirect('gamekeeperPage')
 
