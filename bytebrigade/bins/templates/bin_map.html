@@ -54,8 +54,18 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body d-flex"><img>
-                    <p style="text-align: left;">Welcome to the map page, below is a map of our campus with all bins dotted out. If you press one
-                    of the bins it will show you some information on it</p>
+                    <p style="text-align: left;">Welcome to the map page, below is a map of our campus with all bins
+                        dotted out. If you press one
+                        of the bins it will show you some information on it; Below is the key for each bin type.
+                        <br>
+                        General = <img src={% static 'figures/bins/general_waste.png' %} style='height: 40px;width: 40px;'>,
+                        Recycling = <img src={% static 'figures/bins/recycling.png' %} style='height: 40px;width: 40px;'>,
+                        Paper = <img src={% static 'figures/bins/paper.png' %} style='height: 40px;width: 40px;'>,
+                        Cans = <img src={% static 'figures/bins/tins_and_cans.png' %} style='height: 40px;width: 40px;'>,
+                        Plastic = <img src={% static 'figures/bins/plastics.png' %} style='height: 40px;width: 40px;'>,
+                        Glass = <img src={% static 'figures/bins/glass.png' %} style='height: 40px;width: 40px;'>,
+                        Non-recycling = <img src={% static 'figures/bins/non_recycle.png' %} style='height: 40px;width: 40px;'>
+                    </p>
                 </div>
             </div>
         </div>
@@ -187,12 +197,35 @@
             mapMarkers.push(marker)
             marker.addListener("click", () => {
                 infoWindow.close();
+                // Add category images to each infobox
                 const markerCategories = marker.category;
                 categoryText = "";
-                for(let i = 0; i < markerCategories.length; i++){
-                    categoryText = categoryText + " " + markerCategories[i] + "<img src={% static 'figures/arrow.png' %}>"
+                for (let i = 0; i < markerCategories.length; i++) {
+                    switch (markerCategories[i]) {
+                        case "general":
+                            categoryText = categoryText + " " + "<img src={% static 'figures/bins/general_waste.png' %} style='height: 26px;width: 26px;'>"
+                            break;
+                        case "recycle":
+                            categoryText = categoryText + " " + "<img src={% static 'figures/bins/recycling.png' %} style='height: 26px;width: 26px;'>"
+                            break;
+                        case "paper":
+                            categoryText = categoryText + " " + "<img src={% static 'figures/bins/paper.png' %} style='height: 26px;width: 26px;'>"
+                            break;
+                        case "cans":
+                            categoryText = categoryText + " " + "<img src={% static 'figures/bins/tins_and_cans.png' %} style='height: 26px;width: 26px;'>"
+                            break;
+                        case "plastic":
+                            categoryText = categoryText + " " + "<img src={% static 'figures/bins/plastics.png' %} style='height: 26px;width: 26px;'>"
+                            break;
+                        case "glass":
+                            categoryText = categoryText + " " + "<img src={% static 'figures/bins/glass.png' %} style='height: 26px;width: 26px;'>"
+                            break;
+                        case "non-recycle":
+                            categoryText = categoryText + " " + "<img src={% static 'figures/bins/non_recycle.png' %} style='height: 26px;width: 26px;'>"
+                            break;
+                    }
                 }
-                infoWindow.setContent("<p>" + marker.getTitle() + "<br />" + categoryText+ "</p>" );
+                infoWindow.setContent("<p>" + marker.getTitle() + "<br />" + categoryText + "</p>");
                 infoWindow.open(marker.getMap(), marker);
             });
         }
