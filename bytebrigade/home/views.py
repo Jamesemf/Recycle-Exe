@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from home.models import Transaction
+from home.models import Transaction, TransactionLike
 from account.models import Statistic
 from bins.models import BinData
 from products.models import Product
@@ -24,9 +24,15 @@ def home_view(request):
     request.session['pokedex_barcode'] = -1
     if not request.user.is_authenticated:
         return redirect('login')
-
     if request.method == 'POST':
-        return redirect('barcode_lookup')   # Redirect to the scanner page
+        if (request.user and Transaction.objects.filter(transaction_id=request.POST.get("trans_id"))):
+            trans = Transaction.objects.get(transaction_id=request.POST.get("trans_id"))
+            print(trans)
+            if(not TransactionLike.objects.filter(transaction=trans)):
+                trans_like = TransactionLike(user=request.user, transaction=trans)
+                trans.likes += 1
+                trans_like.save()
+                trans.save()
     if BinData.objects.count() == 0:
         bins = [['FORUM-MAIN-OUT', 'Forum main entrance Outside', 50.735666895923100001, -3.533641953682420000, True, True, True, True, True, True, False, False],
                 ['IN-1-SWIOT-1', 'Innovation 1 SWIOT 1', 50.737929365592700001, -3.530370602541640000, False, False, False, True, False, True, True, False],
@@ -39,10 +45,17 @@ def home_view(request):
             bin_ob = BinData(binId=item[0], binName=item[1], binLat=item[2], binLong=item[3], binPhoto='figures/bins/default.jpg', bin_general=item[4], bin_recycle=item[5], bin_paper=item[6], bin_cans=item[7], bin_glass=item[8], bin_plastic=item[9], bin_non_rec=item[10])
             print(bin_ob)
             bin_ob.save()
+    #  Retrieve liked transactions by the current user
+    liked = TransactionLike.objects.filter(user=request.user)
+    likedList = []
+    for x in liked:
+        likedList.append(x.transaction_id)
+    print(likedList)
 
     data = Transaction.objects.all().order_by('-time')[:5]
     data_dict = {
-        'Transaction': data
+        'Transaction': data,
+        'likedList': likedList
     }
 
     return render(request, 'home/index.html', data_dict) #  Return index page

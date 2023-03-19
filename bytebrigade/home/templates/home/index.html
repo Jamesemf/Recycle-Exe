@@ -51,28 +51,23 @@
                     <tr style = "border-bottom: #82b068 solid 2px;">
                         <td>{{item.time}}</td>
                         <td>{{item.user}} just recycled {{item.product.name}} at Bin {{item.bin.binName}}</td>
-                        <td>{{item.likes}}</td>
+                        <form method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="trans_id" value="{{ item.transaction_id }}">
+                            <td>{{item.likes}}
+                                {% if item.transaction_id in likedList %}
+                                    Liked :)
+                                {% else %}
+                                    <button role="submit">Like</button>
+                                {% endif %}
+                            </td>
+                        </form>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
-            <form id = "formId" method="POST">
-                {% csrf_token %}
-                <input type="hidden" name="location_lat" id="lat" value=0>
-                <input type="hidden" name="location_long" id="long" value=0>
-                <button class="btn btn-secondary d-block w-100" type="submit">Scan Item</button>
-            </form>
-
-                <!-- If error is set -->
-                {% if error %}
-                    <!-- display info on nearest bin -->
-                <div id="infoModel" class="modal">
-                    <div class="modal-content" style="color:red">
-                        <p>Your closest bin is {{ Bin.binName }}, {{ Distance }}m from your location. Follow the map to find the nearest bin</p>
-                    </div>
-                </div>
-                {% endif %}
+                <a class="btn btn-secondary d-block w-100" role="button">Scan Item</a>
 
                 <!-- If successful scan -->
                 {% if points %}

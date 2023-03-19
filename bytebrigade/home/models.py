@@ -27,5 +27,24 @@ class Transaction(models.Model):
     likes = models.IntegerField(default=0)
 
 
+class TransactionLike(models.Model):
+    """
+           *** TransactionLike model ***
+
+           This model is used to store data on who has liked what transaction
+
+           Transaction_id: The unique id of the transaction
+           time: The time the transaction occured (takes the current time)
+           bin: The bin object the transaction occured at
+           user: The user object that completed the transaction
+           product: The product object that was recycled
+           likes: A count of the number of likes a transaction received
+
+           """
+    transactionlike_id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE)
+
+
 
 
