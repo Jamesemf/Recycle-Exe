@@ -6,16 +6,6 @@ recycling bins, providing information about recycling products, and many other f
 For a full description of the application's features, visit:
 http://bytebrigade.net/instruction/
 
-
-## Requirements
-
-This application makes use of the following python modules:
-
-- Django : python -m pip install Django
-- Pillow : python pip install pillow
-- geopy : python pip install geopy
-- qrcode : python pip install qrcode
-
 ## Usage
 
 To run this application locally, navigate to the bytebrigade directory

@@ -37,17 +37,17 @@
                         style="border-radius: 8px;color: var(--bs-black); text-decoration: none;">Account</a>
                     <div class="dropdown-menu">
                         <p class="dropdown-item">Hello {{ request.user.username }}</p>
-                        <a class="dropdown-item" href="{% url 'account' %}">Profile</a>
-                        <a class="dropdown-item" href="{% url 'shop' %}">Shop</a>
-                        <a class="dropdown-item" href="{% url 'product_dex' %}">ProductDex</a>
-                        <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+                        <a class="dropdown-item" style="color: black" href="{% url 'account' %}">Profile</a>
+                        <a class="dropdown-item" style="color: black" href="{% url 'shop' %}">Shop</a>
+                        <a class="dropdown-item" style="color: black" href="{% url 'product_dex' %}">ProductDex</a>
+                        <a class="dropdown-item" style="color: black" href="{% url 'logout' %}">Logout</a>
                     </div>
                 </div>
             {% else %}
                 <div class="dropdown" style="border-radius: 8px;background: var(--primary);padding: 8px;"><a class="dropdown-toggle text-center" aria-expanded="false" data-bs-toggle="dropdown" style="border-radius: 8px;color: var(--bs-black); text-decoration: none;">Login</a>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item" href="{% url 'login' %}">Log-In</a>
-                        <a class="dropdown-item" href="{% url 'registration' %}">Sign-Up</a>
+                        <a class="dropdown-item" style="color: black" href="{% url 'login' %}">Log-In</a>
+                        <a class="dropdown-item" style="color: black" href="{% url 'registration' %}">Sign-Up</a>
                     </div>
                 </div>
             {% endif %}
@@ -91,10 +91,8 @@
 <div class="main-content" >
     {% block content %}{% endblock %}
 </div>
-<div style="flex: 121212;">
-
-</div>
-<footer class="text-center footer-styles mt-4" style="color: ">
+<div style="flex: 1;"></div>
+<footer class="text-center footer-styles mt-4">
     <div class="container text-muted py-4 py-lg-5">
         <ul class="list-inline">
             <li class="list-inline-item me-4"><a class="link-secondary" href="#">About</a></li>

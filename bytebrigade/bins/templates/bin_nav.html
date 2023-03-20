@@ -100,7 +100,7 @@
             const degrees = radians * 180 / Math.PI;
 
             // Calculate the angle as if you're pointing north from the first point
-            let angleFromNorth = (degrees + 360 - 90) % 360;
+            let angleFromNorth = (degrees + 360) % 360;
 
             return angleFromNorth;
         }
@@ -131,7 +131,13 @@
                 }
 
                 // Calculate the difference between the current angle and the desired angle
-                const angleDiff = angle - rotationAngle;
+                var angleDiff = angle - rotationAngle;
+
+                if (angleDiff > 359) {
+                    angleDiff = angleDiff - 360;
+                } else if (angleDiff < 0) {
+                    angleDiff = angleDiff + 360;
+                }
 
                 // Apply the rotation transform to the image
                 img.style.transform = `rotate(${angleDiff}deg)`;
@@ -187,6 +193,9 @@
             const {latitude, longitude} = position.coords;
             pointDegree = getAngle(latitude, longitude, {{BinGoal.binLat}}, {{BinGoal.binLong}});
             pointCompass(compassImg, pointDegree);
+
+            //console.log("ANGLE");
+            //console.log(getAngle(50.730838, -3.516063, 50.728239, -3.522721));
 
             if (pointDegree < 0) {
                 pointDegree = pointDegree + 360;

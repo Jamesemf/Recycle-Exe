@@ -24,7 +24,11 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     'testserver',
-    '127.0.0.1'
+    '127.0.0.1',
+    'bytebrigade.net',
+    'www.bytebrigade.net',
+    '0.0.0.0',
+    '81.28.4.128',
 ]
 
 

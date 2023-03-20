@@ -11,7 +11,6 @@ import calendar
 import schedule
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
-from django.db import models
 from django.db.models import Count
 
 def register(request):
