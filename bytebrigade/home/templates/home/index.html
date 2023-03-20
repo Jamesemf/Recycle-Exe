@@ -35,11 +35,11 @@
 {% endblock %}
 
 {% block content %}
-    <div class="fs-6" style="margin-right: 28px;margin-top: 14px;margin-bottom: 22px;color: var(--bs-secondary);margin-left: 28px;">
+    <div class="fs-6" style="margin-right: 28px;margin-top: 14px;margin-bottom: 22px;color: var(--secondary);margin-left: 28px;">
         <h1 style="background: var(--secondary);font-size: 30px;padding-bottom: 5px;color: var(--bs-black);">Daily Feed</h1>
-        <div style="background: #e1edbd; height: 70%; overflow:auto;">
-        <table class = "table table-striped">
-                <thead style="background: #82b068; padding: 10px">
+        <div style="background: var(--body-bg); height: 70%; overflow:auto;">
+            <table class = "table table-striped">
+                <thead style="background: var(--primary); padding: 10px">
                     <tr>
                         <th style="width: 200px">Time</th>
                         <th style="width: 200px">Recycled</th>
@@ -48,7 +48,7 @@
                 </thead>
                 <tbody style="color: black;">
                     {% for item in Transaction %}
-                    <tr style = "border-bottom: #82b068 solid 2px;">
+                    <tr style = "border-bottom: var(--primary) solid 2px;">
                         <td>{{item.time}}</td>
                         <td>{{item.user}} just recycled {{item.product.name}} at Bin {{item.bin.binName}}</td>
                         <form method="POST">
@@ -67,35 +67,38 @@
                 </tbody>
             </table>
         </div>
-                <a class="btn btn-secondary d-block w-100" href="{% url 'barcode_lookup' %}" role="button">Scan Item</a>
 
-                <!-- If successful scan -->
-                {% if points %}
-                    <!-- display info on successful scan -->
-                    <div id="infoModel" class="modal">
-                        <div class="modal-content" style="color:green">
-                            {% if peakTime %}
-                                <p>Thank you for recycling you gained {{ points }} points !</p>
-                                <p>Points are doubled between this period of the day</p>
-                            {% else %}
-                                <p>Thank you for recycling you gained {{ points }} points</p>
-                            {% endif %}
-                        </div>
-                    </div>
-                {% endif %}
+        <a class="btn btn-secondary d-block w-100" style="color: black; background-color: var(--primary);" href="{% url 'barcode_lookup' %}" role="button">Scan Item</a>
+
+        <!-- If successful scan -->
+        {% if points %}
+            <!-- display info on successful scan -->
+            <div id="infoModel" class="modal">
+                <div class="modal-content" style="color:green">
+                    {% if peakTime %}
+                        <p>Thank you for recycling you gained {{ points }} points !</p>
+                        <p>Points are doubled between this period of the day</p>
+                    {% else %}
+                        <p>Thank you for recycling you gained {{ points }} points</p>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
     </div>
+
 
 {% endblock %}
 
 {% block script %}
     <script>
-        currentLocationInsert();
+        //currentLocationInsert();
 
         /**
          * This function retrieves you current location using geolocation and sets
          * the hidden fields within the form your long and lat when loading the page
          *
          * */
+        /*
         function currentLocationInsert() {
             function getLocation() {
                 if (navigator.geolocation) {
@@ -113,17 +116,18 @@
             }
             getLocation();
         }
-
+*/
         /**
          * Displays a pop-up with information regarding the distance to your nearest bin
          * */
+        /*
         var modal = document.getElementById("infoModel");
         modal.style.display = "block";
         window.onclick = function(event) {
             if (event.target == modal) {
                 modal.style.display = "none";
             }
-        }
+        }*/
     </script>
 {% endblock %}
 

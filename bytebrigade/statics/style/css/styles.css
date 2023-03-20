@@ -30,21 +30,27 @@ body {
 }
 .main-content {
     opacity: 90%;
-    background-color: #FBFAF8;
-    width: 85vw;
-    flex:1;
+    background-color: var(--secondary);
+    /*width: 85vw;*/
     margin: 0 auto;
     margin-top: 5vh;
-    padding-top: 2vh;
+    padding: 2vh;
     display: inline-block;
-    padding-bottom: 2vh;
-    /*border-radius: 2vw;*/
 }
 .footer-styles {
-    bottom: 0;
+    align-self: end;
     width: 100%;
-    background: #FBFAF8;
+    background: var(--secondary);
     margin-top: 2vh;
+}
+a {
+    color: var(--primary);
+}
+a:active {
+    color: var(--primary);
+}
+a:visited {
+    color: var(--primary);
 }
 
 /* profile styles */
