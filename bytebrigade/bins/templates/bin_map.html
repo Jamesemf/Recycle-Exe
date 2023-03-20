@@ -52,7 +52,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <div class="card">
+
                 <div class="card-body d-flex"><img>
                     <p style="text-align: left;">Welcome to the map page, below is a map of our campus with all bins
                         dotted out. If you press one
@@ -67,7 +67,7 @@
                         Non-recycling = <img src={% static 'figures/bins/non_recycle.png' %} style='height: 40px;width: 40px;'>
                     </p>
                 </div>
-            </div>
+
         </div>
     </div>
 </div>
@@ -75,40 +75,35 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <div class="card">
-                <div class="card-body">
+            <div class="card-body">
 
-                    <!--The div element for the map -->
-                    <div id="map"></div>
-                    <select id="type" onchange=filterMarkers(this.value)>
+                <!--The div element for the map -->
+                <div id="map"></div>
+                <select id="type" onchange=filterMarkers(this.value)>
 
-                        <option value="">Please select category</option>
-                        <option value="general">General</option>
-                        <option value="recycle">Recycle</option>
-                        <option value="paper">Paper</option>
-                        <option value="cans">Cans</option>
-                        <option value="glass">Glass</option>
-                        <option value="plastic">Plastic</option>
-                        <option value="non-recycle">Non-Recycle</option>
-                    </select>
-                    <script
-                        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCeauTIEx5Oz2I6sV3M7zdyqS1kZ074l3A&callback=initMap"
-                        defer></script>
-
-                </div>
+                    <option value="">Please select category</option>
+                    <option value="general">General</option>
+                    <option value="recycle">Recycle</option>
+                    <option value="paper">Paper</option>
+                    <option value="cans">Cans</option>
+                    <option value="glass">Glass</option>
+                    <option value="plastic">Plastic</option>
+                    <option value="non-recycle">Non-Recycle</option>
+                </select>
+                <script
+                    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCeauTIEx5Oz2I6sV3M7zdyqS1kZ074l3A&callback=initMap"
+                    defer></script>
             </div>
         </div>
     </div>
 </div>
 {% if presentButton == 1 %}
 <div class="container">
-    <div class="card">
-        <div class="card-body d-lg-flex justify-content-lg-center">
-            <form method="POST">
-                <button class="btn btn-primary" type="submit">Would you like to start you adventure</button>
-                {% csrf_token %}
-            </form>
-        </div>
+    <div class="card-body d-lg-flex justify-content-lg-center">
+        <form method="POST">
+            <button class="btn btn-primary" type="submit">Would you like to start you adventure</button>
+            {% csrf_token %}
+        </form>
     </div>
 </div>
 {% endif %}

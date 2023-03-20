@@ -31,207 +31,191 @@
         <div class="tab-content">
             <div class="tab-pane active" role="tabpanel" id="tab-1">
                 <div class="col">
-                    <div class="card">
-                        <div class="card-body p-4">
-                            <form method="POST" action="addBin" id="newBin" class="new-form">
-                                {% csrf_token %}
-                                <div class="form-group" id="new">
-                                    <label for="binId">Bin ID</label>
-                                    <input type="text" class="form-control" name="binId" id="binId" required>
-                                    <small class="form-text text-muted">Format AM-01-1 (Building-Floor-BinNo)</small>
-                                </div>
-                                <div class="form-group" id="new">
-                                    <label for="binName">Bin Name</label>
-                                    <input type="text" class="form-control" name="binName" id="binName" required>
-                                </div>
-                                <div class="form-group" id="new">
-                                    <label for="binLat">Bin Latitude</label>
-                                    <input type="text" class="form-control" name="binLat" id="binLat" required>
-                                </div>
-                                <div class="form-group" id="new">
-                                    <label for="binLong">Bin Longitude</label>
-                                    <input type="text" class="form-control" name="binLong" id="binLong" required>
-                                </div>
-                                <div class="form-group" id="new">
-                                    <label for="binLong">Bin Photo</label>
-                                    <input type="file" class="form-control" name="binPhoto" id="binPhoto">
-                                </div>
-                                <div class="form-group" id="new">
-                                    <label for="binLong">General?</label>
-                                    <input type="checkbox" name="bin_general" id="bin_general" value='True'>
-                                </div>
-                                <div class="form-group" id="new">
-                                    <label for="binLong">Recycling?</label>
-                                    <input type="checkbox" name="bin_recycle" id="bin_recycle" value='True'>
-                                </div>
-                                <div class="form-group" id="new">
-                                    <label for="binLong">Paper?</label>
-                                    <input type="checkbox" name="bin_paper" id="bin_paper" value='True'>
-                                </div>
-                                <div class="form-group" id="new">
-                                    <label for="binLong">Cans?</label>
-                                    <input type="checkbox" name="bin_cans" id="bin_cans" value='True'>
-                                </div>
-                                <div class="form-group" id="new">
-                                    <label for="binLong">Glass?</label>
-                                    <input type="checkbox" name="bin_glass" id="bin_glass" value='True'>
-                                </div>
-                                <div class="form-group" id="new">
-                                    <label for="binLong">Plastic?</label>
-                                    <input type="checkbox" name="bin_plastic" id="bin_plastic" value='True'>
-                                </div>
-                                <div class="form-group" id="new">
-                                    <label for="binLong">Non-Recyclable?</label>
-                                    <input type="checkbox" name="bin_non_rec" id="bin_non_rec" value='True'>
-                                </div>
-                                <button type="submit" class="btn btn-primary" id="submit">Submit</button>
-                            </form>
-                        </div>
+                    <div class="card-body p-4">
+                        <form method="POST" action="addBin" id="newBin" class="new-form">
+                            {% csrf_token %}
+                            <div class="form-group" id="new">
+                                <label for="binId">Bin ID</label>
+                                <input type="text" class="form-control" name="binId" id="binId" required>
+                                <small class="form-text text-muted">Format AM-01-1 (Building-Floor-BinNo)</small>
+                            </div>
+                            <div class="form-group" id="new">
+                                <label for="binName">Bin Name</label>
+                                <input type="text" class="form-control" name="binName" id="binName" required>
+                            </div>
+                            <div class="form-group" id="new">
+                                <label for="binLat">Bin Latitude</label>
+                                <input type="text" class="form-control" name="binLat" id="binLat" required>
+                            </div>
+                            <div class="form-group" id="new">
+                                <label for="binLong">Bin Longitude</label>
+                                <input type="text" class="form-control" name="binLong" id="binLong" required>
+                            </div>
+                            <div class="form-group" id="new">
+                                <label for="binLong">Bin Photo</label>
+                                <input type="file" class="form-control" name="binPhoto" id="binPhoto">
+                            </div>
+                            <div class="form-group" id="new">
+                                <label for="binLong">General?</label>
+                                <input type="checkbox" name="bin_general" id="bin_general" value='True'>
+                            </div>
+                            <div class="form-group" id="new">
+                                <label for="binLong">Recycling?</label>
+                                <input type="checkbox" name="bin_recycle" id="bin_recycle" value='True'>
+                            </div>
+                            <div class="form-group" id="new">
+                                <label for="binLong">Paper?</label>
+                                <input type="checkbox" name="bin_paper" id="bin_paper" value='True'>
+                            </div>
+                            <div class="form-group" id="new">
+                                <label for="binLong">Cans?</label>
+                                <input type="checkbox" name="bin_cans" id="bin_cans" value='True'>
+                            </div>
+                            <div class="form-group" id="new">
+                                <label for="binLong">Glass?</label>
+                                <input type="checkbox" name="bin_glass" id="bin_glass" value='True'>
+                            </div>
+                            <div class="form-group" id="new">
+                                <label for="binLong">Plastic?</label>
+                                <input type="checkbox" name="bin_plastic" id="bin_plastic" value='True'>
+                            </div>
+                            <div class="form-group" id="new">
+                                <label for="binLong">Non-Recyclable?</label>
+                                <input type="checkbox" name="bin_non_rec" id="bin_non_rec" value='True'>
+                            </div>
+                            <button type="submit" class="btn btn-primary" id="submit">Submit</button>
+                        </form>
                     </div>
                 </div>
             </div>
             <div class="tab-pane" role="tabpanel" id="tab-2">
                 <div class="col">
-                    <div class="card">
-                        <div class="card-body p-4">
-                            <form method="POST" action="addGoal" id="newGoal" class="new-form">
-                                {% csrf_token %}
-                                <div class="form-group" id="new">
-                                    <label for="name">Goal Name</label>
-                                    <input type="text" class="form-control" name="name" id="name" required>
-                                </div>
-                                <div class="form-group" id="new">
-                                    <label for="description">Goal Description</label>
-                                    <input type="text" class="form-control" name="description" id="description"
-                                        required>
-                                </div>
-                                <div class="form-group" id="new">
-                                    <label for="target">Goal Target</label>
-                                    <input type="text" class="form-control" name="target" id="target" required>
-                                </div>
-                                <button type="submit" class="btn btn-primary" id="submit">Submit</button>
-                            </form>
-                        </div>
+                    <div class="card-body p-4">
+                        <form method="POST" action="addGoal" id="newGoal" class="new-form">
+                            {% csrf_token %}
+                            <div class="form-group" id="new">
+                                <label for="name">Goal Name</label>
+                                <input type="text" class="form-control" name="name" id="name" required>
+                            </div>
+                            <div class="form-group" id="new">
+                                <label for="description">Goal Description</label>
+                                <input type="text" class="form-control" name="description" id="description"
+                                    required>
+                            </div>
+                            <div class="form-group" id="new">
+                                <label for="target">Goal Target</label>
+                                <input type="text" class="form-control" name="target" id="target" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary" id="submit">Submit</button>
+                        </form>
                     </div>
                 </div>
             </div>
             <div class="tab-pane" role="tabpanel" id="tab-3">
                 <div class="col">
-                    <div class="card">
-                        <div class="card-body p-4">
-                            <form method="POST" action="addShopItem" id="newShopItem" class="new-form">
-                                {% csrf_token %}
-                                <div class="form-group" id="new">
-                                    <label for="name">Shop Item Name</label>
-                                    <input type="text" class="form-control" name="name" id="name" required>
-                                </div>
-                                <div class="form-group" id="new">
-                                    <label for="cost">Shop Item Cost</label>
-                                    <input type="text" class="form-control" name="cost" id="cost" required>
-                                </div>
-                                <div class="form-group" id="new">
-                                    <label for="description">Shop Item Description</label>
-                                    <input type="text" class="form-control" name="description" id="description"
-                                        required>
-                                </div>
-                                <button type="submit" class="btn btn-primary" id="submit">Submit</button>
-                            </form>
-                        </div>
+                    <div class="card-body p-4">
+                        <form method="POST" action="addShopItem" id="newShopItem" class="new-form">
+                            {% csrf_token %}
+                            <div class="form-group" id="new">
+                                <label for="name">Shop Item Name</label>
+                                <input type="text" class="form-control" name="name" id="name" required>
+                            </div>
+                            <div class="form-group" id="new">
+                                <label for="cost">Shop Item Cost</label>
+                                <input type="text" class="form-control" name="cost" id="cost" required>
+                            </div>
+                            <div class="form-group" id="new">
+                                <label for="description">Shop Item Description</label>
+                                <input type="text" class="form-control" name="description" id="description"
+                                    required>
+                            </div>
+                            <button type="submit" class="btn btn-primary" id="submit">Submit</button>
+                        </form>
                     </div>
                 </div>
             </div>
             <div class="tab-pane" role="tabpanel" id="tab-4">
                 <div class="col">
-                    <div class="card">
-                        <div class="card-body p-4">
-                            <form method="POST" action="deleteBin" id="deleteBin" class="new-form">
-                                {% csrf_token %}
-                                <select name="bin">
-                                    {% for item in Bins %}
-                                    <option value="{{item.binId}}">
-                                        {{ item.binName }}
-                                    </option>
-                                    {% endfor %}
-                                </select>
-                                <button type="submit" class="btn btn-primary" id="submit">Submit</button>
-                            </form>
-                        </div>
+                    <div class="card-body p-4">
+                        <form method="POST" action="deleteBin" id="deleteBin" class="new-form">
+                            {% csrf_token %}
+                            <select name="bin">
+                                {% for item in Bins %}
+                                <option value="{{item.binId}}">
+                                    {{ item.binName }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                            <button type="submit" class="btn btn-primary" id="submit">Submit</button>
+                        </form>
                     </div>
                 </div>
             </div>
             <div class="tab-pane" role="tabpanel" id="tab-5">
                 <div class="col">
-                    <div class="card">
-                        <div class="card-body p-4">
-                            <form method="POST" action="deleteGoal" id="deleteGoal" class="new-form">
-                                {% csrf_token %}
-                                <select name="goal">
-                                    {% for item in Goals %}
-                                    <option value="{{item.goalID}}">
-                                        {{ item.name }}
-                                    </option>
-                                    {% endfor %}
-                                </select>
-                                <button type="submit" class="btn btn-primary" id="submit">Submit</button>
-                            </form>
-                        </div>
+                    <div class="card-body p-4">
+                        <form method="POST" action="deleteGoal" id="deleteGoal" class="new-form">
+                            {% csrf_token %}
+                            <select name="goal">
+                                {% for item in Goals %}
+                                <option value="{{item.goalID}}">
+                                    {{ item.name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                            <button type="submit" class="btn btn-primary" id="submit">Submit</button>
+                        </form>
                     </div>
                 </div>
             </div>
             <div class="tab-pane" role="tabpanel" id="tab-6">
                 <div class="col">
-                    <div class="card">
-                        <div class="card-body p-4">
-                            <form method="POST" action="deleteShopItem" id="deleteShopItem" class="new-form">
-                                {% csrf_token %}
-                                <select name="shopItem">
-                                    {% for item in ShopItems %}
-                                    <option value="{{item.item_id}}">
-                                        {{ item.name }}
-                                    </option>
-                                    {% endfor %}
-                                </select>
-                                <button type="submit" class="btn btn-primary" id="submit">Submit</button>
-                            </form>
-                        </div>
+                    <div class="card-body p-4">
+                        <form method="POST" action="deleteShopItem" id="deleteShopItem" class="new-form">
+                            {% csrf_token %}
+                            <select name="shopItem">
+                                {% for item in ShopItems %}
+                                <option value="{{item.item_id}}">
+                                    {{ item.name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                            <button type="submit" class="btn btn-primary" id="submit">Submit</button>
+                        </form>
                     </div>
                 </div>
             </div>
             <div class="tab-pane" role="tabpanel" id="tab-7">
                 <div class="col">
-                    <div class="card">
-                        <div class="card-body p-4">
-                            Most recycled item:<br>
-                            {{ mostRecycled.product.name }}<br>
-                            <br>
-                            Most commonly used bin:<br>
-                            {{ mostUsedBin.bin.binName }}<br>
-                            <br>
-                            Total weight recycled:<br>
-                            {{ totalWeight }}<br>
-                            <br>
-                            Total carbon footprint:<br>
-                            {{ totalCarbon }}<br>
-                            <br>
-                            Number of users:<br>
-                            {{ numUsers }}<br>
-                            <br>
-                            Average carbon footprint of each user:<br>
-                            {{ averageCarbon }}<br>
-                            <br>
-                            Average weight recycled per user:<br>
-                            {{ averageWeight }}<br>
-                        </div>
+                    <div class="card-body p-4">
+                        Most recycled item:<br>
+                        {{ mostRecycled.product.name }}<br>
+                        <br>
+                        Most commonly used bin:<br>
+                        {{ mostUsedBin.bin.binName }}<br>
+                        <br>
+                        Total weight recycled:<br>
+                        {{ totalWeight }}<br>
+                        <br>
+                        Total carbon footprint:<br>
+                        {{ totalCarbon }}<br>
+                        <br>
+                        Number of users:<br>
+                        {{ numUsers }}<br>
+                        <br>
+                        Average carbon footprint of each user:<br>
+                        {{ averageCarbon }}<br>
+                        <br>
+                        Average weight recycled per user:<br>
+                        {{ averageWeight }}<br>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <div class="col">
-        <div class="card">
-            <div class="card-body p-4">
-                Info on gamekeeper page goes here
-            </div>
+        <div class="card-body p-4">
+            Info on gamekeeper page goes here
         </div>
     </div>
 </div>

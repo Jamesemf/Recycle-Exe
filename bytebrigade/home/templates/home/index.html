@@ -46,7 +46,7 @@
                         <th style="width: 200px">Likes</th>
                     </tr>
                 </thead>
-                <tbody style="color: black;">
+                <tbody style="color: black; border-radius: 25px;">
                     {% for item in Transaction %}
                     <tr style = "border-bottom: var(--primary) solid 2px;">
                         <td>{{item.time}}</td>
@@ -67,9 +67,7 @@
                 </tbody>
             </table>
         </div>
-
         <a class="btn btn-secondary d-block w-100" style="color: black; background-color: var(--primary);" href="{% url 'barcode_lookup' %}" role="button">Scan Item</a>
-
         <!-- If successful scan -->
         {% if points %}
             <!-- display info on successful scan -->
@@ -85,49 +83,4 @@
             </div>
         {% endif %}
     </div>
-
-
 {% endblock %}
-
-{% block script %}
-    <script>
-        //currentLocationInsert();
-
-        /**
-         * This function retrieves you current location using geolocation and sets
-         * the hidden fields within the form your long and lat when loading the page
-         *
-         * */
-        /*
-        function currentLocationInsert() {
-            function getLocation() {
-                if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(location);
-                } else {
-                    x.innerHTML = "Geolocation is not supported by this browser.";
-                }
-            }
-
-            function location(position) {
-                var lat = position.coords.latitude;
-                var long = position.coords.longitude;
-                document.getElementById("lat").value = lat;
-                document.getElementById("long").value = long;
-            }
-            getLocation();
-        }
-*/
-        /**
-         * Displays a pop-up with information regarding the distance to your nearest bin
-         * */
-        /*
-        var modal = document.getElementById("infoModel");
-        modal.style.display = "block";
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        }*/
-    </script>
-{% endblock %}
-

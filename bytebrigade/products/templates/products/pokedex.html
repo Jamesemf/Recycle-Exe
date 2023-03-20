@@ -7,16 +7,14 @@
     <!-- title pane -->
     <div class="row" style="width: 100%; margin: 0;">
         <div class="col-md-12" style="padding: 0; margin: 0;">
-            <div class="card">
-                <div class="card-body" style="text-align: center;">
-                    <h4 class="card-title">ProductDex</h4>
-                    <p class="card-text">Welcome to the productDex page</p>
-                </div>
-                <form action="" method="post" id="pokeBarcode">
-                    {% csrf_token %}
-                    <input type="hidden" name="barcode" id="barcode" value=0>
-                </form>
+            <div class="card-body" style="text-align: center;">
+                <h4 class="card-title">ProductDex</h4>
+                <p class="card-text">Welcome to the productDex page</p>
             </div>
+            <form action="" method="post" id="pokeBarcode">
+                {% csrf_token %}
+                <input type="hidden" name="barcode" id="barcode" value=0>
+            </form>
         </div>
     </div>
 
@@ -53,7 +51,7 @@
     while (i < pokemonArray.length) {
         // Creates all the html objects required for each item in the array
         const cardDiv = document.createElement('div');
-        cardDiv.classList.add('card');
+        //cardDiv.classList.add('card');
         cardDiv.classList.add('col-md-4');
 
         const cardBodyDiv = document.createElement('div');

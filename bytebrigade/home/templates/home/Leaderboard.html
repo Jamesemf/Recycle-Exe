@@ -8,16 +8,16 @@
         <h1 style="background: var(--secondary);font-size: 30px;padding-bottom: 5px;color: var(--bs-black);">Leaderboard</h1>
         <div style="background: #e1edbd;">
         <table class = "table table-striped" id = "leaderboard">
-                <thead style="background: #82b068; padding: 10px">
+                <thead style="background: var(--primary); padding: 10px">
                     <tr>
                         <th style="width: 200px">Rank</th>
                         <th style="width: 200px">Username</th>
                         <th style="width: 200px">Points</th>
                     </tr>
                 </thead>
-                <tbody style="color: black;">
+                <tbody style="color: black; background: var(--secondary);">
                     {% for item in Statistics %}
-                        <tr class="text-center" style = "border-bottom: #82b068 solid 2px;">
+                        <tr class="text-center" style = "border-bottom: var(--primary) solid 2px;">
                             <td>{{forloop.counter}}</td>
                             <td>{{item.user}}</td>
                             <td>{{item.points}}</td>
@@ -26,7 +26,7 @@
                 </tbody>
             </table>
         </div>
-        <div><input type="search" id = "myInput" onkeyup="search()" style="background: #82b068;border-style: solid;border-color: var(--bs-success);margin-top: 10px" placeholder="Search for a user"></div>
+        <div><input type="search" id = "myInput" onkeyup="search()" style="background: var(--secondary);border-style: solid;border-color: var(--primary);margin-top: 10px" placeholder="Search for a user"></div>
     </div>
 
 {% endblock %}
