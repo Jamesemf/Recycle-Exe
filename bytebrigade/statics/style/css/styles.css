@@ -31,18 +31,26 @@ body {
 .main-content {
     opacity: 90%;
     background-color: var(--secondary);
-    width: 85vw;
+    /*width: 85vw;*/
     margin: 0 auto;
     margin-top: 5vh;
-    padding-top: 2vh;
+    padding: 2vh;
     display: inline-block;
-    padding-bottom: 2vh;
 }
 .footer-styles {
     align-self: end;
     width: 100%;
     background: var(--secondary);
     margin-top: 2vh;
+}
+a {
+    color: var(--primary);
+}
+a:active {
+    color: var(--primary);
+}
+a:visited {
+    color: var(--primary);
 }
 
 /* profile styles */
