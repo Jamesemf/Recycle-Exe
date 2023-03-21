@@ -26,7 +26,7 @@
     /* Modal Content */
     .modal-content {
     background-color: var(--bs-secondary);
-    margin: auto;
+    margin: 15% auto;
     padding: 20px;
     border: 1px solid #888;
     width: 80%;
@@ -83,4 +83,24 @@
             </div>
         {% endif %}
     </div>
+{% endblock %}
+
+{% block script %}
+
+    <script>
+        /**
+         * Displays a pop-up with information regarding the distance to your nearest bin
+         * */
+        var modal = document.getElementById("infoModel");
+        if(modal != null){
+            modal.style.display = "block";
+            modal.style.alignSelf = "center";
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+                }
+            }
+        }
+
+    </script>
 {% endblock %}

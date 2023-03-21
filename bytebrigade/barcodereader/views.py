@@ -7,7 +7,19 @@ from account.views import addstats, update_goal_stat
 
 
 def scanner_page_view(request):
+    """
+    Web backend for '../scanner/' (name 'barcode_lookup')
+    This view is the back of the scanner page, it to render the barcode scanner and allows the user to scan a barcode. Once
+    it has been scanned the view will collect the barcode and allow the system to progress to the next stage of the recycling
+    journey.
 
+    Returns:
+      If 'POST':
+        * Redirect to product information page '../product/' if the barcode scanned match one in the database.
+        * Redirect to create product page '../product/create/' if the barcode is new.
+      If 'Get':
+        * Return the scanner page 'Scanner_page.html'
+    """
     # If the user not log-in, redirect them to login page
     if not request.user.is_authenticated:
         return redirect('login')
@@ -28,10 +40,17 @@ def scanner_page_view(request):
 
 def recycle_confirm_view(request):
     """
-        Web backend for '../scanner/recycle/confirm/' (name 'recycle_confirm')
+    Web backend for '../scanner/recycle/confirm/' (name 'recycle_confirm')
+    This function handles if a user successfully reaches a bin after starting a quest. When they do, a new transaction
+    is registered on the index page.
 
-        This function handles if a user successfully reaches a bin after starting a quest. When they do,
-        a new transaction is registered on the index page.
+    Returns:
+      If user not log-in:
+        * Redirect to login page '../account/login/'.
+      If user have invalid session value 'valid' == -1:
+        * Redirect to index page.
+      If
+
     """
     if not request.user.is_authenticated:
         return redirect('login')
@@ -65,31 +84,19 @@ def recycle_confirm_view(request):
 
             weight = product_data.weight
             now = datetime.now().time()  # get the current time
-
             if now >= time(9, 0) and now <= time(15, 0):  #  If peak time points are doubled
                 points = round(weight * 122) * 2
                 peak = True  # peak is used for rendering messages
             else:
                 points = round(weight * 122)
                 peak = False
-
             addstats(request.user, product_data, points, weight)  # need to include the product
             update_goal_stat(request.user, product_data)
     except Exception as e:
         print(e)
-
-    #  Retrieve the liked transactions by the current user
-    liked = TransactionLike.objects.filter(user=request.user)
-    likedList = []
-    for x in liked:
-        likedList.append(x.transaction_id)
-
-    data = Transaction.objects.all().order_by('-time')[:5]
-    data_dict = {
-        'Transaction': data,
-        'points': points,
-        'peakTime': peak,
-        'likedList': likedList,
+    index_data = {
+        "points":points,
+        "peakTime":peak
     }
-
-    return render(request, 'home/index.html', data_dict)
+    request.session['index_info'] = index_data
+    return redirect('index')

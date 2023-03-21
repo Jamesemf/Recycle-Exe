@@ -9,6 +9,8 @@ from django.contrib.auth.models import User
 
 def gamekeeperPage(request):
     """
+    Web backend for’../gamekepper/’ (name ‘gamekeeperPage’)
+
     This function handles the rendering and viewing of the gamekeeper page. This page allows an Admin to create bins,shop
     items, and gaols for users in the system. All data is collected for the system so that it can be presented in another
     section where the Admin can delete items which they have created.
@@ -55,6 +57,8 @@ def gamekeeperPage(request):
 
 def addBin(request):
     """
+    Web backend for’../gamekepper/addBin’ (name ‘addBin’)
+
     This function handles the procedure of adding a bin to the system. The bin being added is one specified by the
     admin in the gamekeeper page.
     """
@@ -83,6 +87,8 @@ def addBin(request):
 
 def addGoal(request):
     """
+    Web backend for’../gamekepper/addGoal’ (name ‘addGoal’)
+
     This procedure handles the adding of a goal to the system which the admin has specified
     """
     if not request.user.is_authenticated:
@@ -99,6 +105,8 @@ def addGoal(request):
 
 def addShopItem(request):
     """
+    Web backend for’../gamekepper/addShopItem’ (name ‘addShopItem’)
+
     This procedure handles the adding of a shop item to the system which the admin has specified
     """
     if not request.user.is_authenticated:
@@ -117,6 +125,8 @@ def addShopItem(request):
 
 def deleteBin(request):
     """
+    Web backend for’../gamekepper/deleteBin’ (name ‘deleteBin’)
+
     This procedure handles the removal of a bin object in the system
     """
     if not request.user.is_authenticated:
@@ -130,6 +140,8 @@ def deleteBin(request):
 
 def deleteGoal(request):
     """
+    Web backend for’../gamekepper/deleteGoal’ (name ‘deleteGoal’)
+
     This procedure handles the deletion of a goal item in the database
     """
     if not request.user.is_authenticated:
@@ -143,6 +155,8 @@ def deleteGoal(request):
 
 def deleteShopItem(request):
     """
+    Web backend for’../gamekepper/deleteShopItem’ (name ‘deleteShopItem’)
+
     This procedure handles the deletion of a shop item in the system
     """
     if not request.user.is_authenticated:

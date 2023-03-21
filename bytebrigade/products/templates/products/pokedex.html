@@ -92,7 +92,14 @@
         i++;
     }
 
-    // submits the form with the attatched variable from the button pressed on an array item
+
+     /**
+      *
+      * Submits the form with the product barcode
+      *
+      * @param id: the barcode of the product
+      *
+      */
     function submit(id) {
         document.getElementById("barcode").value = id;
         document.getElementById("pokeBarcode").submit();
@@ -102,9 +109,9 @@
      * This function removes any unwanted special characters from the title of the products we are trying to
      * display.
      *
-     * @param html
+     * @param html: the html document
      *
-     * @return txt.value
+     * @return txt.value: the new text value
      *
      */
     function decodeHtml(html) {

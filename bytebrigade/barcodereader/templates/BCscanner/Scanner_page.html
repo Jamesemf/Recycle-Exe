@@ -38,10 +38,17 @@
 {% endblock %}
 
 {% block script %}
-
     <script src="{% static 'BCscanner/html5-qrcode.min.js' %}"></script>
     <script>
 
+
+        /**
+         *
+         * This function initialises the barcode scanner which scans the camera looking for a barcode
+         *
+         * @param fn: is a function
+         *
+         * */
         function docReady(fn) {
             // see if DOM is already available
             if (document.readyState === "complete"
@@ -83,12 +90,18 @@
 
         let auto_refresh = setInterval(function() { submitform(); }, 3000);
 
+        /**
+         *
+         * This function submits the hidden form within the html page
+         *
+         * @param none
+         *
+         * @return none
+         * */
         function submitform(){
             if (document.getElementById("barcode").value != 0){
-                console.log(document.getElementById("barcode").value);
                 document.getElementById("formId").submit();
             }
         }
     </script>
-
 {% endblock %}

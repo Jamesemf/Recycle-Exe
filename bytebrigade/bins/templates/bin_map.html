@@ -164,6 +164,10 @@
      * The function also attempts to find your current position if avaiable and translate / scale the map so
      * that your position can be seen.
      *
+     * @param none
+     *
+     * @return none
+     *
      */
     function initMap() {
         // The location of Exeter Forum
@@ -230,7 +234,7 @@
             mapMarkers.push(marker)
             marker.addListener("click", () => {
                 infoWindow.close();
-                // Add category images to each infobox
+                // Add category images to each infobox of the marker
                 const markerCategories = marker.category;
                 categoryText = "";
                 for (let i = 0; i < markerCategories.length; i++) {
@@ -271,6 +275,7 @@
 
             // Try HTML5 geolocation.
             if (navigator.geolocation) {
+                //getting location
                 navigator.geolocation.getCurrentPosition(
                     (position) => {
                         const pos = {

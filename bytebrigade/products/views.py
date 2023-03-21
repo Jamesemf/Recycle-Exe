@@ -40,11 +40,16 @@ def product_dex(request):
 
 def create_product_view(request):
     """
+    Web backend for'../product/create)' (name 'create_product')
+
     This view handles the product creation page. When the user scans a product if the product is not in the database
     we then ask the user to fill out a form about this product. If the request is a get request we load the page containing
     the product form. When a post request occurs we collect the product information and add it to the database.
 
     The page will automatically contain the barcode which the user has scanned.
+
+    Return:
+        Nothing, but a product is added to the db
     """
     if not request.user.is_authenticated:
         return redirect('login')
@@ -75,9 +80,14 @@ def create_product_view(request):
 
 def prompt_recycle_product_view(request):
     """
+    Web backend for’../product/’ (name ‘product_info’)
+
     This view handles the viewing of a product that the user has just scanned or previously scanned
     If they have just scanned the product then they will be prompted with a button to recycle the product.
     Below we calculate what bin the product should go into, and then use this data to load the map of bins.
+
+    Return:
+        Nothing, but a product is presented to the user
     """
     if not request.user.is_authenticated:
         return redirect('login')
@@ -97,7 +107,7 @@ def prompt_recycle_product_view(request):
                     "recycle": product.recycle,
                     "present_button": 1,
                     "binType": binType,
-                    "history": Transaction.objects.filter(user=request.user, product=product),
+                    "history": Transaction.objects.filter(user=request.user, product=product)[:5],
                     "image": product.image,
                     }
     if request.session['pokedex_barcode'] != -1:
@@ -111,7 +121,7 @@ def prompt_recycle_product_view(request):
                 "recycle": product.recycle,
                 "present_button": 0,
                 "binType": binType,
-                "history": Transaction.objects.filter(user=request.user, product=product),
+                "history": Transaction.objects.filter(user=request.user, product=product)[:5],
                 }
     return render(request, 'products/info_product.html', data)
 

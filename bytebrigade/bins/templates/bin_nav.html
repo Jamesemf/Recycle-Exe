@@ -146,7 +146,9 @@
         
         /**
          * Calculates the distance between two geographical coordinates using the Haversine formula.
+         *
          * @param {number} latitude - The latitude of the start location.
+         * 
          * @param {number} longitude - The longitude of the start location.
          */
         function binDistance(latitude, longitude) {
@@ -164,7 +166,8 @@
             var d = 1000 * R * c; // Distance in m
             d = d.toFixed(2);
             document.getElementById('distance').innerHTML = "Distance to bin: <strong>" + d + "m</strong>";
-            if (d <= 3) {
+            console.log(d)
+            if (d <= 5) {
                 document.getElementById("formId").submit();
             }
         }

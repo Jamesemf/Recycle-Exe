@@ -16,6 +16,7 @@ from django.db.models import Count
 def register(request):
     """
     Web backend for '../account/registration' (name 'registration')
+    Registration page for new user register their account.
 
     Returns:
         * for 'POST' method:
@@ -48,6 +49,13 @@ def register(request):
 
 
 def password(request):
+    """
+    Web backend for '../account/password/' (name 'password')
+    Display password change center middle page.
+
+    Returns:
+        * Password center page.
+    """
     return render(request, 'account/password.html')
 
 
@@ -135,8 +143,9 @@ def addstats(user, product, points: int, kg=0):
         product - the product object which is giving them points
         points - the points being added to the user object
         kg - the kg amount being added to the users stats
+    Returns:
+        None
     """
-    print("In add stats")
     user_stats = Statistic.objects.get(user=user)
     user_stats.points += points
     kg *= 0.09
