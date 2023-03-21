@@ -23,5 +23,7 @@ jobs:
         pip install -r requirements.txt
     - name: Run Tests
       run: |
-        cd bytebridage
+        cd ..
+        cd ..
+        cd bytebrigade
         python manage.py test
