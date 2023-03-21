@@ -4,72 +4,57 @@
 {% block title %} Leaderboard {% endblock %}
 
 {% block content %}
-    <body class="text-center">
-    <div class="fs-6"
-         style="margin-right: 28px;margin-top: 14px;margin-bottom: 22px;color: var(--bs-secondary);margin-left: 28px;">
-        <h1 style="background: var(--secondary);font-size: 30px;padding-bottom: 5px;color: var(--bs-black);">
-            Leaderboard</h1>
-        <div style="background: #e1edbd;">
-            <table class="table table-striped" id="leaderboard">
-                <thead style="background: var(--primary); padding: 10px">
-                <tr>
-                    <th style="width: 200px">Rank</th>
-                    <th style="width: 200px">Username</th>
-                    <th style="width: 200px">Points</th>
-                </tr>
-                </thead>
-                <tbody style="color: black; background: var(--secondary);">
-                {% for item in Statistics %}
-                    <tr class="text-center" style="border-bottom: var(--primary) solid 2px;">
-                        <td>{{ forloop.counter }}</td>
-                        <td>{{ item.user }}</td>
-                        <td>{{ item.points }}</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        <div><input type="search" id="myInput" onkeyup="search()"
-                    style="background: var(--secondary);border-style: solid;border-color: var(--primary);margin-top: 10px"
-                    placeholder="Search for a user"></div>
     </div>
-    </body>
+    <div class="feeds" style="margin: 0 auto;color: var(--secondary); width: 80vw;">
+        <div class="top-bar">
+            <h3 style="width: 200px">Rank</h3>
+            <h3 style="width: 200px">Username</h3>
+            <h3 style="width: 200px">Points</h3>
+        </div>
+        <div style="color: black;" id="leaderboard">
+            {% for item in Statistics %}
+             <div class="content-container">
+                <div class="content-bar-cells">{{forloop.counter}}</div>
+                <div class="content-bar-cells">{{item.user}}</div>
+                <div class="content-bar-cells">{{item.points}}</div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="top-bar" style="align-items: center; justify-content: center;">
+            <input type="search" id = "myInput" onkeyup="search()" style="background: var(--secondary);border-style: solid;border-color: var(--primary);" placeholder="Search for a user">
+        </div>
+    </div>
 
 {% endblock %}
 
 {% block script %}
-    <script>
-        /**
-         * This function is used to search the leaderboard for a particular user. It loops through the table
-         * and hides any users that do not have a matching expression entered into the search box field#
-         *
-         * @param none
-         *
-         * @return none
-         *
-         * */
-        function search() {
-            // Declare variables
-            var input, filter, table, tr, td, i, txtValue;
-            input = document.getElementById("myInput");
-            filter = input.value.toUpperCase();
-            table = document.getElementById("leaderboard");
-            tr = table.getElementsByTagName("tr");
+<script>
+    /**
+     * This function is used to search the leaderboard for a particular user. It loops through the divs
+     * and hides any users that do not have a matching expression entered into the search box field
+     */
+    function search() {
+      // Get the input field and filter value
+      var input = document.getElementById("myInput");
+      var filter = input.value.toUpperCase();
 
-            // Loop through all table rows, and hide those who don't match the search query
-            for (i = 0; i < tr.length; i++) {
-                td = tr[i].getElementsByTagName("td")[1];
-                if (td) {
-                    txtValue = td.textContent || td.innerText;
-                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                        tr[i].style.display = "";
-                    } else {
-                        tr[i].style.display = "none";
-                    }
-                }
-            }
+      // Get the leaderboard container and leaderboard items
+      var leaderboard = document.getElementById("leaderboard");
+      var items = leaderboard.getElementsByClassName("content-container");
+
+      // Loop through all leaderboard items, and hide those that don't match the search query
+      for (var i = 0; i < items.length; i++) {
+        var username = items[i].getElementsByClassName("content-bar-cells")[1];
+        if (username.innerHTML.toUpperCase().indexOf(filter) > -1) {
+          items[i].style.display = "";
+        } else {
+          items[i].style.display = "none";
         }
-    </script>
+      }
+    }
+
+
+</script>
 
 {% endblock %}
 

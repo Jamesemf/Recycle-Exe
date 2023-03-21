@@ -34,7 +34,8 @@ body {
     /*width: 85vw;*/
     margin: 0 auto;
     margin-top: 5vh;
-    padding: 2vh;
+    padding-top: 2vh;
+    padding-bottom: 2vh;
     display: inline-block;
 }
 .footer-styles {
@@ -73,4 +74,35 @@ label {
 }
 .new-form {
     background-color: var(--secondary);
+}
+
+/* display on the daily feed and leaderboard */
+.feeds * {
+    opacity: 95%;
+}
+.top-bar {
+    background: var(--primary);
+    padding: 10px;
+    display: flex;
+    justify-content: space-evenly;
+    border-radius: 100px;
+}
+.content-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    background: var(--secondary);
+    min-height: 5vh;
+    border-radius: 30px;
+    border: black 10px;
+    justify-content: center;
+    margin: 2vh;
+    padding: 0.5vh;
+    opacity: 100%;
+}
+.content-bar-cells {
+    width: 26.7vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

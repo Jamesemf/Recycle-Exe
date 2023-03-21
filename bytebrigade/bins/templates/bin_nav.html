@@ -50,29 +50,29 @@
 {% endblock %}
 
 {% block content %}
-    <body>
-    <div class="card-body">
-        <div style="text-align: center;">
-            <h6 class="text-muted mb-2">Finding</h6>
-            <h4>{{ BinGoal.binName }}</h4>
-        </div>
-        <div style="text-align: center;">
-            <h6 class="text-muted mb-2" id="distance"></h6>
-        </div>
-        <div style="text-align: center;">
-            <div class="compass">
-                <img id="compass" style="width: 100%" src="{% static 'figures/arrow.png' %}">
+
+        <div class="card-body">
+            <div style="text-align: center;">
+                <h6 class="text-muted mb-2">Finding</h6>
+                <h4>{{ BinGoal.binName }}</h4>
             </div>
-            <button class="start-btn" style="visibility: hidden;">Start compass</button>
+            <div style="text-align: center;">
+                <h6 class="text-muted mb-2" id="distance"></h6>
+            </div>
+            <div style="text-align: center;">
+                <div class="compass">
+                    <img id="compass" style="width: 100%" src="{% static 'figures/arrow.png' %}">
+                </div>
+                <button class="start-btn" style="visibility: hidden;">Start compass</button>
+            </div>
+            <div>
+                <form id="formId" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="distance" id="distance" value=0>
+                </form>
+            </div>
         </div>
-        <div>
-            <form id="formId" method="POST">
-                {% csrf_token %}
-                <input type="hidden" name="distance" id="distance" value=0>
-            </form>
-        </div>
-    </div>
-    </body>
+
 {% endblock %}
 
 {% block script %}
@@ -88,7 +88,6 @@
          * @param {number} lon1 - The longitude of the first point (in degrees).
          * @param {number} lat2 - The latitude of the second point (in degrees).
          * @param {number} lon2 - The longitude of the second point (in degrees).
-         *
          * @returns {number} - The angle (in degrees) between the two points, as if you're pointing north from the first point.
          */
         function getAngle(lat1, lon1, lat2, lon2) {
@@ -109,7 +108,6 @@
 
         /**
          * Points an HTML image to a specific compass heading.
-         *
          * @param {HTMLElement} img - The HTML image element to point to the specified compass heading.
          * @param {number} angle - The compass heading to point the HTML image element to, in degrees (0-359).
          */
@@ -119,7 +117,6 @@
 
             /**
              * Handles device orientation events and updates the HTML image element to point to North.
-             *
              * @param {DeviceOrientationEvent} event - The device orientation event.
              */
             function handleCompass(event) {
@@ -146,10 +143,9 @@
                 img.style.transform = `rotate(${angleDiff}deg)`;
             }
         }
-
+        
         /**
          * Calculates the distance between two geographical coordinates using the Haversine formula.
-         *
          * @param {number} latitude - The latitude of the start location.
          * @param {number} longitude - The longitude of the start location.
          */
@@ -168,15 +164,13 @@
             var d = 1000 * R * c; // Distance in m
             d = d.toFixed(2);
             document.getElementById('distance').innerHTML = "Distance to bin: <strong>" + d + "m</strong>";
-            console.log(d)
-            if (d <= 5) {
+            if (d <= 3) {
                 document.getElementById("formId").submit();
             }
         }
 
         /**
          * Converts degrees to radians.
-         *
          * @param {number} deg - The angle in degrees to be converted to radians.
          * @returns {number} The angle converted to radians.
          */
@@ -193,7 +187,6 @@
 
         /**
          * Handles the current location of the user and updates the compass direction and distance to the bin.
-         *
          * @param {Position} position - The current position of the user.
          */
         function locationHandler(position) {

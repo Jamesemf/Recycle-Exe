@@ -5,7 +5,7 @@
 
 {% block content %}
     {% if request.user.is_authenticated %}
-        <meta http-equiv="refresh" content="0; URL={% url 'account' %}"/>
+        <meta http-equiv="refresh" content="0; URL={% url 'account' %}" />
     {% endif %}
     <div class="container text-muted py-4 py-lg-5">
         <section class="py-4 py-xl-5" style="margin-top: -16px;margin-bottom: -55px;">
@@ -18,37 +18,19 @@
                 <div class="row d-flex justify-content-center">
                     <div class="col-md-6 col-xl-4">
                         <div class="card-body d-flex flex-column align-items-center">
-                            <div class="bs-icon-xl bs-icon-circle bs-icon-primary bs-icon my-4">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor"
-                                     viewBox="0 0 16 16" class="bi bi-person">
+                            <div class="bs-icon-xl bs-icon-circle bs-icon-primary bs-icon my-4"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-person">
                                     <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"></path>
-                                </svg>
-                            </div>
+                                </svg></div>
                             <form class="text-center" method="POST" style="min-width: 30vh;">
                                 {% csrf_token %}
                                 {{ form.non_field_errors }}
                                 {{ form.username.errors }}
-                                <div class="mb-3" style="margin-top: 13px;"><input class="form-control"
-                                                                                   name="{{ form.username.name }}"
-                                                                                   id="{{ form.username.id_for_label }}"
-                                                                                   type="text" placeholder="Username"
-                                                                                   maxlength="20" minlength="3"
-                                                                                   required=""></div>
+                                <div class="mb-3" style="margin-top: 13px;"><input class="form-control" name="{{ form.username.name }}" id="{{ form.username.id_for_label }}" type="text" placeholder="Username" maxlength="20" minlength="3" required=""></div>
                                 {{ form.password.errors }}
-                                <div class="mb-3"><input class="form-control" type="password"
-                                                         name="{{ form.password.name }}"
-                                                         id="{{ form.password.id_for_label }}" placeholder="Password"
-                                                         required=""></div>
-                                <div class="mb-3">
-                                    <button class="btn btn-primary d-block w-100" style="border-color: var(--bs-gray);"
-                                            type="submit">Login
-                                    </button>
-                                </div>
-                                <div class="mb-3"><a href="{% url 'password_reset' %}"
-                                                     style="margin-top: 0px;padding-top: 0px;">Forgot your password
-                                    ?</a></div>
-                                <div class="mb-3"><a href="{% url 'registration' %}"
-                                                     style="margin-top: 0px;padding-top: 0px;">Sign Up!</a></div>
+                                <div class="mb-3"><input class="form-control" type="password" name="{{ form.password.name }}" id="{{ form.password.id_for_label }}" placeholder="Password" required=""></div>
+                                <div class="mb-3"><button class="btn btn-primary d-block w-100" style="border-color: var(--bs-gray);" type="submit">Login</button></div>
+                                <div class="mb-3"><a href="{%  url 'password_reset' %}" style="margin-top: 0px;padding-top: 0px;">Forgot your password ?</a></div>
+                                <div class="mb-3"><a href="{% url 'registration' %}" style="margin-top: 0px;padding-top: 0px;">Sign Up!</a></div>
                             </form>
                         </div>
                     </div>
@@ -57,3 +39,5 @@
         </section>
     </div>
 {% endblock %}
+
+</html>
