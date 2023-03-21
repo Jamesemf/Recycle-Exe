@@ -150,9 +150,12 @@ def product_image(name):
     engine_id = 'd20669afb9bf147dc'
     # Send the request to the Google Custom Search API
     name = urllib.parse.quote(name)
-    url = f"https://www.googleapis.com/customsearch/v1?key=%s&cx=%s&q=%s&searchType=image" % (api_key, engine_id, name)
-    with urllib.request.urlopen(url) as response:
-        # Parse the response JSON to get the image URL
-        data = json.loads(response.read().decode())
-        image_url = data['items'][1]['link']
-    return image_url
+    try:
+        url = f"https://www.googleapis.com/customsearch/v1?key=%s&cx=%s&q=%s&searchType=image&safe=active" % (api_key, engine_id, name)
+        with urllib.request.urlopen(url) as response:
+            # Parse the response JSON to get the image URL
+            data = json.loads(response.read().decode())
+            image_url = data['items'][1]['link']
+        return image_url
+    except:
+        return 'https://trolleymate.co.uk/assets/img/error_404.jpeg'
