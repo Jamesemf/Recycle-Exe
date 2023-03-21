@@ -60,6 +60,8 @@
          * This function retrieves you current location using geolocation and sets
          * the hidden fields within the form your long and lat when loading the page
          *
+         * @param none
+         *
          * */
         function currentLocationInsert() {
             function getLocation() {
@@ -69,6 +71,11 @@
                     x.innerHTML = "Geolocation is not supported by this browser.";
                 }
             }
+            /**
+             *
+             * This function puts your current latitude and longitude into h
+             *
+             * */
             function location(position) {
                 var lat = position.coords.latitude;
                 var long = position.coords.longitude;
