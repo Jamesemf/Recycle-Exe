@@ -46,6 +46,7 @@ def bin_nav_view(request):
     if not request.user.is_authenticated:
         return redirect('login')
     if request.method == 'POST':
+        request.session['success_recycle'] = 1
         return redirect('recycle_confirm')
     if request.session['newHome'] != -1:
         data_dict = {'BinGoal': BinData.objects.get(binId=request.session['newHome'])}
