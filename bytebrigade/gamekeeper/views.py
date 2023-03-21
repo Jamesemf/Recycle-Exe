@@ -8,7 +8,11 @@ from django.contrib.auth.models import User
 
 
 def gamekeeperPage(request):
-
+    """
+    This function handles the rendering and viewing of the gamekeeper page. This page allows an Admin to create bins,shop
+    items, and gaols for users in the system. All data is collected for the system so that it can be presented in another
+    section where the Admin can delete items which they have created.
+    """
     if not request.user.is_authenticated:
         return redirect('login')
     if request.user.is_superuser:
@@ -50,6 +54,14 @@ def gamekeeperPage(request):
 
 
 def addBin(request):
+    """
+    This function handles the procedure of adding a bin to the system. The bin being added is one specified by the
+    admin in the gamekeeper page.
+    """
+    if not request.user.is_authenticated:
+        return redirect('login')
+    if not request.user.is_superuser:
+        return redirect('index')
     binId = request.POST.get('binId')
     binName = request.POST.get('binName')
     binLat = request.POST.get('binLat')
@@ -70,6 +82,13 @@ def addBin(request):
 
 
 def addGoal(request):
+    """
+    This procedure handles the adding of a goal to the system which the admin has specified
+    """
+    if not request.user.is_authenticated:
+        return redirect('login')
+    if not request.user.is_superuser:
+        return redirect('index')
     name = request.POST.get('name')
     description = request.POST.get('description')
     target = request.POST.get('target')
@@ -79,6 +98,13 @@ def addGoal(request):
 
 
 def addShopItem(request):
+    """
+    This procedure handles the adding of a shop item to the system which the admin has specified
+    """
+    if not request.user.is_authenticated:
+        return redirect('login')
+    if not request.user.is_superuser:
+        return redirect('index')
     name = request.POST.get('name')
     description = request.POST.get('description')
     cost = request.POST.get('cost')
@@ -90,18 +116,39 @@ def addShopItem(request):
 
 
 def deleteBin(request):
+    """
+    This procedure handles the removal of a bin object in the system
+    """
+    if not request.user.is_authenticated:
+        return redirect('login')
+    if not request.user.is_superuser:
+        return redirect('index')
     id = request.POST.get('bin')
     BinData.objects.filter(binId=id).delete()
     return redirect('gamekeeperPage')
 
 
 def deleteGoal(request):
+    """
+    This procedure handles the deletion of a goal item in the database
+    """
+    if not request.user.is_authenticated:
+        return redirect('login')
+    if not request.user.is_superuser:
+        return redirect('index')
     id = request.POST.get('goal')
     Goal.objects.filter(goalID=id).delete()
     return redirect('gamekeeperPage')
 
 
 def deleteShopItem(request):
+    """
+    This procedure handles the deletion of a shop item in the system
+    """
+    if not request.user.is_authenticated:
+        return redirect('login')
+    if not request.user.is_superuser:
+        return redirect('index')
     id = request.POST.get('shopItem')
     ShopItems.objects.filter(item_id=id).delete()
     return redirect('gamekeeperPage')

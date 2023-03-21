@@ -11,8 +11,12 @@ from django.template.loader import render_to_string
 # Create your views here.
 def shop_view(request):
     """
+    Web backend for’../shop/’ (name ‘shop’)
+
     This function will handle the shop page view. A user will be presented the shop page to which they can select
     which item they would like to buy. This will then be returned to the user by email after a successful purchase.
+
+    Return: 'shop.html' with shop items dictionary.
     """
     if not request.user.is_authenticated:
         return redirect('login')
@@ -30,6 +34,12 @@ def item_purchased(user, item):
     """
     This procedure handles the purchase of a given item. First we must check that the user can afford this item and then
     if they can we then purchase the product and then email them a QR code
+
+    Parameters:
+        user: user model of specific user.
+        item: item that been choosed by user.
+    return:
+        redirect back to shop page after purchase done.
     """
     user_stats = Statistic.objects.get(user=user)
     print("hi")

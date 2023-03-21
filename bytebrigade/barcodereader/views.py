@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from home.models import Transaction
+from home.models import Transaction, TransactionLike
 from products.models import Product
 from bins.models import BinData
 from datetime import datetime, time
@@ -7,6 +7,13 @@ from account.views import addstats, update_goal_stat
 
 
 def scanner_page_view(request):
+    """
+        Web backend for '../scanner' (name 'barcode_lookup')
+
+        This function returns a redirect to 'product_info' where the user is displayed information about the
+        product if the barcode of the item scanned exists within the database. If not, the user is redirected
+        to the 'create_product' to enter new information about the item.
+    """
     # If the user not log-in, redirect them to login page
     if not request.user.is_authenticated:
         return redirect('login')
@@ -24,8 +31,14 @@ def scanner_page_view(request):
         return render(request, 'BCscanner/Scanner_page.html')
 
 
+
 def recycle_confirm_view(request):
-    # This is function handles the user successfully getting to the bin
+    """
+        Web backend for '../scanner/recycle/confirm/' (name 'recycle_confirm')
+
+        This function handles if a user successfully reaches a bin after starting a quest. When they do,
+        a new transaction is registered on the index page.
+    """
     if not request.user.is_authenticated:
         return redirect('login')
     try:
@@ -37,8 +50,6 @@ def recycle_confirm_view(request):
     try:
         barcode_product = request.session['barcode']
         bin_id = request.session['newHome']
-        print(barcode_product)
-        print(bin_id)
         if Product.objects.filter(barcode=barcode_product).exists() \
                 and BinData.objects.filter(binId=bin_id).exists():
             product_data = Product.objects.get(barcode=barcode_product)
@@ -55,40 +66,34 @@ def recycle_confirm_view(request):
             request.session['barcode'] = -1
             request.session['valid'] = -1
             request.session['newHome'] = -1
-            # Call a function that will take in the calculate the points for the user
-            # If the product is new add points, this is handle in the create product part
-            weight = product_data.weight
 
+            weight = product_data.weight
             now = datetime.now().time()  # get the current time
 
-            if now >= time(9, 0) and now <= time(15, 0):
+            if now >= time(9, 0) and now <= time(15, 0):  #  If peak time points are doubled
                 points = round(weight * 122) * 2
-                peak = True;
+                peak = True  # peak is used for rendering messages
             else:
                 points = round(weight * 122)
-                peak = False;
+                peak = False
 
             addstats(request.user, product_data, points, weight)  # need to include the product
             update_goal_stat(request.user, product_data)
     except Exception as e:
         print(e)
 
+    #  Retrieve the liked transactions by the current user
+    liked = TransactionLike.objects.filter(user=request.user)
+    likedList = []
+    for x in liked:
+        likedList.append(x.transaction_id)
+
     data = Transaction.objects.all().order_by('-time')[:5]
     data_dict = {
         'Transaction': data,
         'points': points,
-        'peakTime': peak
+        'peakTime': peak,
+        'likedList': likedList,
     }
+
     return render(request, 'home/index.html', data_dict)
-
-
-def database_lookup(request):
-    print(request.POST)
-    barcode_camera = request.POST.get("barcode")
-    print("Value is ", barcode_camera)
-    if Product.objects.filter(barcode=barcode_camera).exists():
-        print("in db")
-        product_data = Product.objects.get(barcode=barcode_camera)
-        print(product_data)
-    else:
-        print("not in db")

@@ -13,6 +13,7 @@ class Product(models.Model):
         weight:
         material:
         recycle:
+        image:
     (WARNING: A default product entity with id '1' must be created at initial.)
     """
     barcode = models.CharField(max_length=30, primary_key=True)
@@ -20,6 +21,7 @@ class Product(models.Model):
     weight = models.FloatField()
     material = models.CharField(max_length=100)
     recycle = models.CharField(max_length=30)
+    image = models.URLField()
 
     def __unicode__(self):
         return u'%s' % self.barcode

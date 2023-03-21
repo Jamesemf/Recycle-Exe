@@ -5,6 +5,10 @@ from home.views import withinRange
 from home.models import Transaction
 from django.db.models import Q, Count
 from django.http import HttpResponse
+import json
+import urllib.request
+import urllib.parse
+
 
 def product_dex(request):
     """
@@ -20,8 +24,6 @@ def product_dex(request):
 
     # Data is all transactions from the current user
     data = Transaction.objects.filter(Q(user=request.user))
-
-
     # Create a dictionary of unique items that appear in transaction and keep a count
     items = {}
     for obj in data:
@@ -31,11 +33,9 @@ def product_dex(request):
         else:
             items[key] +=1
 
-    print(items)
     product_count = {
         'product': items
     }
-
     return render(request, 'products/pokedex.html', product_count)  #  Render pokedex page
 
 def create_product_view(request):
@@ -55,15 +55,13 @@ def create_product_view(request):
             name=form.get("name"),
             weight=float(form.get("weight")) / 1000,
             material=form.get("material"),
-            recycle=form.get("recycle")
+            recycle=form.get("recycle"),
+            image=product_image(form.get("name")),
         )
         new_product.save()
-
         product_data = Product.objects.get(barcode=form.get("barcode"))
         addstats(request.user, product_data, 50)
-
         request.session['new_product'] = True
-
         return redirect('product_info')
     elif request.session['barcode'] != -1: # Collect the barcode that the user has provided
         if not Product.objects.filter(barcode=request.session['barcode']).exists():
@@ -100,6 +98,7 @@ def prompt_recycle_product_view(request):
                     "present_button": 1,
                     "binType": binType,
                     "history": Transaction.objects.filter(user=request.user, product=product),
+                    "image": product.image,
                     }
     if request.session['pokedex_barcode'] != -1:
         product = Product.objects.get(barcode=request.session['pokedex_barcode'])
@@ -108,6 +107,7 @@ def prompt_recycle_product_view(request):
                 "barcode": request.session['pokedex_barcode'],
                 "weight": product.weight,
                 "material": product.material,
+                "image": product.image,
                 "recycle": product.recycle,
                 "present_button": 0,
                 "binType": binType,
@@ -115,40 +115,15 @@ def prompt_recycle_product_view(request):
                 }
     return render(request, 'products/info_product.html', data)
 
-    # product = Product.objects.get(barcode=request.session['barcode'])
-    # if request.method == 'POST':
-    #     binType = "General"
-    #     match (product.material, product.recycle):
-    #         case ("Paper", "True"):
-    #             binType = 'Paper'
-    #         case ("Plastic", "True"):
-    #             binType = 'Plastic'
-    #         case ("Cans", "True"):
-    #             binType = 'Cans'
-    #         case ("Glass", "True"):
-    #             binType = 'Glass'
-    #         case ("Plastic", "False"):
-    #             binType = 'General'
-    #         case ("Cans", "False"):
-    #             binType = 'General'
-    #         case ("Non-Recyclable", "False"):
-    #             binType = 'General'
-    #         case ("Glass", "False"):
-    #             binType = 'General'
-    #     shortestDistance, close_bin, bin_object = withinRange(request, binType)
-    #     request.session['newHome'] = bin_object.binId  # Directly correlates to a bin
-    #     print(request.session['newHome'])
-    #     return redirect("bin_map")
-    # data = {"name": product.name,
-    #         "barcode": request.session['barcode'],
-    #         "weight": product.weight,
-    #         "material": product.material,
-    #         "recycle": product.recycle,
-    #         "present_button": 1,
-    #         }
-    # return render(request, 'products/info_product.html', data)
 
 def check_bin(product):
+    """
+    Check bin recycle material and recycle data and return the bin type which should go.
+    Parameter:
+        product: the product being recycled
+    Return:
+        binType: the type of bin the product goes in
+    """
     binType = "General"
     match (product.material, product.recycle):
         case ("Paper", "True"):
@@ -170,16 +145,14 @@ def check_bin(product):
     return binType
 
 
-def database_lookup(request):
-    """
-    This function is used to check if a product exists in the database already.
-    """
-    print(request.POST)
-    barcode_camera = request.POST.get("barcode")
-    print("Value is ", barcode_camera)
-    if Product.objects.filter(barcode=barcode_camera).exists():
-        print("in db")
-        product_data = Product.objects.get(barcode=barcode_camera)
-        print(product_data)
-    else:
-        print("not in db")
+def product_image(name):
+    api_key = 'AIzaSyAOqNfgoVAOG4Lnu0-eBPq_vSzQeD7DDNA'
+    engine_id = 'd20669afb9bf147dc'
+    # Send the request to the Google Custom Search API
+    name = urllib.parse.quote(name)
+    url = f"https://www.googleapis.com/customsearch/v1?key=%s&cx=%s&q=%s&searchType=image" % (api_key, engine_id, name)
+    with urllib.request.urlopen(url) as response:
+        # Parse the response JSON to get the image URL
+        data = json.loads(response.read().decode())
+        image_url = data['items'][1]['link']
+    return image_url
