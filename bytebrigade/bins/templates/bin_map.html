@@ -290,6 +290,10 @@
      * This function handles any errors that occur when a browser does not support geolocation
      * services
      *
+     * @param browserHasGeolocation, infoWindow, pos
+     *
+     * @return none
+     *
      *
      * */
     function handleLocationError(browserHasGeolocation, infoWindow, pos) {
@@ -306,6 +310,10 @@
      *
      * This function filters the map markers based on a category selected on the html page. If a bin does not
      * contain the same category then its marker is hidden from the user
+     *
+     * @param category
+     *
+     * @return none
      *
      */
     function filterMarkers(category) {

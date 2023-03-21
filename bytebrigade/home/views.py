@@ -50,7 +50,6 @@ def home_view(request):
     likedList = []
     for x in liked:
         likedList.append(x.transaction_id)
-    print(likedList)
 
     data = Transaction.objects.all().order_by('-time')[:5]
     data_dict = {
@@ -59,6 +58,9 @@ def home_view(request):
     }
 
     return render(request, 'home/index.html', data_dict) #  Return index page
+
+
+
 
 
 # Handles a request for the leaderboard page, ordering the users by their points

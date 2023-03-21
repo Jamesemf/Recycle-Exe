@@ -54,19 +54,6 @@ def bin_nav_view(request):
         return redirect('bin_map')
 
 
-# Potentially might want to remove this as could make recycle confirm the bin arrived view instead
-def bin_arrived_view(request):
-    """
-    Web backend for '../bin/arrived/' (name 'bin_arrive')
-
-    This function returns a render to the 'bin_arrived.html'
-    """
-    if not request.user.is_authenticated:
-        return redirect('login')
-
-    return render(request, 'bin_arrived.html')
-
-
 def binDistance(request, binGoal):
     """
     This function calculates the distance between you and the bin goal.

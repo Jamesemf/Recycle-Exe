@@ -1,6 +1,11 @@
 from django.urls import path
 from . import views
 
+"""
+    GAMEKEEPER APPLICATION URLS
+    (BASED ON '../gamekepper/')
+"""
+
 urlpatterns = [
     path('', views.gamekeeperPage, name='gamekeeperPage'),
     path('addBin', views.addBin, name='addBin'),
