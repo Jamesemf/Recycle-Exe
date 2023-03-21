@@ -9,7 +9,7 @@
     <div class="col-md-12" style="padding: 0; margin: 0;">
         <div class="card-body" style="text-align: center;">
             <h4 class="card-title">Shop</h4>
-            <p class="card-text">Nullam id dolor id nibh ultricies vehicula ut id elit. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus.</p>
+            <p class="card-text" style="padding-left: 2vh; padding-right: 2vh;">This is the shop page. Here you can choose what to spend your points on, just press the buy button :).</p>
         </div>
         <form action="" method="post" id="shop_item_form">
             {% csrf_token %}
@@ -23,14 +23,11 @@
 
 </div>
 
-
-
 {% endblock %}
 
 {% block script %}
 
 <script>
-
     // Array of items that are show (for purpose of template only)
     const itemArray = [
         {% for item in shop_items %}

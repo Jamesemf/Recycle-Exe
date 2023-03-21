@@ -10,8 +10,8 @@
                     <picture class="d-sm-flex d-md-flex justify-content-sm-center justify-content-md-center">
                         <img class="d-sm-flex d-md-flex justify-content-md-start" width="100" height="80" src={{ image }}></picture>
                     <div></div>
-                    <h6 class="text-center text-muted card-subtitle mb-2">Product name: {{ name }}</h6>
-                    <h6 class="text-center text-muted card-subtitle mb-2">Barcode: {{ barcode }}</h6>
+                    <h6 class="text-center text-muted card-subtitl mb-2"><strong>{{ name }}</strong></h6>
+                    <h6 class="text-center text-muted card-subtitle mb-2"><strong>{{ barcode }}</strong></h6>
                 </div>
             </div>
         </div>
@@ -19,20 +19,22 @@
             <div class="col-md-6">
                 <div class="card-body">
                     <h4 class="card-title">Components</h4>
-                    <ul>
-                        <li>Weight: {{ weight }}</li>
-                        <li>Material: {{ material }}</li>
-                        <li>Recyclable: {{ recycle }}</li>
-                        <li>Bin-type: {{ binType }} bin</li>
+                    <ul style="list-style-type: none; text-align: center; margin: 0; padding: 0; margin-bottom: 2vh;">
+                        <li>Weight: <strong>{{ weight }}</strong></li>
+                        <li>Material: <strong>{{ material }}</strong></li>
+                        <li>Recyclable: <strong>{{ recycle }}</strong></li>
+                        <li>Bin-type: <strong>{{ binType }} bin</strong></li>
                     </ul>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="card-body">
                     <h4 class="card-title">Product History</h4>
+                    <ul style="list-style-type: none; text-align: center; margin: 0; padding: 0; margin-bottom: 2vh;">
                     {% for item in history %}
                         <li> {{ item.time }} at {{ item.bin.binName }} </li>
                     {% endfor %}
+                    </ul>
                 </div>
             </div>
         </div>
