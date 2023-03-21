@@ -92,6 +92,33 @@ def instruction_view(request):
     return render(request, 'home/about-me.html')
 
 
+def privacy_policy(request):
+    """
+    Web backend for '../privacy/' (name 'privacy')
+    Returns:
+        * The privacy_policy page.
+    """
+    return render(request, 'home/privacypolicy.html')
+
+
+def license_view(request):
+    """
+    Web backend for '../license/' (name 'license')
+    Returns:
+        * The license page.
+    """
+    return render(request, 'home/license.html')
+
+
+def about_us_view(request):
+    """
+    Web backend for '../about-us/' (name 'aboutus')
+    Returns:
+        * The about-us page.
+    """
+    return render(request, 'home/about-us.html')
+
+
 # Function that checks you are within the minimum range of a bin and return's information about your closest bin
 def withinRange(request, binType):
     """

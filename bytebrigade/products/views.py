@@ -146,6 +146,13 @@ def check_bin(product):
 
 
 def product_image(name):
+    """
+    Search and return the image url with the product name given.
+    Parameters:
+        name: string name of the product
+    Return:
+        url string of the related product image
+    """
     api_key = 'AIzaSyAOqNfgoVAOG4Lnu0-eBPq_vSzQeD7DDNA'
     engine_id = 'd20669afb9bf147dc'
     # Send the request to the Google Custom Search API

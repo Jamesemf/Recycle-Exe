@@ -3,7 +3,7 @@
 ## Install Python:
 
 If you don't already have Python installed, you can download the latest version from the official Python website: https://www.python.org/downloads/. <br>
-Follow the instructions to install Python for your operating system.
+Follow the instructions to install Python for your operating system. Python 3.11.1 is the minimum required version
 
 ## Install Django:
 
