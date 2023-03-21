@@ -7,9 +7,9 @@ from bins.models import BinData
 class TestPages(TestCase):
     def setUp(self):
         self.client = Client()
-        self.bin = BinData.objects.create(binId='XFI-LEC', binName='XFI Building Lecture', binLat='50.7358441920794000000000',
-                               binLong='-3.5297260384419000000000', bin_general='True', bin_cans='True',
-                               bin_plastic='True')
+        self.bin = BinData.objects.create(binId='XFI-LEC', binName='XFI Building Lecture',
+                                          binLat='50.7358441920794000000000', binLong='-3.5297260384419000000000',
+                                          bin_general='True', bin_cans='True', bin_plastic='True')
         session = self.client.session
         session['newHome'] = 'XFI-LEC'
         session.save()
@@ -29,4 +29,3 @@ class TestPages(TestCase):
     def test_get_bin_nav_arrive(self):
         response = self.client.get('/bins/bin/map/arrive/')
         self.assertEqual(response.status_code, 200)
-

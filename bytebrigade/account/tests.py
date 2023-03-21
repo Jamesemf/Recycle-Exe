@@ -37,6 +37,14 @@ class TestNotLoggedIn(TestCase):
         response = self.client.get('/account/password/reset')
         self.assertEqual(response.status_code, 200)
 
+    def test_account_password_reset_email_sent(self):
+        response = self.client.get('/account/password/reset/emailsent')
+        self.assertEqual(response.status_code, 200)
+
+    def test_account_password_reset_complete(self):
+        response = self.client.get('/account/password/reset/complete/')
+        self.assertEqual(response.status_code, 200)
+
     def test_account_password_change(self):
         response = self.client.get('/account/password/change')
         self.assertEqual(response.status_code, 302)
@@ -75,6 +83,7 @@ class TestLoggedIn(TestCase):
     def test_account_logged(self):
         response = self.client.get('/account/')
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['Profile'], Statistic.objects.get(user=self.user))
 
     def test_account_password_reset_logged(self):
         response = self.client.get('/account/password/reset')
@@ -85,9 +94,9 @@ class TestLoggedIn(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_account_registration_logged(self):
-        #
         response = self.client.get('/account/registration/', follow=True)
         self.assertEqual(response.redirect_chain, [('/', 302)])
+
 
     def test_post_account_addUserGoal(self):
         response = self.client.post('/account/addUserGoal/',
