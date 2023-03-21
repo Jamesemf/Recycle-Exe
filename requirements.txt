@@ -1,0 +1,5 @@
+pip install Django
+pip install Pillow
+pip install geopy
+pip install qrcode
+pip install schedule
