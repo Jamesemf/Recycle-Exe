@@ -112,25 +112,25 @@ provide an easy way for administrators and other approved individuals to manage 
 
 Within this repository there is a complex file structure. In the main directory it contains all GitHub files, Django Files,
 and Document Files 
+```
+  .
+  ├── .github                       # All GitHub files, including action files.
+  ├── bytebrigade                   # All Django files, Applications and Root file.
+  ├── Requirements.md               # Our Requirements file containing all dependencies needed in order for the system to function.
+  ├── Byte_Brigade_Privacy_Policy   # Our Privacy Policy file detailing how we manage and process users data.
+  ├── LICENSE.md                    # Out License file, contain our legal obligations.
+  └── README.md                     # Our README file which details how the system functions from a developers point of view.
 
-  .<br />
-  ├── .github                       # All GitHub files, including action files.<br />
-  ├── bytebrigade                   # All Django files, Applications and Root file.<br />
-  ├── Requirements.md               # Our Requirements file containing all dependencies needed in order for the system to function.<br />
-  ├── Byte_Brigade_Privacy_Policy   # Our Privacy Policy file detailing how we manage and process users data.<br />
-  ├── LICENSE.md                    # Out License file, contain our legal obligations.<br />
-  └── README.md                     # Our README file which details how the system functions from a developers point of view.<br />
-
-  bytebrigade<br />
-  ├── account                       # This application directory contains all files referring to user and admin accounts in the system.<br />  
-  ├── barcodereader                 # This application directory contains all files referring to the barcodereader, it contains all models and functions which this application uses.<br />
-  ├── bins                          # This application directory contains all files referring to bins, it contains all models and functions which this application uses.<br />
-  ├── bytebrigade                   # This application directory contains all files referring to the root file, it contains all models and functions which this application uses.<br />
-  ├── gamekeeper                    # This application directory contains all files referring to the gamekeeper, it contains all models and functions which this application uses.<br />
-  ├── home                          # This application directory contains all files referring to the home, it contains all models and functions which this application uses.<br />
-  ├── products                      # This application directory contains all files referring to the products, it contains all models and functions which this application uses.<br />
-  └── shop                          # This application directory contains all files referring to the shop, it contains all models and functions which this application uses.<br />
-
+  bytebrigade
+  ├── account                       # This application directory contains all files referring to user and admin accounts in the system.
+  ├── barcodereader                 # This application barcodereader, contains all models and functions which this application uses.
+  ├── bins                          # This application bins, it contains all models and functions which this application uses.
+  ├── bytebrigade                   # This application directory contains all files referring to the root file.
+  ├── gamekeeper                    # This application gamekeeper, contains all models and functions which this application uses.
+  ├── home                          # This application home, contains all models and functions which this application uses.
+  ├── products                      # This application products, contains all models and functions which this application uses.
+  └── shop                          # This application shop, contains all models and functions which this application uses.
+```
 ## Application Structure
 
 The application is structured into 7 separate applications each with a devoted purpose. 
