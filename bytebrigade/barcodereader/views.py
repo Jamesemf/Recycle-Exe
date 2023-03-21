@@ -7,13 +7,7 @@ from account.views import addstats, update_goal_stat
 
 
 def scanner_page_view(request):
-    """
-        Web backend for '../scanner' (name 'barcode_lookup')
 
-        This function returns a redirect to 'product_info' where the user is displayed information about the
-        product if the barcode of the item scanned exists within the database. If not, the user is redirected
-        to the 'create_product' to enter new information about the item.
-    """
     # If the user not log-in, redirect them to login page
     if not request.user.is_authenticated:
         return redirect('login')
@@ -48,6 +42,8 @@ def recycle_confirm_view(request):
         print(e)
         return redirect("index")
     try:
+        if request.session['success_recycle'] == -1:
+            return redirect("index")
         barcode_product = request.session['barcode']
         bin_id = request.session['newHome']
         if Product.objects.filter(barcode=barcode_product).exists() \
