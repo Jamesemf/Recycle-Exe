@@ -8,14 +8,12 @@
         <section class="py-4 py-xl-5" style="margin-top: -16px;margin-bottom: -55px;">
             <div class="container">
                 <div class="row mb-5">
-                    <div class="col-md-8 col-xl-6 text-center mx-auto">
-                        <h2 style="color: var(--bs-black);padding-bottom: 0px;margin-bottom: -30px;">Registration</h2>
-                    </div>
+                    <h2 style="color: var(--bs-black);padding-bottom: 0px;margin-bottom: -30px;">Registration</h2>
                 </div>
                 <div class="row d-flex justify-content-center">
                     <div class="col-md-6 col-xl-4">
                         <div class="card-body d-flex flex-column align-items-center">
-                            <form class="text-center" method="post">
+                            <form class="text-center" method="post" style="min-width: 30vh;">
                                 {% csrf_token %}
                                 {{ form.non_field_errors }}
                                 {% for field in user_form %}
