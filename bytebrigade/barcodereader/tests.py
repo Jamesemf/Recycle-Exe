@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.test import TestCase, Client
 
 from products.models import Product
+from home.models import Transaction
 
 
 # Create your tests here.
@@ -26,6 +27,7 @@ class TestLoggedIn(TestCase):
     def setUp(self):
         self.client = Client()
         self.user = User.objects.create_user(username='testUser', password='PassTest')
+        self.transaction = Transaction.objects.create()
         self.client.login(username='testUser', password='PassTest')
 
     def test_scanner_logged_in(self):
@@ -56,3 +58,4 @@ class TestLoggedIn(TestCase):
         session.save()
         response = self.client.get('/scanner/recycle/confirm', follow=True)
         self.assertEqual(response.redirect_chain, [('/scanner/recycle/confirm/', 301), ('/', 302)])
+        self.assertEqual(response.context[])
