@@ -24,7 +24,4 @@ jobs:
     - name: Run Tests
       run: |
         pwd
-        cd ..
-        pwd
-        cd bytebrigade
         python manage.py test
