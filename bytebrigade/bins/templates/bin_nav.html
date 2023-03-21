@@ -50,7 +50,7 @@
 {% endblock %}
 
 {% block content %}
-    <div class="card main-content">
+
         <div class="card-body">
             <div style="text-align: center;">
                 <h6 class="text-muted mb-2">Finding</h6>
@@ -72,7 +72,7 @@
                 </form>
             </div>
         </div>
-    </div>
+
 {% endblock %}
 
 {% block script %}
@@ -193,9 +193,6 @@
             const {latitude, longitude} = position.coords;
             pointDegree = getAngle(latitude, longitude, {{BinGoal.binLat}}, {{BinGoal.binLong}});
             pointCompass(compassImg, pointDegree);
-
-            //console.log("ANGLE");
-            //console.log(getAngle(50.730838, -3.516063, 50.728239, -3.522721));
 
             if (pointDegree < 0) {
                 pointDegree = pointDegree + 360;
