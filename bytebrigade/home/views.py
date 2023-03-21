@@ -22,7 +22,7 @@ def home_view(request):
     request.session['newHome'] = -1  # The closest bin
     request.session['valid'] = -1  # If the user has scanned a product, they are valid for the scanner page
     request.session['pokedex_barcode'] = -1
-    request.session['success_recycle'] = -1 
+    request.session['success_recycle'] = -1 # A session to verify if a user is valid for the addition of stats
     if not request.user.is_authenticated:
         return redirect('login')
     if request.method == 'POST':
