@@ -43,12 +43,40 @@
             <div class="col-md-12 d-flex d-md-flex justify-content-center justify-content-md-center">
                 <form action="" method="post">
                     {% csrf_token %}
-                    <input type="hidden" name="location_lat" id="lat" value=0>
-                    <input type="hidden" name="location_long" id="long" value=0>
+                    <input type="hidden" name="location_lat" id="location_lat" value=0>
+                    <input type="hidden" name="location_long" id="location_long" value=0>
                     <button class="btn btn-primary" type='submit'>Would you like to Recycle</button>
                 </form>
             </div>
         </div>
     </div>
     {% endif %}
+{% endblock %}
+    {% block script %}
+    <script>
+
+        currentLocationInsert();
+        /**
+         * This function retrieves you current location using geolocation and sets
+         * the hidden fields within the form your long and lat when loading the page
+         *
+         * */
+        function currentLocationInsert() {
+            function getLocation() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(location);
+                } else {
+                    x.innerHTML = "Geolocation is not supported by this browser.";
+                }
+            }
+            function location(position) {
+                var lat = position.coords.latitude;
+                var long = position.coords.longitude;
+                document.getElementById("location_lat").value = lat;
+                document.getElementById("location_long").value = long;
+            }
+            getLocation();
+        }
+
+    </script>
 {% endblock %}

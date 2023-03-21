@@ -1,6 +1,5 @@
 from django.contrib.auth.models import User
 from django.test import TestCase, Client
-
 from products.models import Product
 from home.models import Transaction
 
@@ -58,4 +57,3 @@ class TestLoggedIn(TestCase):
         session.save()
         response = self.client.get('/scanner/recycle/confirm', follow=True)
         self.assertEqual(response.redirect_chain, [('/scanner/recycle/confirm/', 301), ('/', 302)])
-        self.assertEqual(response.context[])

@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import Product
 from account.views import addstats
-from home.views import withinRange
+from bins.views import withinRange
 from home.models import Transaction
 from django.db.models import Q, Count
 from django.http import HttpResponse

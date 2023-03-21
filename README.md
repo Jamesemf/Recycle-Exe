@@ -22,7 +22,7 @@ To run this application locally, navigate to the bytebrigade directory and run:
 
    python manage.py runserver
 
-   Then go to http://127.0.0.1:8000/
+   Then go to ```http://127.0.0.1:8000/```
 
 
 - NAVBAR: 
@@ -188,7 +188,7 @@ an item. This application also contains the model for a shop item that will be d
 This application was tested using the django TestCase and Client modules. The tests are located in each application's
 tests.py file. To run the tests, enter:
 
-python manage.py test
+```python manage.py test```
 
 in the terminal.
 

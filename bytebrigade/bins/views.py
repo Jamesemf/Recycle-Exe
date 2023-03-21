@@ -75,3 +75,50 @@ def binDistance(request, binGoal):
     return distance
 
 
+def withinRange(request, binType):
+    """
+    This function calculates the distance of the closest bin of a particular type.
+
+    Parameters:
+        binType: The type of bin to be found
+
+    Returns:
+        shortestDistance: the shortest distance
+        close_bin: the longitude and latitude of the closest bin
+        bin_object: the closest bin_object that fits the binType requirements
+    """
+
+    curr_lat = float(request.POST.get("location_lat"))
+    curr_long = float(request.POST.get("location_long"))
+    coords_1 = (curr_lat, curr_long)
+
+    print(coords_1)
+    shortestDistance = 100000000
+    close_bin = None
+    bin_object = None
+
+    for bin in BinData.objects.all():
+        coords_2 = (bin.binLat, bin.binLong)
+        distance = geopy.distance.geodesic(coords_1, coords_2).m
+        if distance < shortestDistance:
+            if bin.bin_general and (binType == 'General'):
+                shortestDistance = distance
+                close_bin = coords_2
+                bin_object = bin
+            if bin.bin_paper and (binType == 'Paper'):
+                shortestDistance = distance
+                close_bin = coords_2
+                bin_object = bin
+            if bin.bin_cans and (binType == 'Cans'):
+                shortestDistance = distance
+                close_bin = coords_2
+                bin_object = bin
+            if bin.bin_glass and (binType == 'Glass'):
+                shortestDistance = distance
+                close_bin = coords_2
+                bin_object = bin
+            if bin.bin_plastic and (binType == 'Plastic'):
+                shortestDistance = distance
+                close_bin = coords_2
+                bin_object = bin
+    return shortestDistance, close_bin, bin_object

@@ -30,7 +30,7 @@
 <nav class="navbar navbar-expand-md justify-content-center navbar-styles nav-show">
     <div class="container">
         <a class="navbar-brand d-flex" style="color: var(--primary)"><strong><h1>Rec-Ex</h1></strong></a>
-            <div class="d-inline-flex" >
+        <div class="d-inline-flex">
             {% if request.user.is_authenticated %}
                 <div class="dropdown" style="border-radius: 8px; background-color:var(--primary); padding: 8px;"><a
                         class="dropdown-toggle text-center" aria-expanded="false" data-bs-toggle="dropdown" href="#"
@@ -44,7 +44,9 @@
                     </div>
                 </div>
             {% else %}
-                <div class="dropdown" style="border-radius: 8px;background: var(--primary);padding: 8px;"><a class="dropdown-toggle text-center" aria-expanded="false" data-bs-toggle="dropdown" style="border-radius: 8px;color: var(--bs-black); text-decoration: none;">Login</a>
+                <div class="dropdown" style="border-radius: 8px;background: var(--primary);padding: 8px;"><a
+                        class="dropdown-toggle text-center" aria-expanded="false" data-bs-toggle="dropdown"
+                        style="border-radius: 8px;color: var(--bs-black); text-decoration: none;">Login</a>
                     <div class="dropdown-menu">
                         <a class="dropdown-item" style="color: black" href="{% url 'login' %}">Log-In</a>
                         <a class="dropdown-item" style="color: black" href="{% url 'registration' %}">Sign-Up</a>
@@ -66,29 +68,32 @@
                     {% else %}
                         <li class="nav-item"><a class="btn btn-light me-2" role="button"
                                                 href="{% url 'index' %}"
-                                                style="background-color: var(--primary); color: var(--bs-btn-disabled-color);">Back Home</a>
+                                                style="background-color: var(--primary); color: var(--bs-btn-disabled-color);">Back
+                            Home</a>
                         </li>
                     {% endif %}
                 </li>
                 <li class="nav-item">
-                    <a class="btn btn-light me-2" role="button" href="{% url 'instruction' %}" style="background: var(--primary);color: var(--bs-btn-disabled-color);">How to work?</a>
+                    <a class="btn btn-light me-2" role="button" href="{% url 'instruction' %}"
+                       style="background: var(--primary);color: var(--bs-btn-disabled-color);">How to work?</a>
                 </li>
                 <li class="nav-item"><a class="btn btn-light me-2" role="button"
-                    href="{% url 'bin_map' %}"
-                    style="background-color: var(--primary); color: var(--bs-btn-disabled-color);">Map</a>
+                                        href="{% url 'bin_map' %}"
+                                        style="background-color: var(--primary); color: var(--bs-btn-disabled-color);">Map</a>
                 </li>
                 {% if request.user.is_superuser %}
-                <li class="nav-item">
+                    <li class="nav-item">
                         <a class="btn btn-light me-2" role="button"
-                           href="{% url 'gamekeeperPage' %}" style="background: var(--primary);color: var(--bs-btn-disabled-color);">GameKeeper</a>
-                </li>
+                           href="{% url 'gamekeeperPage' %}"
+                           style="background: var(--primary);color: var(--bs-btn-disabled-color);">GameKeeper</a>
+                    </li>
                 {% endif %}
             </ul>
         </div>
     </div>
 </nav>
 
-<div class="main-content" >
+<div class="main-content">
     {% block content %}{% endblock %}
 </div>
 <div style="flex: 1;"></div>
@@ -96,7 +101,8 @@
     <div class="container text-muted py-4 py-lg-5">
         <ul class="list-inline">
             <li class="list-inline-item me-4"><a class="link-secondary" href="{% url "license" %}">License</a></li>
-            <li class="list-inline-item me-4"><a class="link-secondary" href="{% url "privacy" %}">Privacy-Policy</a></li>
+            <li class="list-inline-item me-4"><a class="link-secondary" href="{% url "privacy" %}">Privacy-Policy</a>
+            </li>
             <li class="list-inline-item"><a class="link-secondary" href="{% url "aboutus" %}">About-Us</a></li>
         </ul>
         <ul class="list-inline">
