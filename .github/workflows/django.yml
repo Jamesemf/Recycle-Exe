@@ -25,5 +25,6 @@ jobs:
       run: |
         cd ..
         cd ..
+        ls
         cd bytebrigade
         python manage.py test
