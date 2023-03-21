@@ -97,7 +97,6 @@ def prompt_recycle_product_view(request):
         if request.method == 'POST':
             shortestDistance, close_bin, bin_object = withinRange(request, binType)
             request.session['newHome'] = bin_object.binId  # Directly correlates to a bin
-            print(request.session['newHome'])
             return redirect("bin_map")
         else:
             data = {"name": product.name,

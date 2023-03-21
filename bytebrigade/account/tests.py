@@ -1,8 +1,7 @@
 from django.contrib.auth.models import User
 from django.test import TestCase, Client
 
-from account.models import Goal
-from account.models import Statistic
+from account.models import Goal, Statistic, UserGoal
 from products.models import Product
 
 
@@ -104,3 +103,6 @@ class TestLoggedIn(TestCase):
                                     follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.redirect_chain, [('/account/', 302)])
+        self.assertEqual(UserGoal.objects.get(user=self.user).goal.goalID, 1)
+        # Test if user goal updates
+

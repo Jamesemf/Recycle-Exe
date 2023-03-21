@@ -69,6 +69,8 @@ def account(request):
         * Redirect to login page if user is not authenticated.
     """
     schedule.run_pending()
+    if request.user.is_superuser:
+        return redirect('index')
     if request.user.is_authenticated:
         data = Statistic.objects.get(user=request.user)
         loveRecycling = 0

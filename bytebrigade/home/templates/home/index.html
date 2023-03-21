@@ -4,53 +4,57 @@
 {% block title %} Home - Welcome! {% endblock %}
 
 {% block header %}
-     <style>
-    /* The Modal (background) */
-    .modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
-    padding-top: 100px; /* Location of the box */
-    left: 0;
-    top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0,0,0); /* Fallback color */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-    }
-    /*Text color*/
-    .modal p{
-        color: black;
-    }
-    /* Modal Content */
-    .modal-content {
-    background-color: var(--bs-secondary);
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-    }
-</style>
-{% endblock %}
+    <style>
+        /* The Modal (background) */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            padding-top: 100px; /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0, 0, 0); /* Fallback color */
+            background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+        }
 
+        /*Text color*/
+        .modal p {
+            color: black;
+        }
+
+        /* Modal Content */
+        .modal-content {
+            background-color: var(--bs-secondary);
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+    </style>
+{% endblock %}
 {% block content %}
-    <div class="fs-6" style="margin-right: 28px;margin-top: 14px;margin-bottom: 22px;color: var(--secondary);margin-left: 28px;">
-        <h1 style="background: var(--secondary);font-size: 30px;padding-bottom: 5px;color: var(--bs-black);">Daily Feed</h1>
+    <body class="text-center">
+    <div class="fs-6"
+         style="margin-right: 28px;margin-top: 14px;margin-bottom: 22px;color: var(--secondary);margin-left: 28px;">
+        <h1 style="background: var(--secondary);font-size: 30px;padding-bottom: 5px;color: var(--bs-black);">Daily
+            Feed</h1>
         <div style="background: var(--body-bg); height: 70%; overflow:auto;">
-            <table class = "table table-striped">
+            <table class="table table-striped">
                 <thead style="background: var(--primary); padding: 10px">
-                    <tr>
-                        <th style="width: 200px">Time</th>
-                        <th style="width: 200px">Recycled</th>
-                        <th style="width: 200px">Likes</th>
-                    </tr>
+                <tr>
+                    <th style="width: 200px">Time</th>
+                    <th style="width: 200px">Recycled</th>
+                    <th style="width: 200px">Likes</th>
+                </tr>
                 </thead>
                 <tbody style="color: black; border-radius: 25px;">
-                    {% for item in Transaction %}
-                    <tr style = "border-bottom: var(--primary) solid 2px;">
-                        <td>{{item.time}}</td>
-                        <td>{{item.user}} just recycled {{item.product.name}} at Bin {{item.bin.binName}}</td>
+                {% for item in Transaction %}
+                    <tr style="border-bottom: var(--primary) solid 2px;">
+                        <td>{{ item.time }}</td>
+                        <td>{{ item.user }} just recycled {{ item.product.name }} at Bin {{ item.bin.binName }}</td>
                         <form method="POST">
                             {% csrf_token %}
                             <input type="hidden" name="trans_id" value="{{ item.transaction_id }}">
@@ -63,11 +67,12 @@
                             </td>
                         </form>
                     </tr>
-                    {% endfor %}
+                {% endfor %}
                 </tbody>
             </table>
         </div>
-        <a class="btn btn-secondary d-block w-100" style="color: black; background-color: var(--primary);" href="{% url 'barcode_lookup' %}" role="button">Scan Item</a>
+        <a class="btn btn-secondary d-block w-100" style="color: black; background-color: var(--primary);"
+           href="{% url 'barcode_lookup' %}" role="button">Scan Item</a>
         <!-- If successful scan -->
         {% if points %}
             <!-- display info on successful scan -->
@@ -83,6 +88,7 @@
             </div>
         {% endif %}
     </div>
+    </body>
 {% endblock %}
 
 {% block script %}
@@ -92,12 +98,12 @@
          * Displays a pop-up with information
          * */
         var modal = document.getElementById("infoModel");
-        if(modal != null){
+        if (modal != null) {
             modal.style.display = "block";
             modal.style.alignSelf = "center";
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
+            window.onclick = function (event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
                 }
             }
         }

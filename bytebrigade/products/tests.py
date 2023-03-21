@@ -4,6 +4,7 @@ from django.test import TestCase, Client
 from account.models import Statistic
 from products.models import Product
 from bins.models import BinData
+from home.models import Transaction
 
 
 # Create your tests here.
@@ -12,13 +13,17 @@ class TestNotLoggedIn(TestCase):
     def setUp(self):
         self.client = Client()
 
-    def test_products_create(self):
-        response = self.client.get('/products/create/', follow=True)
+    def test_product_create(self):
+        response = self.client.get('/product/create/', follow=True)
         self.assertEqual(response.redirect_chain, [('/account/login/', 302)])
 
-    def test_products(self):
-        response = self.client.get('/products/', follow=True)
+    def test_product(self):
+        response = self.client.get('/product/', follow=True)
         self.assertEqual(response.redirect_chain, [('/account/login/', 302)])
+
+    def test_product_dex(self):
+        response = self.client.get('/product/dex', follow=True)
+        self.assertEqual(response.redirect_chain, [('/product/dex/', 301), ('/account/login/', 302)])
 
 
 class TestLoggedIn(TestCase):
@@ -30,39 +35,64 @@ class TestLoggedIn(TestCase):
         self.prod = Product.objects.create(barcode='1', name='testName', weight='0.3', material='Paper', recycle='True')
         self.bin = BinData.objects.create(binId='1', binName='testBin', binLat='50.7358441920794000000000',
                                binLong='-3.5297260384419000000000', bin_paper='True')
+        self.transaction = Transaction.objects.create(user=self.user, product=self.prod, bin=self.bin)
         self.client.login(username='testUser', password='PassTest')
 
     def tearDown(self):
         self.client.logout()
 
-    def test_products_create(self):
+    def test_product_create_logged(self):
         session = self.client.session
         session['barcode'] = 1
+        session['pokedex_barcode'] = -1
         session.save()
-        response = self.client.post('/products/create/', {'barcode': '4060900109798', 'name': '7up Free',
+        response = self.client.post('/product/create/', {'barcode': '4060900109798', 'name': '7up Free',
                                                           'weight': '500', 'material': 'Plastic', 'recycle': 'True'},
                                     follow=True)
-        self.assertEqual(response.redirect_chain, [('/products/', 302)])
+        self.assertEquals(self.stat.lastRecycle, self.prod)
+        self.assertEqual(response.redirect_chain, [('/product/', 302)])
 
-    def test_get_products_create(self):
+    def test_get_product_create_logged(self):
         session = self.client.session
         session['barcode'] = 1
         session.save()
-        response = self.client.get('/products/create/', follow=True)
+        response = self.client.get('/product/create/', follow=True)
         self.assertEquals(response.redirect_chain, [('/', 302)])
 
-    def test_products(self):
+    def test_product_logged(self):
         session = self.client.session
         session['barcode'] = 1
         session.save()
-        response = self.client.post('/products/', {'location_lat': '50.7358441920794000000000',
+        response = self.client.post('/product/', {'location_lat': '50.7358441920794000000000',
                                                    'location_long': '-3.5297260384419000000000'}, follow=True)
-        self.assertEqual(response.redirect_chain, [('/bins/bin/map/', 302)])
+        self.assertEqual(response.redirect_chain, [('/bin/map/', 302)])
 
-    def test_get_products(self):
+    def test_get_product_logged(self):
         session = self.client.session
         session['barcode'] = 1
+        session['pokedex_barcode'] = -1
         session.save()
-        response = self.client.get('/products/')
+        response = self.client.get('/product/')
+        self.assertEqual(response.context['present_button'], 1)
         self.assertEqual(response.status_code, 200)
 
+    def test_get_product_logged_pokedex_barcode_valid(self):
+        session = self.client.session
+        session['barcode'] = 1
+        session['pokedex_barcode'] = 1
+        session.save()
+        response = self.client.get('/product/')
+        self.assertEqual(response.context['present_button'], 0)
+        self.assertEqual(response.status_code, 200)
+
+
+    def test_product_dex_logged(self):
+        session = self.client.session
+        session['barcode'] = -1
+        session.save()
+        response = self.client.post('/product/dex/', {'barcode': '1'}, follow=True)
+        self.assertEqual(response.redirect_chain, [('/product/', 302)])
+
+    def test_get_product_dex_logged(self):
+        response = self.client.get('/product/dex/')
+        self.assertEqual(response.context['product'], {self.prod : 1})

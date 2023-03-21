@@ -21,7 +21,6 @@ def shop_view(request):
     if not request.user.is_authenticated:
         return redirect('login')
     if request.method == 'POST':
-        print("hi")
         item_id = request.POST.get("shop_item")
         item = ShopItems.objects.get(item_id=item_id)
         item_purchased(request.user, item)
@@ -42,9 +41,8 @@ def item_purchased(user, item):
         redirect back to shop page after purchase done.
     """
     user_stats = Statistic.objects.get(user=user)
-    print("hi")
     if(item.stock == 0):
-        return redirect('shop_view')
+        return redirect('shop')
     if(user_stats.points>=item.cost):
         item.stock -= 1
         item.save()
@@ -69,9 +67,8 @@ def item_purchased(user, item):
         # Attach the QR code image as an inline attachment
         email.attach('qrcode.png', qr_image_data, 'image/png')
         email.send()
-    else:
-        # They cannot afford the product
-        return redirect('shop_view')
+    # They cannot afford the product
+    return redirect('shop')
 
 
 

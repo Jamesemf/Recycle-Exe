@@ -50,29 +50,29 @@
 {% endblock %}
 
 {% block content %}
-
-        <div class="card-body">
-            <div style="text-align: center;">
-                <h6 class="text-muted mb-2">Finding</h6>
-                <h4>{{ BinGoal.binName }}</h4>
-            </div>
-            <div style="text-align: center;">
-                <h6 class="text-muted mb-2" id="distance"></h6>
-            </div>
-            <div style="text-align: center;">
-                <div class="compass">
-                    <img id="compass" style="width: 100%" src="{% static 'figures/arrow.png' %}">
-                </div>
-                <button class="start-btn" style="visibility: hidden;">Start compass</button>
-            </div>
-            <div>
-                <form id="formId" method="POST">
-                    {% csrf_token %}
-                    <input type="hidden" name="distance" id="distance" value=0>
-                </form>
-            </div>
+    <body>
+    <div class="card-body">
+        <div style="text-align: center;">
+            <h6 class="text-muted mb-2">Finding</h6>
+            <h4>{{ BinGoal.binName }}</h4>
         </div>
-
+        <div style="text-align: center;">
+            <h6 class="text-muted mb-2" id="distance"></h6>
+        </div>
+        <div style="text-align: center;">
+            <div class="compass">
+                <img id="compass" style="width: 100%" src="{% static 'figures/arrow.png' %}">
+            </div>
+            <button class="start-btn" style="visibility: hidden;">Start compass</button>
+        </div>
+        <div>
+            <form id="formId" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="distance" id="distance" value=0>
+            </form>
+        </div>
+    </div>
+    </body>
 {% endblock %}
 
 {% block script %}
@@ -146,7 +146,7 @@
                 img.style.transform = `rotate(${angleDiff}deg)`;
             }
         }
-        
+
         /**
          * Calculates the distance between two geographical coordinates using the Haversine formula.
          *
