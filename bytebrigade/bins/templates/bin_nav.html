@@ -166,9 +166,8 @@
             } else if (IOS) {
                 document.getElementById("test").innerHTML += "ios";
                 // For IOS devices
-                DeviceOrientationEvent.requestPermission()
-                    .then((response) => {
-                        if (response == "granted") {
+                DeviceOrientationEvent.requestPermission().then((response) => {
+                        if (response === "granted") {
                             alert("GRANTED");
                         }
                             /*
