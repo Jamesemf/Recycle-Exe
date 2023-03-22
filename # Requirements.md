@@ -39,4 +39,9 @@ schedule is a Python library for scheduling events in python. It provides a simp
 freezegun is a Python library for setting datetime in python. It provides the ability to modify the value returned by datetime.datetime.now() which is extremely useful when testing functions that use datetime.
 **Command:** ```pip install freezegun```
 
-That's it! You've now installed Django, Pillow, geopy, qrcode, schedule, and freezegun on your system. You can start building this web application using the libraries.
+## Install validators
+
+validators is a python library for validating different types of data in python. It provides the ability to validate if a string contains a url, which is useful when testing for returns from an API.
+**Command:** ```pip install validators```
+
+That's it! You've now installed Django, Pillow, geopy, qrcode, schedule, freezegun, and validators on your system. You can start building this web application using the libraries.

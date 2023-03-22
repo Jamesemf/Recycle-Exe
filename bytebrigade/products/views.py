@@ -3,8 +3,7 @@ from .models import Product
 from account.views import addstats
 from bins.views import withinRange
 from home.models import Transaction
-from django.db.models import Q, Count
-from django.http import HttpResponse
+from django.db.models import Q
 import json
 import urllib.request
 import urllib.parse
@@ -14,7 +13,7 @@ def product_dex(request):
     """
     Web backend for '../product/dex/' (name 'product_dex')
     
-    This function creates a information page on the number of every product that a user has binned
+    This function creates an information page on the number of every product that a user has binned
     """
     if not request.user.is_authenticated:
         return redirect('login')
@@ -53,7 +52,7 @@ def create_product_view(request):
     """
     if not request.user.is_authenticated:
         return redirect('login')
-    if request.method == 'POST': # Add the product to the database
+    if request.method == 'POST':
         form = request.POST
         new_product = Product.objects.create(
             barcode=form.get("barcode"),
@@ -65,8 +64,10 @@ def create_product_view(request):
         )
         new_product.save()
         product_data = Product.objects.get(barcode=form.get("barcode"))
-        addstats(request.user, product_data, 50)
+        addstats(request.user, product_data, 50)  # Adding 50 points for registering a new product
         request.session['new_product'] = True
+        request.session['index_info'] = {"points": 50}
+
         return redirect('product_info')
     elif request.session['barcode'] != -1: # Collect the barcode that the user has provided
         if not Product.objects.filter(barcode=request.session['barcode']).exists():
@@ -109,6 +110,13 @@ def prompt_recycle_product_view(request):
                     "history": Transaction.objects.filter(user=request.user, product=product)[:5],
                     "image": product.image,
                     }
+            try:
+                if request.session['index_info']:
+                    for key, value in request.session['index_info'].items():
+                        data.update({key: value})
+                    request.session['index_info'] = {}
+            except Exception as e:
+                print(e)
     if request.session['pokedex_barcode'] != -1:
         product = Product.objects.get(barcode=request.session['pokedex_barcode'])
         binType = check_bin(product)
@@ -122,6 +130,7 @@ def prompt_recycle_product_view(request):
                 "binType": binType,
                 "history": Transaction.objects.filter(user=request.user, product=product)[:5],
                 }
+
     return render(request, 'products/info_product.html', data)
 
 

@@ -1,3 +1,5 @@
+import validators
+
 from django.contrib.auth.models import User
 from django.test import TestCase, Client
 
@@ -101,5 +103,4 @@ class TestLoggedIn(TestCase):
 
     def test_product_image(self):
         image = product_image("test")
-        self.assertEqual(image, "https://www.mdanderson.org/images/publications/cancerwise/Generics/positive-at-home-rap"
-                                "id-test.jpg")
+        self.assertEqual(validators.url(image), True)
