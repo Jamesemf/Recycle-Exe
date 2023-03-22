@@ -20,7 +20,7 @@ a barcode reader in our project. Here is the GitHub source where we have source 
 
 ## Usage
 
-- To run this application, please use Python 3.11.
+- To run this application, please use Python 3.11 or visit ```https://www.bytebrigade.net```
 
 - EXECUTING CODE:
 To run this application locally, navigate to the bytebrigade directory and run:
