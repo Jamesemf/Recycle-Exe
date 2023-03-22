@@ -169,7 +169,7 @@
                 DeviceOrientationEvent.requestPermission()
                     .then((response) => {
                         if (response == "granted") {
-                            window.addEventListener("deviceorientation", handler, true);
+                            window.addEventListener("deviceorientation", handleCompass, true);
 
                             function handleCompass(event) {
                                 rotationAngle = event.webkitCompassHeading;
