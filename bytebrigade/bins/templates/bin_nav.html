@@ -51,33 +51,43 @@
 
 {% block content %}
 
-        <div class="card-body">
-            <div style="text-align: center;">
-                <h6 class="text-muted mb-2">Finding</h6>
-                <h4>{{ BinGoal.binName }}</h4>
-            </div>
-            <div style="text-align: center;">
-                <h6 class="text-muted mb-2" id="distance_present"></h6>
-            </div>
-            <div style="text-align: center;">
-                <div class="compass">
-                    <img id="compass" style="width: 100%" src="{% static 'figures/arrow.png' %}">
-                </div>
-                <button class="start-btn" onclick="runAutoRefresh()" id = "sButton">Start compass</button>
-            </div>
-            <div>
-                <form id="formId" method="POST">
-                    {% csrf_token %}
-                    <input type="hidden" name="distance" id="distance" value=0>
-                </form>
-            </div>
+    <div class="card-body">
+        <div style="text-align: center;">
+            <h6 class="text-muted mb-2">Finding</h6>
+            <h4>{{ BinGoal.binName }}</h4>
         </div>
+        <div style="text-align: center;">
+            <h6 class="text-muted mb-2" id="distance"></h6>
+        </div>
+        <div style="text-align: center;">
+            <div class="compass">
+                <img id="compass" style="width: 100%" src="{% static 'figures/arrow.png' %}">
+            </div>
+            <button class="start-btn" onclick="runAutoRefresh()">Start compass</button>
+        </div>
+        <div>
+            <form id="formId" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="distance" id="distance" value=0>
+            </form>
+        </div>
+    </div>
 {% endblock %}
 
 {% block script %}
     <script>
         const compassImg = document.getElementById('compass');
-        document.getElementById('distance_present').innerHTML = "<strong>Loading...</strong>";
+        document.getElementById('distance').innerHTML = "<strong>Loading...</strong>";
+
+        const isMobile = {
+            android() {
+                return /Android/i.test(navigator.userAgent);
+            },
+            iOS() {
+                return /iPhone|iPad|iPod/i.test(navigator.userAgent);
+            },
+        };
+
 
         /**
          * Calculates the angle (in degrees) between two latitude and longitude coordinates,
@@ -112,38 +122,82 @@
          */
         function pointCompass(img, angle) {
             // Register a device orientation event listener to handle changes in device orientation
-            window.addEventListener('deviceorientation.alpha', handleCompass);
-
             /**
              * Handles device orientation events and updates the HTML image element to point to North.
              * @param {DeviceOrientationEvent} event - The device orientation event.
              */
-            function handleCompass(event) {
-                console.log("Changing bearing");
-                // Calculate the rotation angle needed to point the image to North (i.e., 0 degrees)
-                let rotationAngle = 0;
-                if (event.webkitCompassHeading !== undefined) {
-                    // For iOS devices
-                    rotationAngle = event.webkitCompassHeading;
-                } else if (event.absolute === true && event.alpha !== null) {
-                    // For Android devices
+
+            /*
+            if (event.webkitCompassHeading !== undefined) {
+                // For iOS devices
+                rotationAngle = event.webkitCompassHeading;
+            } else if (event.absolute === true && event.alpha !== null) {
+
+            }*/
+
+
+            // Calculate the rotation angle needed to point the image to North (i.e., 0 degrees)
+            let rotationAngle = 0;
+
+            if (isMobile.android()) {
+                // For Android devices
+                window.addEventListener('deviceorientationabsolute', handleCompass);
+
+                /**
+                 * Handles device orientation events and updates the HTML image element to point to North.
+                 * @param {DeviceOrientationEvent} event - The device orientation event.
+                 */
+                function handleCompass(event) {
                     rotationAngle = 360 - event.alpha;
+
+                    // Calculate the difference between the current angle and the desired angle
+                    var angleDiff = angle - rotationAngle;
+
+                    if (angleDiff > 359) {
+                        angleDiff = angleDiff - 360;
+                    } else if (angleDiff < 0) {
+                        angleDiff = angleDiff + 360;
+                    }
+
+                    // Apply the rotation transform to the image
+                    img.style.transform = `rotate(${angleDiff}deg)`;
                 }
 
-                // Calculate the difference between the current angle and the desired angle
-                var angleDiff = angle - rotationAngle;
+            } else if (isMobile.iOS()) {
+                // For IOS devices
+                DeviceOrientationEvent.requestPermission()
+                    .then((response) => {
+                        if (response == "granted") {
+                            window.addEventListener("deviceorientation", handler, true);
 
-                if (angleDiff > 359) {
-                    angleDiff = angleDiff - 360;
-                } else if (angleDiff < 0) {
-                    angleDiff = angleDiff + 360;
-                }
+                            function handleCompass(event) {
+                                rotationAngle = event.webkitCompassHeading;
 
-                // Apply the rotation transform to the image
-                img.style.transform = `rotate(${angleDiff}deg)`;
+                                // Calculate the difference between the current angle and the desired angle
+                                var angleDiff = angle - rotationAngle;
+
+                                if (angleDiff > 359) {
+                                    angleDiff = angleDiff - 360;
+                                } else if (angleDiff < 0) {
+                                    angleDiff = angleDiff + 360;
+                                }
+
+                                // Apply the rotation transform to the image
+                                img.style.transform = `rotate(${angleDiff}deg)`;
+                            }
+
+                        } else {
+                            alert("Must be allowed");
+                        }
+                    })
+                    .catch("browser not supported");
+
+
+            } else {
+                // Do something if the device is not an Android or iOS device
             }
         }
-        
+
         /**
          * Calculates the distance between two geographical coordinates using the Haversine formula.
          * @param {number} latitude - The latitude of the start location.
@@ -162,9 +216,8 @@
                 Math.sin(dLon / 2) * Math.sin(dLon / 2);
             var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
             var d = 1000 * R * c; // Distance in m
-            {#d = d.toFixed(2);#}
-            console.log(d)
-            document.getElementById('distance_present').innerHTML = "Distance to bin: <strong>" + d + "m</strong>";
+            d = d.toFixed(2);
+            document.getElementById('distance').innerHTML = "Distance to bin: <strong>" + d + "m</strong>";
             if (d <= 3) {
                 document.getElementById("formId").submit();
             }
@@ -173,7 +226,6 @@
         /**
          * Converts degrees to radians.
          * @param {number} deg - The angle in degrees to be converted to radians.
-         *
          * @returns {number} The angle converted to radians.
          */
         function deg2rad(deg) {
@@ -185,18 +237,7 @@
         let pointDegree;
         let auto_refresh = setInterval(function () {
             navigator.geolocation.getCurrentPosition(locationHandler);
-        }, 100);
-
-        /**
-         * Runs the functions which update the compass position and distance from the bin
-         */
-        function runAutoRefresh() {
-            // Automatically refreshes the degree to point to at a set interval
-            let auto_refresh = setInterval(function () {
-                navigator.geolocation.getCurrentPosition(locationHandler);
-            }, 100);
-            document.getElementById("sButton").style.display='none';
-        }
+        }, 1000);
 
         /**
          * Handles the current location of the user and updates the compass direction and distance to the bin.
@@ -206,11 +247,11 @@
             const {latitude, longitude} = position.coords;
             pointDegree = getAngle(latitude, longitude, {{BinGoal.binLat}}, {{BinGoal.binLong}});
             pointCompass(compassImg, pointDegree);
-            binDistance(latitude, longitude);
+
             if (pointDegree < 0) {
                 pointDegree = pointDegree + 360;
             }
-
+            binDistance(latitude, longitude);
         }
     </script>
 {% endblock %}

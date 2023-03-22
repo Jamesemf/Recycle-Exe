@@ -1,3 +1,4 @@
+from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from .forms import RegistrationForm
@@ -42,6 +43,8 @@ def register(request):
             new_user.save()
             new_statistic = Statistic.objects.create(user=new_user)
             new_statistic.save()
+            user = authenticate(username=user_form.cleaned_data['username'], password=user_form.cleaned_data['password'])
+            login(request, user)
             return render(request, 'registration/register_done.html', {'new_user': new_user})
     else:
         user_form = RegistrationForm()
