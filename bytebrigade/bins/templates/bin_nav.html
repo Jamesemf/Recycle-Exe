@@ -91,7 +91,7 @@
     function init() {
         navigator.geolocation.watchPosition(locationHandler, errorCallback, {
             enableHighAccuracy: true,
-            distanceFilter: 0,
+            distanceFilter: 0, // Updates whenever you move
             maximumAge: 0,
             timeout: 1000
             });

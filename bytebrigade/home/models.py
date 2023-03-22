@@ -2,21 +2,21 @@ from django.db import models
 from django.contrib.auth.models import User
 from bins.models import BinData
 from products.models import Product
-import time
 
 
 class Transaction(models.Model):
     """
     *** Transaction model ***
 
-    This model is used to store data on the latest transactions of users.
+    This model is used to store data on transactions of users.
 
-    Transaction_id: The unique id of the transaction
-    time: The time the transaction occured (takes the current time)
-    bin: The bin object the transaction occured at
-    user: The user object that completed the transaction
-    product: The product object that was recycled
-    likes: A count of the number of likes a transaction recieved
+    Model Field:
+        Transaction_id: The unique id of the transaction
+        time: The time the transaction occured (takes the current time)
+        bin: The bin object the transaction occured at
+        user: The user object that completed the transaction
+        product: The product object that was recycled
+        likes: A count of the number of likes a transaction recieved
 
     """
     transaction_id = models.AutoField(primary_key=True)
@@ -29,16 +29,14 @@ class Transaction(models.Model):
 
 class TransactionLike(models.Model):
     """
-           *** TransactionLike model ***
+    *** TransactionLike model ***
 
-           This model is used to store data on who has liked what transaction
+    This model is used to store data on who has liked what transaction
 
-           Transaction_id: The unique id of the transaction
-           time: The time the transaction occured (takes the current time)
-           bin: The bin object the transaction occured at
-           user: The user object that completed the transaction
-           product: The product object that was recycled
-           likes: A count of the number of likes a transaction received
+    Model Field:
+        Transaction_id: The unique id of the transactionLike
+        user: The user object that liked the transaction
+        transaction: the transaction object that has been liked
 
            """
     transactionlike_id = models.AutoField(primary_key=True)

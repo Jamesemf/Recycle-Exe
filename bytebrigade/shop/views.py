@@ -1,14 +1,12 @@
-from django.core.mail import EmailMessage
 from django.shortcuts import render, redirect
 import qrcode
 import qrcode.image.svg
 from io import BytesIO
 from .models import ShopItems
 from account.models import Statistic
-
 from django.core.mail import EmailMultiAlternatives
-from django.template.loader import render_to_string
-# Create your views here.
+
+
 def shop_view(request):
     """
     Web backend for’../shop/’ (name ‘shop’)
@@ -28,6 +26,7 @@ def shop_view(request):
     data = ShopItems.objects.all()
     data_dict = {'shop_items': data}
     return render(request, 'shop.html', data_dict)
+
 
 def item_purchased(user, item):
     """

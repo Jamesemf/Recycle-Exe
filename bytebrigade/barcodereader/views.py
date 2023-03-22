@@ -1,4 +1,3 @@
-
 from django.shortcuts import render, redirect
 from home.models import Transaction, TransactionLike
 from products.models import Product
@@ -6,8 +5,6 @@ from bins.models import BinData
 from datetime import datetime, time
 from account.views import addstats, update_goal_stat
 from django.utils import timezone
-
-
 
 
 def scanner_page_view(request):
@@ -36,8 +33,6 @@ def scanner_page_view(request):
             if (x.product.barcode == barcode_product) and (((timezone.now() - x.time).total_seconds())/60 <= 30):
                 request.session['index_info'] = {"refuse": "This product was already a recent transaction. Points not added. "}
                 return redirect('index')
-
-
         # We set the session barcode so that we can then use it in the other areas of the project
         request.session['barcode'] = barcode_product
         request.session['valid'] = 1
@@ -48,7 +43,6 @@ def scanner_page_view(request):
             return redirect('create_product')
     else:
         return render(request, 'BCscanner/Scanner_page.html')
-
 
 
 def recycle_confirm_view(request):

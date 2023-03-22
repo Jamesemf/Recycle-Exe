@@ -9,11 +9,11 @@ from django.db.models import Q
 from products.models import Product
 from home.views import reset_sessions
 import datetime
-import calendar
 import schedule
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.db.models import Count
+
 
 def register(request):
     """

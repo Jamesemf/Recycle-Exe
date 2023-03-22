@@ -3,6 +3,7 @@ from .models import BinData
 import geopy
 from home.views import reset_sessions
 
+
 def bin_map_view(request):
     """
     Web backend for '../bin/map/' (name 'bin_map')

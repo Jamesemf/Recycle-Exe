@@ -7,10 +7,12 @@ class ShopItems(models.Model):
     """
     ***ShopItems Model***
 
-    shop_item_id - the unique id of a product
-    shop_item_name - the name of the product
-    shop_item_cost - the cost of the product in points
-    shop_item_description - a description of the product being sold
+    Model Field:
+        item_id - the unique id of a product
+        name - the name of the product
+        cost - the cost of the product in points
+        description - a description of the product being sold
+        stock - the number of this shop items available
 
     This is a model to contain the information for items that we will sell in the shop page
     Users can spend points on these items. Each item has a QR code associated with it, which we generate ourselvesves.

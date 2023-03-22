@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 class Statistic(models.Model):
     """
     *** Statistic Model ***
+
     Data model that record user personal recycle stats.
 
     Model Fields:
@@ -15,6 +16,8 @@ class Statistic(models.Model):
         curweek: The points earned in the current week
         curmonth: The points earned in the current month
         curyear: The points earned in the current year
+        lastRecycle: The last item that was recycled by a user if there is one
+        loveRecycling: The item that an individiuals most likes recycling
 
     (WARNING: A default product entity with id '1' must be created at initial.)
     """
@@ -68,6 +71,7 @@ class UserGoal(models.Model):
         user: The user the goal belongs to
         goal: The goal object the user want to achieve
         value: The value of this user goal
+        goalType: A String value of goal type about which type of garbage user need to recycle.
     """
     userGoalID = models.AutoField(primary_key=True)
     userGoalNum = models.IntegerField()
