@@ -3,3 +3,4 @@ geopy==2.3.0
 qrcode==7.4.2
 schedule==1.1.0
 pillow==9.4.0
+freezegun==1.2.2

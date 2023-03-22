@@ -6,6 +6,8 @@ from products.models import Product
 from bins.models import BinData
 from home.models import Transaction
 
+from products.views import product_image
+
 
 # Create your tests here.
 
@@ -95,4 +97,9 @@ class TestLoggedIn(TestCase):
 
     def test_get_product_dex_logged(self):
         response = self.client.get('/product/dex/')
-        self.assertEqual(response.context['product'], {self.prod : 1})
+        self.assertEqual(response.context['product'], {self.prod: 1})
+
+    def test_product_image(self):
+        image = product_image("test")
+        self.assertEqual(image, "https://www.mdanderson.org/images/publications/cancerwise/Generics/positive-at-home-rap"
+                                "id-test.jpg")

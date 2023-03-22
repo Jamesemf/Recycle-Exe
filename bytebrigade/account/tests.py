@@ -4,6 +4,10 @@ from django.test import TestCase, Client
 from account.models import Goal, Statistic, UserGoal
 from products.models import Product
 
+from account.views import reset_week, reset_month, reset_year
+
+from freezegun import freeze_time
+
 
 # Create your tests here.
 
@@ -75,7 +79,7 @@ class TestLoggedIn(TestCase):
         self.client = Client()
         self.user = User.objects.create_user(username='testUser', password='PassTest')
         self.goal = Goal.objects.create(goalID='1', name='testGoal', description='A test goal', target='100')
-        self.stat = Statistic.objects.create(user=self.user)
+        self.stat = Statistic.objects.create(user=self.user, curweek='10', curmonth='10', curyear='10')
         self.prod = Product.objects.create(barcode='1', name='testName', weight='0.3', material='Paper', recycle='True')
         self.client.login(username='testUser', password='PassTest')
 
@@ -105,4 +109,23 @@ class TestLoggedIn(TestCase):
         self.assertEqual(response.redirect_chain, [('/account/', 302)])
         self.assertEqual(UserGoal.objects.get(user=self.user).goal.goalID, 1)
         # Test if user goal updates
+
+    def test_reset_week(self):
+        reset_week()
+        response = self.client.get('/account/')
+        self.assertEqual(response.context['Profile'].curweek, 0)
+
+    @freeze_time("2023-01-01")
+    def test_reset_month(self):
+        reset_month()
+        response = self.client.get('/account/')
+        self.assertEqual(response.context['Profile'].curmonth, 0)
+
+    @freeze_time("2023-01-01")
+    def test_reset_month(self):
+        reset_year()
+        response = self.client.get('/account/')
+        self.assertEqual(response.context['Profile'].curyear, 0)
+
+
 
