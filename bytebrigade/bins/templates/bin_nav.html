@@ -164,6 +164,8 @@
                 }
 
             } else if (IOS) {
+                // Alerts if the requestpermission is supported
+                alert(DeviceOrientationEvent.requestPermission());
                 document.getElementById("test").innerHTML += "ios";
                 // For IOS devices
                 DeviceOrientationEvent.requestPermission()
@@ -191,7 +193,7 @@
                             alert("Must be allowed");
                         }
                     })
-                    .catch(() => alert("browser not supported"));
+                    .catch(() => console.log("browser not supported"));//alert("browser not supported"));
 
 
             } else {
