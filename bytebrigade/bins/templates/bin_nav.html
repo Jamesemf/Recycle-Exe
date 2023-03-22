@@ -76,8 +76,15 @@
 
 {% block script %}
     <script>
+          // boolean for if the device is android
+        const IOS = navigator.userAgent.match(/iPhone|iPad|iPod/) &&
+            navigator.userAgent.match(/AppleWebKit/);
 
         // Automatically refreshes the degree to point to at a set interval for android devices
+        if (IOS) {
+            askPermission();
+        }
+        
         let auto_refresh = setInterval(function () {
             navigator.geolocation.getCurrentPosition(locationHandler);
         }, 1000);
@@ -92,10 +99,6 @@
                 return /Android/i.test(navigator.userAgent);
             }
         };
-
-        // boolean for if the device is android
-        const IOS = navigator.userAgent.match(/iPhone|iPad|iPod/) &&
-            navigator.userAgent.match(/AppleWebKit/);
 
         /**
          * Function to be used when the button is pressed on IOS, so the permissions are granted
@@ -207,7 +210,7 @@
                             alert("Must be allowed");
                         }
                     })
-                    .catch(() => alert("browser not supported"));
+                    .catch(() => console.log("browser not supported"));
 
             } else {
                 // Device isn't android or IOS
