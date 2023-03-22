@@ -59,7 +59,6 @@
         <div style="text-align: center;">
             <h6 class="text-muted mb-2" id="distance"></h6>
         </div>
-        <div id="test"></div>
         <div style="text-align: center;">
             <div class="compass">
                 <img id="compass" style="width: 100%" src="{% static 'figures/arrow.png' %}">
@@ -100,7 +99,7 @@
             if (IOS) {
                 DeviceOrientationEvent.requestPermission().then((response) => {
                     if (response === "granted") {
-                        alert("YES WORK, ME HAPPY");
+                        //alert("YES WORK, ME HAPPY");
                     }
                 }).catch(() => alert("no work, me sad"));
             }
@@ -160,7 +159,6 @@
             let rotationAngle = 0;
 
             if (isMobile.android()) {
-                document.getElementById("test").innerHTML += "android";
                 // For Android devices
                 window.addEventListener('deviceorientationabsolute', handleCompass);
 
@@ -185,16 +183,10 @@
                 }
 
             } else if (IOS) {
-                document.getElementById("test").innerHTML += "ios";
                 // For IOS devices
                 DeviceOrientationEvent.requestPermission()
                     .then((response) => {
                         if (response === "granted") {
-
-                            alert("GRANTED");
-                            window.addEventListener("deviceorientation", handleCompass, true);
-                        }
-                            /*
                             window.addEventListener("deviceorientation", handleCompass, true);
 
                             function handleCompass(event) {
@@ -215,7 +207,7 @@
 
                         } else {
                             alert("Must be allowed");
-                        } */
+                        }
                     })
                     .catch(() => alert("browser not supported"));
 
