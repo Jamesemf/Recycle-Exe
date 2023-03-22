@@ -79,14 +79,64 @@
     <script>
     const IOS = navigator.userAgent.match(/iPhone|iPad|iPod/) && navigator.userAgent.match(/AppleWebKit/);
 
-    function init(){
+    /**
+     * Function run to get deviceorientationabsolute handler on android when the "start quest"
+     * button is pressed.
+     */
+    {#function init(){#}
+    {#    navigator.geolocation.watchPosition(locationHandler);#}
+    {#    startCompass();#}
+    {#    if (!IOS){#}
+    {#        window.addEventListener("deviceorientationabsolute", handler,true);#}
+    {#    }#}
+    function init() {
+      if (IOS) {
+        startUpdatingLocation();
+        startCompass();
+        DeviceOrientationEvent.requestPermission().then(response => {
+          if (response === "granted") {
+            window.addEventListener("deviceorientation", handler, true);
+          } else {
+            alert("Must provide access");
+          }
+        }).catch(() => alert("Browser not supported"));
+      } else {
         navigator.geolocation.watchPosition(locationHandler);
         startCompass();
-        if (!IOS){
-            window.addEventListener("deviceorientationabsolute", handler,true);
-        }
+        window.addEventListener("deviceorientationabsolute", handler, true);
+      }
     }
 
+    function startUpdatingLocation() {
+      if (navigator.geolocation) {
+        // Create a new CLLocationManager object
+        const locationManager = new CLLocationManager();
+        locationManager.delegate = {
+          locationManagerDidUpdateLocations: function(manager, locations) {
+            // Get the most recent location from the locations array
+            const location = locations[locations.length - 1];
+            // Call the locationHandler function with the new location
+            locationHandler({
+              coords: {
+                latitude: location.coordinate.latitude,
+                longitude: location.coordinate.longitude
+              }
+            });
+          }
+        };
+        // Request permission to use location services
+        locationManager.requestWhenInUseAuthorization();
+        // Start updating the location
+        locationManager.startUpdatingLocation();
+      } else {
+        alert("Geolocation is not supported by this browser.");
+      }
+    }
+
+
+    /**
+     * Function to start the compass and request permission for IOS
+     */
     function startCompass(){
         if(IOS) {
             DeviceOrientationEvent.requestPermission().then((response) => {
@@ -102,7 +152,6 @@
     function handler(e){
         const compass = e.webkitCompassHeading || Math.abs(e.alpha - 360)
         document.getElementById("compass").style.transform = `rotate(${-compass + pointDegree}deg)`;
-
     }
 
 
@@ -127,9 +176,6 @@
      */
     function calcDegreeAndDistance(lat1, lon1, lat2, lon2) {
         // Calculating the angle between the two points
-       // console.log(lat1)
-       // console.log(lon1)
-
         var dLon = lon2 - lon1;
         const y = Math.sin(dLon) * Math.cos(lat2);
         const x =
@@ -163,7 +209,6 @@
 
     function locationHandler(position) {
         const {latitude, longitude} = position.coords;
-        {#distance(latitude, longitude);#}
         pointDegree = calcDegreeAndDistance(latitude, longitude, {{BinGoal.binLat}}, {{BinGoal.binLong}});
     }
 
