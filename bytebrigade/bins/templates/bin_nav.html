@@ -64,7 +64,7 @@
             <div class="compass">
                 <img id="compass" style="width: 100%" src="{% static 'figures/arrow.png' %}">
             </div>
-            <button class="start-btn" onclick="runAutoRefresh()">Start compass</button>
+            <button class="start-btn" onclick="askPermission()"> Start Quest</button>
         </div>
         <div>
             <form id="formId" method="POST">
@@ -85,7 +85,28 @@
                 return /Android/i.test(navigator.userAgent);
             }
         };
-        const IOS = navigator.userAgent.match(/iPhone|iPad|iPod/) && navigator.userAgent.match(/AppleWebKit/);
+        const IOS = navigator.userAgent.match(/iPhone|iPad|iPod/) &&
+            navigator.userAgent.match(/AppleWebKit/);
+
+         function askPermission(){
+            navigator.geolocation.watchPosition(locationHandler);
+            startCompass();
+            if (!isIOS){
+                window.addEventListener("deviceorientationabsolute",handler,true);
+            }
+        }
+
+        function startCompass() {
+            if (IOS) {
+                DeviceOrientationEvent.requestPermission().then((response) => {
+                    if (response === "granted") {
+                        alert("YES WORK, ME HAPPY");
+                    }
+                }).catch(() => alert("no work, me sad"));
+            }
+        }
+
+
 
 
         /**
@@ -166,9 +187,12 @@
             } else if (IOS) {
                 document.getElementById("test").innerHTML += "ios";
                 // For IOS devices
-                DeviceOrientationEvent.requestPermission().then((response) => {
+                DeviceOrientationEvent.requestPermission()
+                    .then((response) => {
                         if (response === "granted") {
+
                             alert("GRANTED");
+                            window.addEventListener("deviceorientation", handleCompass, true);
                         }
                             /*
                             window.addEventListener("deviceorientation", handleCompass, true);
@@ -246,6 +270,7 @@
          * Handles the current location of the user and updates the compass direction and distance to the bin.
          * @param {Position} position - The current position of the user.
          */
+        /*
         function locationHandler(position) {
             const {latitude, longitude} = position.coords;
             pointDegree = getAngle(latitude, longitude, {{BinGoal.binLat}}, {{BinGoal.binLong}});
@@ -255,6 +280,6 @@
                 pointDegree = pointDegree + 360;
             }
             binDistance(latitude, longitude);
-        }
+        }*/
     </script>
 {% endblock %}
