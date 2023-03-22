@@ -63,7 +63,7 @@
             <div class="compass">
                 <img id="compass" style="width: 100%" src="{% static 'figures/arrow.png' %}">
             </div>
-            <button class="start-btn" onclick="askPermission()" id = "startBtn"> Start Quest</button>
+            <button class="start-btn" onclick="init()" id = "startBtn"> Start Quest</button>
         </div>
         <div>
             <form id="formId" method="POST">
@@ -75,200 +75,97 @@
 {% endblock %}
 
 {% block script %}
+
     <script>
-          // boolean for if the device is android
-        const IOS = navigator.userAgent.match(/iPhone|iPad|iPod/) &&
-            navigator.userAgent.match(/AppleWebKit/);
+    const IOS = navigator.userAgent.match(/iPhone|iPad|iPod/) && navigator.userAgent.match(/AppleWebKit/);
 
-        // Automatically refreshes the degree to point to at a set interval for android devices
-        if (IOS) {
-            askPermission();
+    function init(){
+        navigator.geolocation.watchPosition(locationHandler);
+        startCompass();
+        if (!IOS){
+            window.addEventListener("deviceorientationabsolute", handler,true);
         }
-        
-        let auto_refresh = setInterval(function () {
-            navigator.geolocation.getCurrentPosition(locationHandler);
-        }, 1000);
+    }
 
-        // js element of compass
-        const compassImg = document.getElementById('compass');
-        document.getElementById('distance').innerHTML = "<strong>Loading...</strong>";
-
-        // boolean for if the device is android
-        const isMobile = {
-            android() {
-                return /Android/i.test(navigator.userAgent);
-            }
-        };
-
-        /**
-         * Function to be used when the button is pressed on IOS, so the permissions are granted
-         */
-        function askPermission(){
-            document.getElementById("startBtn").style.display = 'none'
-            if (IOS) {
-                DeviceOrientationEvent.requestPermission().then((response) => {
+    function startCompass(){
+        if(IOS) {
+            DeviceOrientationEvent.requestPermission().then((response) => {
                     if (response === "granted") {
-                        // Permission Granted
+                        window.addEventListener("deviceorientation",handler, true);
+                    }else{
+                        alert("Must provide access")
                     }
-                }).catch(() => alert("not supported"));
+                }).catch(() => alert("Browser not supported"));
             }
         }
 
-        /**
-         * Calculates the angle (in degrees) between two latitude and longitude coordinates,
-         * as if you're pointing north from the first point.
-         *
-         * @param {number} lat1 - The latitude of the first point (in degrees).
-         * @param {number} lon1 - The longitude of the first point (in degrees).
-         * @param {number} lat2 - The latitude of the second point (in degrees).
-         * @param {number} lon2 - The longitude of the second point (in degrees).
-         * @returns {number} - The angle (in degrees) between the two points, as if you're pointing north from the first point.
-         */
-        function getAngle(lat1, lon1, lat2, lon2) {
-            const dLon = lon2 - lon1;
-            const y = Math.sin(dLon) * Math.cos(lat2);
-            const x =
-                Math.cos(lat1) * Math.sin(lat2) -
-                Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon);
-            const radians = Math.atan2(y, x);
-            const degrees = radians * 180 / Math.PI;
+    function handler(e){
+        const compass = e.webkitCompassHeading || Math.abs(e.alpha - 360)
+        document.getElementById("compass").style.transform = `rotate(${-compass + pointDegree}deg)`;
 
-            // Calculate the angle as if you're pointing north from the first point
-            let angleFromNorth = (degrees + 360) % 360;
+    }
 
-            return angleFromNorth;
+
+    /**
+     * Converts degrees to radians.
+     * @param {number} deg - The angle in degrees to be converted to radians.
+     * @returns {number} The angle converted to radians.
+     */
+    function deg2rad(deg) {
+        return deg * (Math.PI / 180);
+    }
+
+    /**
+     * Calculates the angle (in degrees) between two latitude and longitude coordinates,
+     * as if you're pointing north from the first point.
+     *
+     * @param {number} lat1 - The latitude of the first point (in degrees).
+     * @param {number} lon1 - The longitude of the first point (in degrees).
+     * @param {number} lat2 - The latitude of the second point (in degrees).
+     * @param {number} lon2 - The longitude of the second point (in degrees).
+     * @returns {number} - The angle (in degrees) between the two points, as if you're pointing north from the first point.
+     */
+    function calcDegreeAndDistance(lat1, lon1, lat2, lon2) {
+        // Calculating the angle between the two points
+       // console.log(lat1)
+       // console.log(lon1)
+
+        var dLon = lon2 - lon1;
+        const y = Math.sin(dLon) * Math.cos(lat2);
+        const x =
+            Math.cos(lat1) * Math.sin(lat2) -
+            Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon);
+        const radians = Math.atan2(y, x);
+        const degrees = radians * 180 / Math.PI;
+
+        // Calculate the angle as if you're pointing north from the first point
+        let angleFromNorth = (degrees + 360) % 360;
+
+        // Calculating the distance between the two points
+        var R = 6371; // Radius of the earth in km
+        var dLat = deg2rad(lat2 - lat1);
+        dLon = deg2rad(lon2 - lon1);
+        var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        var d = 1000 * R * c; // Distance in m
+        d = d.toFixed(3);
+        document.getElementById('distance_output').innerHTML = "Distance to bin: <strong>" + d + "m</strong>";
+        if (d <= 3) {
+            document.getElementById("formId").submit();
         }
 
+        return angleFromNorth;
+    }
 
-        /**
-         * Points an HTML image to a specific compass heading.
-         * @param {HTMLElement} img - The HTML image element to point to the specified compass heading.
-         * @param {number} angle - The compass heading to point the HTML image element to, in degrees (0-359).
-         */
-        function pointCompass(img, angle) {
-            // Register a device orientation event listener to handle changes in device orientation
-            /**
-             * Handles device orientation events and updates the HTML image element to point to North.
-             * @param {DeviceOrientationEvent} event - The device orientation event.
-             */
+    let pointDegree;
 
-            // Calculate the rotation angle needed to point the image to North (i.e., 0 degrees)
-            let rotationAngle = 0;
+    function locationHandler(position) {
+        const {latitude, longitude} = position.coords;
+        {#distance(latitude, longitude);#}
+        pointDegree = calcDegreeAndDistance(latitude, longitude, {{BinGoal.binLat}}, {{BinGoal.binLong}});
+    }
 
-            if (isMobile.android()) {
-                // For Android devices
-                window.addEventListener('deviceorientationabsolute', handleCompass);
-
-                /**
-                 * Handles device orientation events and updates the HTML image element to point to North.
-                 * @param {DeviceOrientationEvent} event - The device orientation event.
-                 */
-                function handleCompass(event) {
-                    rotationAngle = 360 - event.alpha;
-
-                    // Calculate the difference between the current angle and the desired angle
-                    var angleDiff = angle - rotationAngle;
-
-                    if (angleDiff > 359) {
-                        angleDiff = angleDiff - 360;
-                    } else if (angleDiff < 0) {
-                        angleDiff = angleDiff + 360;
-                    }
-
-                    // Apply the rotation transform to the image
-                    img.style.transform = `rotate(${angleDiff}deg)`;
-                }
-
-            } else if (IOS) {
-                // For IOS devices
-                DeviceOrientationEvent.requestPermission()
-                    .then((response) => {
-                        if (response === "granted") {
-                            window.addEventListener("deviceorientation", handleCompass, true);
-
-                            /**
-                             * Handles device orientation events and updates the HTML image element to point to North.
-                             * @param {DeviceOrientationEvent} event - The device orientation event.
-                             */
-                            function handleCompass(event) {
-                                rotationAngle = event.webkitCompassHeading;
-
-                                // Calculate the difference between the current angle and the desired angle
-                                var angleDiff = angle - rotationAngle;
-
-                                if (angleDiff > 359) {
-                                    angleDiff = angleDiff - 360;
-                                } else if (angleDiff < 0) {
-                                    angleDiff = angleDiff + 360;
-                                }
-
-                                // Apply the rotation transform to the image
-                                img.style.transform = `rotate(${angleDiff}deg)`;
-                            }
-
-                        } else {
-                            alert("Must be allowed");
-                        }
-                    })
-                    .catch(() => console.log("browser not supported"));
-
-            } else {
-                // Device isn't android or IOS
-            }
-        }
-
-        /**
-         * Calculates the distance between two geographical coordinates using the Haversine formula.
-         * @param {number} latitude - The latitude of the start location.
-         * @param {number} longitude - The longitude of the start location.
-         */
-        function binDistance(latitude, longitude) {
-            var lat1 = latitude;
-            var lon1 = longitude;
-            var lat2 = {{BinGoal.binLat}};
-            var lon2 = {{BinGoal.binLong}};
-            var R = 6371; // Radius of the earth in km
-            var dLat = deg2rad(lat2 - lat1);
-            var dLon = deg2rad(lon2 - lon1);
-            var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
-                Math.sin(dLon / 2) * Math.sin(dLon / 2);
-            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-            var d = 1000 * R * c; // Distance in m
-            d = d.toFixed(2);
-            console.log(lat1)
-            console.log(lon1)
-            document.getElementById('distance_output').innerHTML = "Distance to bin: <strong>" + d + "m</strong>";
-            if (d <= 3) {
-                document.getElementById("formId").submit();
-            }
-        }
-
-        /**
-         * Converts degrees to radians.
-         * @param {number} deg - The angle in degrees to be converted to radians.
-         * @returns {number} The angle converted to radians.
-         */
-        function deg2rad(deg) {
-            return deg * (Math.PI / 180);
-        }
-
-        /**
-         * Handles the current location of the user and updates the compass direction and distance to the bin.
-         * @param {Position} position - The current position of the user.
-         */
-        function locationHandler(position) {
-            const {latitude, longitude} = position.coords;
-            let pointDegree;
-            pointDegree = getAngle(latitude, longitude, {{BinGoal.binLat}}, {{BinGoal.binLong}});
-            pointCompass(compassImg, pointDegree);
-
-            if (pointDegree < 0) {
-                pointDegree = pointDegree + 360;
-            }
-            console.log(latitude);
-            console.log(longitude);
-            binDistance(latitude, longitude);
-        }
     </script>
 {% endblock %}
