@@ -72,15 +72,20 @@
             image.src = itemArray[i].img;
             cardBodyDiv.appendChild(image);
 
-            // title
+            // name
             const titleH4 = document.createElement('h4');
             titleH4.classList.add('card-title');
             titleH4.innerText = itemArray[i].name;
 
-            // sub-title
+            // description
             const subtitleH6 = document.createElement('h6');
             subtitleH6.classList.add('text-muted', 'card-subtitle', 'mb-2');
             subtitleH6.innerText = itemArray[i].description;
+
+            // cost
+            const subtitleH8 = document.createElement('h6');
+            subtitleH8.classList.add('text-muted', 'card-subtitle', 'mb-2');
+            subtitleH8.innerText = "Price: "+itemArray[i].cost;
 
             // button
             if (itemArray[i].stock !== '0') {
@@ -95,6 +100,7 @@
                 cardBodyDiv.appendChild(image);
                 cardBodyDiv.appendChild(titleH4);
                 cardBodyDiv.appendChild(subtitleH6);
+                cardBodyDiv.appendChild(subtitleH8);
                 cardBodyDiv.appendChild(button);
                 cardDiv.appendChild(cardBodyDiv);
                 container.appendChild(cardDiv);
@@ -105,6 +111,7 @@
                 cardBodyDiv.appendChild(image);
                 cardBodyDiv.appendChild(titleH4);
                 cardBodyDiv.appendChild(subtitleH6);
+                cardBodyDiv.appendChild(subtitleH8);
                 cardBodyDiv.appendChild(subtitleH7);
                 cardDiv.appendChild(cardBodyDiv);
                 container.appendChild(cardDiv);

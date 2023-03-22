@@ -63,7 +63,7 @@
                 <div class="compass">
                     <img id="compass" style="width: 100%" src="{% static 'figures/arrow.png' %}">
                 </div>
-                <button class="start-btn" style="">Start compass</button>
+                <button class="start-btn" onclick="runAutoRefresh()">Start compass</button>
             </div>
             <div>
                 <form id="formId" method="POST">
@@ -72,7 +72,6 @@
                 </form>
             </div>
         </div>
-
 {% endblock %}
 
 {% block script %}
@@ -179,11 +178,22 @@
         }
 
 
-        // Automatically refreshes the degree to point to at a set interval
+        // Automatically refreshes the degree to point to at a set interval for android devices
         let pointDegree;
         let auto_refresh = setInterval(function () {
             navigator.geolocation.getCurrentPosition(locationHandler);
         }, 1000);
+
+        /**
+         * Runs the functions which update the compass position and distance from the bin
+         */
+        function runAutoRefresh() {
+            // Automatically refreshes the degree to point to at a set interval
+            let pointDegree;
+            let auto_refresh = setInterval(function () {
+                navigator.geolocation.getCurrentPosition(locationHandler);
+            }, 1000);
+        }
 
         /**
          * Handles the current location of the user and updates the compass direction and distance to the bin.

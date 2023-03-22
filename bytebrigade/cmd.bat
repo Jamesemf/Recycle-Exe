@@ -1,1 +1,1 @@
-hypercorn --certfile cert.crt --keyfile cert.key --bind bytebrigade.net:443 --insecure-bind bytebrigade.net:80 bytebrigade.asgi:application
+hypercorn bytebrigade.asgi:application --config=hypercorn_config.py
