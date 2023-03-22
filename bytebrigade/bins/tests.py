@@ -28,6 +28,7 @@ class TestLoggedIn(TestCase):
                                           bin_general='True', bin_cans='True', bin_plastic='True')
         session = self.client.session
         session['newHome'] = 'XFI-LEC'
+        session['shownMap'] = 1
         session.save()
         self.client.login(username='testUser', password='PassTest')
 
@@ -60,6 +61,7 @@ class TestNewHomeNotSet(TestCase):
                                           bin_general='True', bin_cans='True', bin_plastic='True')
         session = self.client.session
         session['newHome'] = -1
+        session['shownMap'] = -1
         session.save()
         self.client.login(username='testUser', password='PassTest')
 
