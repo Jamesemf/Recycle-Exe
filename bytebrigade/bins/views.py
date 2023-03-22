@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import BinData
-import geopy
+import geopy.distance
 from home.views import reset_sessions
 
 
@@ -96,6 +96,7 @@ def withinRange(request, binType):
     curr_lat = float(request.POST.get("location_lat"))
     curr_long = float(request.POST.get("location_long"))
     coords_1 = (curr_lat, curr_long)
+
 
     shortestDistance = 100000000
     close_bin = None
