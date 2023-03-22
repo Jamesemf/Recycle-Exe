@@ -34,4 +34,9 @@ qrcode is a Python library for generating QR codes. It provides a simple interfa
 schedule is a Python library for scheduling events in python. It provides a simple interface for creating functional events in python. You can install schedule using pip:
 **Command:**  ```pip install schedule```
 
-That's it! You've now installed Django, Pillow, geopy, qrcode, and schedule on your system. You can start building this web application using the libraries.
+## Install freezegun:
+
+freezegun is a Python library for setting datetime in python. It provides the ability to modify the value returned by datetime.datetime.now() which is extremely useful when testing functions that use datetime.
+**Command:** ```pip install freezegun```
+
+That's it! You've now installed Django, Pillow, geopy, qrcode, schedule, and freezegun on your system. You can start building this web application using the libraries.

@@ -15,6 +15,10 @@ body {
     background-color: var(--secondary);
     display: flex;
     flex-direction: column;
+    font-family: helvetica;
+}
+body * {
+    font-family: helvetica;
 }
 .navbar-styles {
     background-color: #FBFAF8;
@@ -31,7 +35,6 @@ body {
 .main-content {
     opacity: 90%;
     background-color: var(--secondary);
-    /*width: 85vw;*/
     margin: 0 auto;
     margin-top: 5vh;
     padding-top: 2vh;

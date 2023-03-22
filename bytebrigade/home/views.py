@@ -43,12 +43,13 @@ def home_view(request):
         for item in bins:
             bin_ob = BinData(binId=item[0], binName=item[1], binLat=item[2], binLong=item[3], binPhoto='figures/bins/default.jpg', bin_general=item[4], bin_recycle=item[5], bin_paper=item[6], bin_cans=item[7], bin_glass=item[8], bin_plastic=item[9], bin_non_rec=item[10])
             bin_ob.save()
+
     #  Retrieve liked transactions by the current user
     liked = TransactionLike.objects.filter(user=request.user)
     likedList = []
     for x in liked:
         likedList.append(x.transaction_id)
-    data = Transaction.objects.all().order_by('-time')[:5]
+    data = Transaction.objects.all().order_by('-time')[:4]
 
     data_dict = {
         'Transaction': data,
@@ -61,7 +62,7 @@ def home_view(request):
             request.session['index_info'] = {}
     except Exception as e:
         print(e)
-    return render(request, 'home/index.html', data_dict) #  Return index page
+    return render(request, 'home/index.html', data_dict)
 
 # Handles a request for the leaderboard page, ordering the users by their points
 def getLeaderboard(request):
