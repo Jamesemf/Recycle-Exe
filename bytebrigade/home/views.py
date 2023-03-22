@@ -18,11 +18,7 @@ def home_view(request):
     information.
     If the request is a POST then the user is redirected to the scanner page.
     """
-    request.session['barcode'] = -1  # The barcode that the user has scanned
-    request.session['newHome'] = -1  # The closest bin
-    request.session['valid'] = -1  # If the user has scanned a product, they are valid for the scanner page
-    request.session['pokedex_barcode'] = -1
-    request.session['success_recycle'] = -1 # A session to verify if a user is valid for the addition of stats
+    reset_sessions(request)
     if not request.user.is_authenticated:
         return redirect('login')
     if request.method == 'POST':
@@ -73,11 +69,7 @@ def getLeaderboard(request):
     value in the model. It then returns a render of 'Leaderboard.html' passing the data_dict
     with the model information.
     """
-    request.session['barcode'] = -1  # The barcode that the user has scanned
-    request.session['newHome'] = -1  # The closest bin
-    request.session['valid'] = -1  # If the user has scanned a product, they are valid for the scanner page
-    request.session['pokedex_barcode'] = -1
-    request.session['success_recycle'] = -1  # A session to verify if a user is valid for the addition of stats
+    reset_sessions(request)
     if not request.user.is_authenticated:
         return redirect('login')  #  Redirects to login page if not logged in
     statData = Statistic.objects.all().order_by('-points')
@@ -92,11 +84,7 @@ def instruction_view(request):
     Returns:
         * The instruction about page.
     """
-    request.session['barcode'] = -1  # The barcode that the user has scanned
-    request.session['newHome'] = -1  # The closest bin
-    request.session['valid'] = -1  # If the user has scanned a product, they are valid for the scanner page
-    request.session['pokedex_barcode'] = -1
-    request.session['success_recycle'] = -1  # A session to verify if a user is valid for the addition of stats
+    reset_sessions(request)
     return render(request, 'home/about-me.html')
 
 
@@ -106,11 +94,7 @@ def privacy_policy(request):
     Returns:
         * The privacy_policy page.
     """
-    request.session['barcode'] = -1  # The barcode that the user has scanned
-    request.session['newHome'] = -1  # The closest bin
-    request.session['valid'] = -1  # If the user has scanned a product, they are valid for the scanner page
-    request.session['pokedex_barcode'] = -1
-    request.session['success_recycle'] = -1  # A session to verify if a user is valid for the addition of stats
+    reset_sessions(request)
     return render(request, 'home/privacypolicy.html')
 
 
@@ -120,11 +104,7 @@ def license_view(request):
     Returns:
         * The license page.
     """
-    request.session['barcode'] = -1  # The barcode that the user has scanned
-    request.session['newHome'] = -1  # The closest bin
-    request.session['valid'] = -1  # If the user has scanned a product, they are valid for the scanner page
-    request.session['pokedex_barcode'] = -1
-    request.session['success_recycle'] = -1  # A session to verify if a user is valid for the addition of stats
+    reset_sessions(request)
     return render(request, 'home/license.html')
 
 
@@ -134,12 +114,16 @@ def about_us_view(request):
     Returns:
         * The about-us page.
     """
+    reset_sessions(request)
+    return render(request, 'home/about-us.html')
+
+def reset_sessions(request):
+    """
+    This function resets all the sessions storing information about the web application use
+    """
+    request.session['shownMap'] = -1 # Indicates whether the map has been shown with a specific marker
     request.session['barcode'] = -1  # The barcode that the user has scanned
     request.session['newHome'] = -1  # The closest bin
     request.session['valid'] = -1  # If the user has scanned a product, they are valid for the scanner page
-    request.session['pokedex_barcode'] = -1
+    request.session['pokedex_barcode'] = -1 # The barcode of a product selected within the pokedex
     request.session['success_recycle'] = -1  # A session to verify if a user is valid for the addition of stats
-    return render(request, 'home/about-us.html')
-
-
-

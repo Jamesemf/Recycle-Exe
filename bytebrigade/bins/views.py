@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import BinData
 import geopy
+from home.views import reset_sessions
 
 def bin_map_view(request):
     """
@@ -20,12 +21,15 @@ def bin_map_view(request):
     if request.method == 'POST':
         return redirect('bin_nav')
 
-    if request.session['newHome'] != -1:
-        data_dict = {
-            'bin': BinData.objects.get(binId=request.session['newHome']),
-            'presentButton': 1,
-        }
+    if request.session['shownMap'] != -1:
+        if request.session['newHome'] != -1:
+            data_dict = {
+                'bin': BinData.objects.get(binId=request.session['newHome']),
+                'presentButton': 1,
+            }
+        request.session['shownMap'] = -1
     else:
+        reset_sessions(request)
         data_dict = {
             'Bins': BinData.objects.all(),
             'presentButton': 0

@@ -6,6 +6,7 @@ from datetime import datetime, time
 from account.views import addstats, update_goal_stat
 
 
+
 def scanner_page_view(request):
     """
     Web backend for '../scanner/' (name 'barcode_lookup')
