@@ -103,6 +103,7 @@
                     }
                 }).catch(() => alert("no work, me sad"));
             }
+            update();
         }
 
 
@@ -251,13 +252,13 @@
             return deg * (Math.PI / 180);
         }
 
-
         // Automatically refreshes the degree to point to at a set interval for android devices
-        /*
-        let pointDegree;
-        let auto_refresh = setInterval(function () {
-            navigator.geolocation.getCurrentPosition(locationHandler);
-        }, 1000);*
+        function update() {
+            let pointDegree;
+            let auto_refresh = setInterval(function () {
+                navigator.geolocation.getCurrentPosition(locationHandler);
+            }, 1000);
+        }
 
         /**
          * Handles the current location of the user and updates the compass direction and distance to the bin.
