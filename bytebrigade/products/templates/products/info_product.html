@@ -56,46 +56,48 @@
     </body>
 {% endblock %}
 {% block script %}
-    <script>
+    {% if present_button == 1 %}
+        <script>
 
-        currentLocationInsert();
-
-        /**
-         * This function retrieves you current location using geolocation and sets
-         * the hidden fields within the form your long and lat when loading the page
-         *
-         * @param none
-         *
-         * @return none
-         *
-         * */
-        function currentLocationInsert() {
-            function getLocation() {
-                if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(location);
-                } else {
-                    x.innerHTML = "Geolocation is not supported by this browser.";
-                }
-            }
+            currentLocationInsert();
 
             /**
+             * This function retrieves you current location using geolocation and sets
+             * the hidden fields within the form your long and lat when loading the page
              *
-             * This function puts your current latitude and longitude into fields within a hidden form
-             *
-             * @param position: the position element of geolocation
+             * @param none
              *
              * @return none
              *
              * */
-            function location(position) {
-                var lat = position.coords.latitude;
-                var long = position.coords.longitude;
-                document.getElementById("location_lat").value = lat;
-                document.getElementById("location_long").value = long;
+            function currentLocationInsert() {
+                function getLocation() {
+                    if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(location);
+                    } else {
+                        x.innerHTML = "Geolocation is not supported by this browser.";
+                    }
+                }
+
+                /**
+                 *
+                 * This function puts your current latitude and longitude into fields within a hidden form
+                 *
+                 * @param position: the position element of geolocation
+                 *
+                 * @return none
+                 *
+                 * */
+                function location(position) {
+                    var lat = position.coords.latitude;
+                    var long = position.coords.longitude;
+                    document.getElementById("location_lat").value = lat;
+                    document.getElementById("location_long").value = long;
+                }
+
+                getLocation();
             }
 
-            getLocation();
-        }
-
-    </script>
+        </script>
+    {% endif %}
 {% endblock %}

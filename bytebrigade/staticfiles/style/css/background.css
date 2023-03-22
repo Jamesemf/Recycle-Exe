@@ -68,7 +68,7 @@
     animation-delay: 6s;
 }
 .slideshow li:nth-child(3) span {
-    background-image: url("../images/glasney.png");
+    background-image: url("../images/glasney.jpg");
     -webkit-animation-delay: 12s;
     -moz-animation-delay: 12s;
     -o-animation-delay: 12s;
