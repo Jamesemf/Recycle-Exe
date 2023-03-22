@@ -26,7 +26,7 @@
     /* Modal Content */
     .modal-content {
     background-color: var(--bs-secondary);
-    margin: auto;
+    margin: 15% auto;
     padding: 20px;
     border: 1px solid #888;
     width: 80%;
@@ -37,6 +37,9 @@
 {% block content %}
     </div>
     <div class="feeds" style="margin: 0 auto;color: var(--secondary); width: 80vw;">
+        <div class="content-container" style="align-items: center; justify-content: center;">
+            <h5 style="color: black;">Doubles points 9am - 3pm</h5>
+        </div>
         <div style="height: 70%; overflow:auto;">
             <div class="top-bar">
                 <h3 style="width: 200px">Time</h3>
@@ -73,10 +76,19 @@
                         <p>DOUBLE POINTS !</p>
                         <p>Thank you for recycling you gained {{ points }} points !</p>
                     {% else %}
-                        <p>Thank you for recycling you gained {{ points }} points</p>
+                        <p>Thank you for recycling you gained {{ points }} points !</p>
                     {% endif %}
                 </div>
             </div>
+        {% endif %}
+
+        {% if refuse %}
+            <div id="infoModel" class="modal">
+                <div class="modal-content" style="color:green">
+                        <p>{{ refuse }}</p>
+                </div>
+            </div>
+
         {% endif %}
     </div>
 {% endblock %}

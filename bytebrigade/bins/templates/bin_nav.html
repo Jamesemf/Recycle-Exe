@@ -57,13 +57,13 @@
             <h4>{{ BinGoal.binName }}</h4>
         </div>
         <div style="text-align: center;">
-            <h6 class="text-muted mb-2" id="distance"></h6>
+            <h6 class="text-muted mb-2" id="distance_output"></h6>
         </div>
         <div style="text-align: center;">
             <div class="compass">
                 <img id="compass" style="width: 100%" src="{% static 'figures/arrow.png' %}">
             </div>
-            <button class="start-btn" onclick="askPermission()"> Start Quest</button>
+            <button class="start-btn" onclick="askPermission()" id = "startBtn"> Start Quest</button>
         </div>
         <div>
             <form id="formId" method="POST">
@@ -76,38 +76,40 @@
 
 {% block script %}
     <script>
+
+        // Automatically refreshes the degree to point to at a set interval for android devices
+        let auto_refresh = setInterval(function () {
+            navigator.geolocation.getCurrentPosition(locationHandler);
+        }, 1000);
+
+        // js element of compass
         const compassImg = document.getElementById('compass');
         document.getElementById('distance').innerHTML = "<strong>Loading...</strong>";
 
+        // boolean for if the device is android
         const isMobile = {
             android() {
                 return /Android/i.test(navigator.userAgent);
             }
         };
+
+        // boolean for if the device is android
         const IOS = navigator.userAgent.match(/iPhone|iPad|iPod/) &&
             navigator.userAgent.match(/AppleWebKit/);
 
-         function askPermission(){
-            navigator.geolocation.watchPosition(locationHandler);
-            startCompass();
-            if (!isIOS){
-                window.addEventListener("deviceorientationabsolute",handler,true);
-            }
-        }
-
-        function startCompass() {
+        /**
+         * Function to be used when the button is pressed on IOS, so the permissions are granted
+         */
+        function askPermission(){
+            document.getElementById("startBtn").style.display = 'none'
             if (IOS) {
                 DeviceOrientationEvent.requestPermission().then((response) => {
                     if (response === "granted") {
-                        //alert("YES WORK, ME HAPPY");
+                        // Permission Granted
                     }
-                }).catch(() => alert("no work, me sad"));
+                }).catch(() => alert("not supported"));
             }
-            update();
         }
-
-
-
 
         /**
          * Calculates the angle (in degrees) between two latitude and longitude coordinates,
@@ -147,15 +149,6 @@
              * @param {DeviceOrientationEvent} event - The device orientation event.
              */
 
-            /*
-            if (event.webkitCompassHeading !== undefined) {
-                // For iOS devices
-                rotationAngle = event.webkitCompassHeading;
-            } else if (event.absolute === true && event.alpha !== null) {
-
-            }*/
-
-
             // Calculate the rotation angle needed to point the image to North (i.e., 0 degrees)
             let rotationAngle = 0;
 
@@ -190,6 +183,10 @@
                         if (response === "granted") {
                             window.addEventListener("deviceorientation", handleCompass, true);
 
+                            /**
+                             * Handles device orientation events and updates the HTML image element to point to North.
+                             * @param {DeviceOrientationEvent} event - The device orientation event.
+                             */
                             function handleCompass(event) {
                                 rotationAngle = event.webkitCompassHeading;
 
@@ -212,9 +209,8 @@
                     })
                     .catch(() => alert("browser not supported"));
 
-
             } else {
-                // Do something if the device is not an Android or iOS device
+                // Device isn't android or IOS
             }
         }
 
@@ -237,7 +233,9 @@
             var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
             var d = 1000 * R * c; // Distance in m
             d = d.toFixed(2);
-            document.getElementById('distance').innerHTML = "Distance to bin: <strong>" + d + "m</strong>";
+            console.log(lat1)
+            console.log(lon1)
+            document.getElementById('distance_output').innerHTML = "Distance to bin: <strong>" + d + "m</strong>";
             if (d <= 3) {
                 document.getElementById("formId").submit();
             }
@@ -252,26 +250,21 @@
             return deg * (Math.PI / 180);
         }
 
-        // Automatically refreshes the degree to point to at a set interval for android devices
-        function update() {
-            let pointDegree;
-            let auto_refresh = setInterval(function () {
-                navigator.geolocation.getCurrentPosition(locationHandler);
-            }, 1000);
-        }
-
         /**
          * Handles the current location of the user and updates the compass direction and distance to the bin.
          * @param {Position} position - The current position of the user.
          */
         function locationHandler(position) {
             const {latitude, longitude} = position.coords;
+            let pointDegree;
             pointDegree = getAngle(latitude, longitude, {{BinGoal.binLat}}, {{BinGoal.binLong}});
             pointCompass(compassImg, pointDegree);
 
             if (pointDegree < 0) {
                 pointDegree = pointDegree + 360;
             }
+            console.log(latitude);
+            console.log(longitude);
             binDistance(latitude, longitude);
         }
     </script>

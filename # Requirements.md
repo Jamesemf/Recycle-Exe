@@ -44,4 +44,9 @@ freezegun is a Python library for setting datetime in python. It provides the ab
 validators is a python library for validating different types of data in python. It provides the ability to validate if a string contains a url, which is useful when testing for returns from an API.
 **Command:** ```pip install validators```
 
-That's it! You've now installed Django, Pillow, geopy, qrcode, schedule, freezegun, and validators on your system. You can start building this web application using the libraries.
+## Install django-mobile-detect
+
+django-mobile-detect is  a lightweight Python package for detecting mobile devices (including tablets). It uses the User-Agent string combined with specific HTTP headers to detect the mobile environment.
+**Command:** ```pip install django-mobile-detect```
+
+That's it! You've now installed Django, Pillow, geopy, qrcode, schedule, freezegun, validators and django-mobile-detect on your system. You can start building this web application using the libraries.

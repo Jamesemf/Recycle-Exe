@@ -4,6 +4,8 @@ from products.models import Product
 from bins.models import BinData
 from datetime import datetime, time
 from account.views import addstats, update_goal_stat
+from django.utils import timezone
+
 
 
 
@@ -25,7 +27,20 @@ def scanner_page_view(request):
     if not request.user.is_authenticated:
         return redirect('login')
     if request.method == 'POST':
+        # If the product is in transaction top and there is a 30 minute difference
+        # then let the code below run if not render home
         barcode_product = request.POST.get("barcode")
+        user_recent = Transaction.objects.filter(user=request.user)[:50]
+        print("ashd")
+        print(user_recent)
+        for x in user_recent:
+            print(((timezone.now() - x.time).total_seconds())/60)
+            if (x.product.barcode == barcode_product) and (((timezone.now() - x.time).total_seconds())/60 <= 30):
+                print("h")
+                request.session['index_info'] = {"refuse": "This product was already a recent transaction. Points not added. "}
+                return redirect('index')
+
+
         # We set the session barcode so that we can then use it in the other areas of the project
         request.session['barcode'] = barcode_product
         request.session['valid'] = 1
@@ -96,8 +111,8 @@ def recycle_confirm_view(request):
     except Exception as e:
         print(e)
     index_data = {
-        "points":points,
-        "peakTime":peak
+        "points": points,
+        "peakTime": peak
     }
     request.session['index_info'] = index_data
     return redirect('index')

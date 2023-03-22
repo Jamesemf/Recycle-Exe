@@ -108,6 +108,33 @@ The gamekeeper page is a page only available to users with staff permissions. Th
 to create to add new bins, goals, and shop items, as well as delete existing ones. The purpose of this page is to
 provide an easy way for administrators and other approved individuals to manage the applications database.
 
+
+## Static/Templates File Structure
+
+Within this repository the django staticfiles model have been used. Therefore, the static file structure is following 
+Django staticfiles distribution.
+```
+  FOR EACH APPLICATION:
+  <application folder>
+    ├── static                      # Static file for specific application(JS/CSS and figures etc.).
+    ├── templates                   # Templates file for specific application.
+    ├── ...
+  
+  FOR GENERAL STATIC(BASE_DIR / "statics"):
+  statics
+    ├── assets                      # General boostrap css/js been used.
+    ├── figures                     # General use figures (database, icon etc.).
+    ├── style                       # General style css that modified for overriding boostrap.
+    ├── templates                   # General template to be inheritant by other app templates. (navbar.html etc.)
+    └── favicon.ico                 # favicon
+    
+  FOR PRODUCTION COLLECTED STATIC: All static file (both under application folder and statics folder) need to be collected
+  into STATIC_ROOT folder for publish. (with DEBUG=False) Follow command need to be used:
+```
+**Command:**   ```py manage.py collectstatic```
+
+
+
 ## File Structure
 
 Within this repository there is a complex file structure. In the main directory it contains all GitHub files, Django Files,
@@ -134,6 +161,22 @@ and Document Files
 ## Application Structure
 
 The application is structured into 7 separate applications each with a devoted purpose. 
+
+The application structured is following this pattern:
+```
+  <application folder>
+    ├── migrations                 # Database schema migration files
+    ├── static                     # Static files (CSS, JS, images, etc.)
+    ├── templates                  # HTML templates for rendering views
+    ├── __init__.py                # Empty file to mark this as a Python package
+    ├── admin.py                   # Customize the admin interface for models
+    ├── apps.py                    # Application configuration settings
+    ├── forms.py                   # Form classes for handling user input
+    ├── models.py                  # Define application models (fields and methods)
+    ├── tests.py                   # Test cases for the application
+    ├── urls.py                    # URL routing for the application
+    └── views.py                   # View functions to handle user requests
+```
 
 - ACCOUNT:
 The account application is responsible for all account registration and management function. It also

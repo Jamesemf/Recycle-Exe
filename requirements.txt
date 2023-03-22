@@ -6,3 +6,4 @@ pillow==9.4.0
 freezegun==1.2.2
 whitenoise==6.4.0
 validators==0.20.0
+django-mobile-detect==0.1

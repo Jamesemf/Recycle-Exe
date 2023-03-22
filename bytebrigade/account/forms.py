@@ -9,9 +9,9 @@ class RegistrationForm(forms.ModelForm):
         Defined validation function for checking whether the two password are the same.
     """
     password = forms.CharField(label='Password', widget=forms.PasswordInput(
-        attrs={'class': 'form-control', 'placeholder': 'Password'}))
+        attrs={'class': 'form-control', 'placeholder': 'Password', 'minlength': 8}))
     password_confirm = forms.CharField(label='Confirm Password', widget=forms.PasswordInput(
-        attrs={'class': 'form-control', 'placeholder': 'Confirm Password'}))
+        attrs={'class': 'form-control', 'placeholder': 'Confirm Password', 'minlength': 8}))
 
     class Meta:
         model = User
