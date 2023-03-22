@@ -13,13 +13,6 @@
     <link rel="stylesheet" href="{% static 'style/css/styles.css' %}">
     <!-- Slideshow Background -->
     {% block header %}  {% endblock %}
-    {% if request.device.is_mobile %}
-    {% elif request.device.is_tablet %}
-    {% else %}
-        {% if request.get_full_path != "/mobile/" %}
-            <meta http-equiv="refresh" content="0;url={% url 'mobile' %}">
-        {% endif %}
-    {% endif %}
 </head>
 
 <ul class="slideshow unordered">

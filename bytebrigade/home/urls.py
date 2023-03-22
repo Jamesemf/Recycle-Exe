@@ -13,5 +13,4 @@ urlpatterns = [
     path('privacy/', views.privacy_policy, name='privacy'),  # URL for the privacy policy page
     path('about-us/', views.about_us_view, name='aboutus'),  # URL for the privacy policy page
     path('license/', views.license_view, name='license'),  # URL for the privacy policy page
-    path('mobile/',views.mobile_view, name='mobile'),
 ]

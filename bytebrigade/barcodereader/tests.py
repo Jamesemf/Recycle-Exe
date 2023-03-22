@@ -42,10 +42,11 @@ class TestLoggedIn(TestCase):
 
     def test_scanner_post_product_exists(self):
         session = self.client.session
+        session['barcode'] = 1
         session['pokedex_barcode'] = -1
         session.save()
         response = self.client.post('/scanner/', {'barcode': '1'}, follow=True)
-        self.assertEqual(response.redirect_chain, [('/product/', 302)])
+        self.assertEqual(response.redirect_chain, [('/', 302)])
 
     def test_scanner_post_product_does_not_exist(self):
         self.stat.delete()

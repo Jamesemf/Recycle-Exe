@@ -33,7 +33,7 @@ if (('BarcodeDetector' in window)) {
     // Run detect code function every 100 milliseconds
     setInterval(detectCode, 100);
 } else {
-    window.location.replace("http://127.0.0.1:8000/account/login");
+    window.location.replace("http://127.0.0.1:8000/account");
 }
 
 

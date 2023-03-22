@@ -127,12 +127,3 @@ def reset_sessions(request):
     request.session['valid'] = -1  # If the user has scanned a product, they are valid for the scanner page
     request.session['pokedex_barcode'] = -1 # The barcode of a product selected within the pokedex
     request.session['success_recycle'] = -1  # A session to verify if a user is valid for the addition of stats
-
-
-def mobile_view(request):
-    """
-    Web backend for '../mobile/' (name 'mobile')
-    Returns:
-        * The QR code for mobile page.
-    """
-    return render(request, 'home/mobile.html')
