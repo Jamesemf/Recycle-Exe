@@ -82,6 +82,11 @@
     /**
      * Function run to get deviceorientationabsolute handler on android when the "start quest"
      * button is pressed.
+     *
+     * @param none
+     *
+     * @return none
+     *
      */
     function init() {
         navigator.geolocation.watchPosition(locationHandler, errorCallback, {
@@ -96,12 +101,25 @@
         }
     }
 
+    /**
+     * Function to alert the browser isn't supported on the compass
+     *
+     * @param none
+     *
+     * @return none
+     *
+     * */
     function errorCallback(){
         alert("Browser not supported");
     }
 
     /**
      * Function to start the compass and request permission for IOS
+     *
+     * @param none
+     *
+     * @return none
+     *
      */
     function startCompass(){
         if(IOS) {
@@ -115,6 +133,14 @@
             }
         }
 
+    /**
+     * Function that handles roateting the compass html element
+     *
+     * @param e: the element attached to the event
+     *
+     * @return none
+     *
+     * */
     function handler(e){
         const compass = e.webkitCompassHeading || Math.abs(e.alpha - 360)
         document.getElementById("compass").style.transform = `rotate(${-compass + pointDegree}deg)`;
@@ -124,6 +150,7 @@
     /**
      * Converts degrees to radians.
      * @param {number} deg - The angle in degrees to be converted to radians.
+     *
      * @returns {number} The angle converted to radians.
      */
     function deg2rad(deg) {
@@ -173,6 +200,15 @@
 
     let pointDegree;
 
+    /**
+     * This function calculates the angle and distance to the bin and updates elements on the page or the
+     * compass transformation
+     *
+     * @param position: a geolocation object
+     *
+     * @return none
+     *
+     * */
     function locationHandler(position) {
         const {latitude, longitude} = position.coords;
         pointDegree = calcDegreeAndDistance(latitude, longitude, {{BinGoal.binLat}}, {{BinGoal.binLong}});

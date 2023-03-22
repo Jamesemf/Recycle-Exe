@@ -57,7 +57,7 @@ def home_view(request):
                 data_dict.update({key: value})
             request.session['index_info'] = {}
     except Exception as e:
-        print(e)
+        pass
     return render(request, 'home/index.html', data_dict)
 
 # Handles a request for the leaderboard page, ordering the users by their points

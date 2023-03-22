@@ -68,9 +68,9 @@
 
                     <!--The div element for the map -->
                     <div id="map"></div>
-                    <select id="type" onchange=filterMarkers(this.value)>
+                    <select id="type" style="margin-top: 1vh;" onchange=filterMarkers(this.value)>
 
-                        <option value="">Please select category</option>
+                        <option value="">please select category</option>
                         <option value="general">General</option>
                         <option value="recycle">Recycle</option>
                         <option value="paper">Paper</option>
@@ -87,10 +87,10 @@
         </div>
     </div>
     {% if presentButton == 1 %}
-        <div class="container">
+        <div class="container" style="margin-top: 1vh;">
             <div class="card-body d-lg-flex justify-content-lg-center">
                 <form method="POST">
-                    <button class="btn btn-primary" type="submit">Would you like to start you adventure</button>
+                    <button class="btn btn-primary" type="submit">Start an Adventure?</button>
                     {% csrf_token %}
                 </form>
             </div>
@@ -324,7 +324,7 @@
          * This function filters the map markers based on a category selected on the html page. If a bin does not
          * contain the same category then its marker is hidden from the user
          *
-         * @param category
+         * @param category: is a type of bin
          *
          * @return none
          *

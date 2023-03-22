@@ -96,7 +96,6 @@ def withinRange(request, binType):
     curr_long = float(request.POST.get("location_long"))
     coords_1 = (curr_lat, curr_long)
 
-    print(coords_1)
     shortestDistance = 100000000
     close_bin = None
     bin_object = None

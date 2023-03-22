@@ -32,12 +32,8 @@ def scanner_page_view(request):
         # then let the code below run if not render home
         barcode_product = request.POST.get("barcode")
         user_recent = Transaction.objects.filter(user=request.user)[:50]
-        print("ashd")
-        print(user_recent)
         for x in user_recent:
-            print(((timezone.now() - x.time).total_seconds())/60)
             if (x.product.barcode == barcode_product) and (((timezone.now() - x.time).total_seconds())/60 <= 30):
-                print("h")
                 request.session['index_info'] = {"refuse": "This product was already a recent transaction. Points not added. "}
                 return redirect('index')
 
@@ -75,7 +71,7 @@ def recycle_confirm_view(request):
         if not request.session['valid'] == 1:
             return redirect('index')
     except Exception as e:
-        print(e)
+        pass
         return redirect("index")
     try:
         if request.session['success_recycle'] == -1:
@@ -110,7 +106,7 @@ def recycle_confirm_view(request):
             addstats(request.user, product_data, points, weight)  # need to include the product
             update_goal_stat(request.user, product_data)
     except Exception as e:
-        print(e)
+        pass
     index_data = {
         "points": points,
         "peakTime": peak

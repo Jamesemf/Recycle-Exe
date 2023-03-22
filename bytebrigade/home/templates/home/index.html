@@ -38,7 +38,7 @@
     </div>
     <div class="feeds" style="margin: 0 auto;color: var(--secondary); width: 80vw;">
         <div class="content-container" style="align-items: center; justify-content: center;">
-            <h5 style="color: black;">Double points <strong>9am - 3pm</strong> Every Day!</h5>
+            <h5 style="color: black; margin-left: 1vw; margin-right: 1vw;">Double points <strong>9am - 3pm</strong> Every Day!</h5>
         </div>
         <div style="height: 70%; overflow:auto;">
             <div class="top-bar">
@@ -71,7 +71,7 @@
         {% if points %}
             <!-- display info on successful scan -->
             <div id="infoModel" class="modal">
-                <div class="modal-content" style="color:green">
+                <div class="modal-content" style="color:green; border-color: var(--primary); border-style: solid; border-width: 1vh; opacity: 100%">
                     {% if peakTime %}
                         <p>DOUBLE POINTS !</p>
                         <p>Thank you for recycling you gained {{ points }} points !</p>
@@ -84,7 +84,7 @@
 
         {% if refuse %}
             <div id="infoModel" class="modal">
-                <div class="modal-content" style="color:green">
+                <div class="modal-content" style="color:green; border-color: red; border-style: solid; border-width: 1vh; opacity: 100%;">
                         <p>{{ refuse }}</p>
                 </div>
             </div>

@@ -12,6 +12,11 @@ user's recycling habits and allows a user to set themselves goals about the numb
 recycle. Finally, the application provides a gamekeeper page for staff members to access where they can create new bin
 locations, new goals for users to choose from, and new shop items for users to purchase.
 
+## Open Source Barcode Reader : Educational Use 
+
+Note within the directory ```staticfiles``` there is a directory named ```BCscanner```. This is open source that has an Apache License 
+meaning we are able to use it for educational uses and modify it as need be (which we have done). This software provides 
+a barcode reader in our project. Here is the GitHub source where we have source this open source software ```https://github.com/mebjas/html5-qrcode```.
 
 ## Usage
 
@@ -138,7 +143,8 @@ Django staticfiles distribution.
 ## File Structure
 
 Within this repository there is a complex file structure. In the main directory it contains all GitHub files, Django Files,
-and Document Files 
+and Document Files
+
 ```
   .
   ├── .github                       # All GitHub files, including action files.
